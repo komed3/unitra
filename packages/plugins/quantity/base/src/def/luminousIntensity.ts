@@ -1,7 +1,9 @@
+import type { DerivedQuantityDef, QuantityRef } from '@unitra/types/quantity';
+
 import { Format, Lang } from '@unitra/dict/common';
 import { Branch } from '@unitra/dict/quantity';
 import { LuminousIntensityDim } from '@unitra/dim/base';
-import type { DerivedQuantityDef, QuantityRef } from '@unitra/types/quantity';
+
 
 export const luminousIntensity = 'luminousIntensity' as QuantityRef< typeof LuminousIntensityDim, 'luminousIntensity' >;
 

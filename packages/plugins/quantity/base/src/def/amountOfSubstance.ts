@@ -1,7 +1,9 @@
+import type { DerivedQuantityDef, QuantityRef } from '@unitra/types/quantity';
+
 import { Format, Lang } from '@unitra/dict/common';
 import { Branch } from '@unitra/dict/quantity';
 import { AmountOfSubstanceDim } from '@unitra/dim/base';
-import type { DerivedQuantityDef, QuantityRef } from '@unitra/types/quantity';
+
 
 export const amountOfSubstance = 'amountOfSubstance' as QuantityRef< typeof AmountOfSubstanceDim, 'amountOfSubstance' >;
 
