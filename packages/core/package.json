@@ -1,0 +1,12 @@
+{
+  "name": "@unitra/core",
+  "description": "Core module for unitra framework",
+  "license": "MIT",
+  "version": "0.0.1",
+  "author": {
+    "name": "komed3 (Paul Köhler)",
+    "email": "webmaster@komed3.de",
+    "url": "https://komed3.de"
+  },
+  "type": "module"
+}
