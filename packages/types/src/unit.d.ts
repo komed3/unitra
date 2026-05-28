@@ -1,5 +1,6 @@
 import type { UnitType } from '@unitra/dict/unit';
 import type { Dimension } from './dim';
+import { Modifier } from './common';
 
 export type UnitRef<
   D extends Dimension = Dimension,
@@ -10,6 +11,19 @@ export type UnitRef<
   readonly __type: T;
   readonly __dim: D;
 };
+
+export type UnitStruct = ReadonlyArray< {
+  unit: UnitRef;
+  exp: number;
+  modifier?: Modifier;
+} | {
+  factor: number;
+} >;
+
+export type CompoundStruct = ReadonlyArray< {
+  unit: UnitRef;
+  exp: number;
+} >;
 
 export type UnitDef<
   D extends Dimension = Dimension,
