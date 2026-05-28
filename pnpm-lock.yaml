@@ -16,7 +16,7 @@ importers:
 
   packages/dim: {}
 
-  packages/plugins/quantities/base:
+  packages/plugin/quantity/base:
     dependencies:
       '@unitra/dict':
         specifier: workspace:*
@@ -24,6 +24,21 @@ importers:
       '@unitra/dim':
         specifier: workspace:*
         version: link:../../../dim
+      '@unitra/types':
+        specifier: workspace:*
+        version: link:../../../types
+
+  packages/plugin/unit/base:
+    dependencies:
+      '@unitra/dict':
+        specifier: workspace:*
+        version: link:../../../dict
+      '@unitra/dim':
+        specifier: workspace:*
+        version: link:../../../dim
+      '@unitra/quantity-base':
+        specifier: workspace:*
+        version: link:../../quantity/base
       '@unitra/types':
         specifier: workspace:*
         version: link:../../../types

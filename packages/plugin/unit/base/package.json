@@ -1,0 +1,23 @@
+{
+  "name": "@unitra/unit-base",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@unitra/dict": "workspace:*",
+    "@unitra/dim": "workspace:*",
+    "@unitra/quantity-base": "workspace:*",
+    "@unitra/types": "workspace:*"
+  }
+}
