@@ -1,3 +1,4 @@
+import type { ConstantRef } from './constant';
 import type { PrefixRef } from './prefix';
 import type { UnitRef } from './unit';
 
@@ -10,6 +11,7 @@ export type UnitNode = {
 
 export type ConstantNode = {
   type: 'constant';
+  constant: ConstantRef;
   exp: number;
 };
 
