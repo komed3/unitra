@@ -1,7 +1,7 @@
 import { Format, Lang } from '@unitra/dict/common';
 import { Branch } from '@unitra/dict/quantity';
 import { MassDim } from '@unitra/dim/base';
-import { DerivedQuantityDef, QuantityRef } from '@unitra/types/quantity';
+import type { DerivedQuantityDef, QuantityRef } from '@unitra/types/quantity';
 
 export const mass = 'mass' as QuantityRef< typeof MassDim, 'mass' >;
 

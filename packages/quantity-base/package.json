@@ -7,6 +7,9 @@
     "README.md",
     "LICENSE"
   ],
+  "exports": {
+    ".": "./dist/index.js"
+  },
   "scripts": {
     "build": "tsc -b",
     "lint": "tsc --noEmit"
