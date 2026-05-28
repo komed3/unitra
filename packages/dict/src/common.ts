@@ -8,3 +8,9 @@ export enum Format {
   UNICODE = 'unicode',
   LATEX = 'latex'
 }
+
+export enum SIType {
+  BASE = 'base',
+  DERIVED = 'derived',
+  ACCEPTED = 'accepted'
+}

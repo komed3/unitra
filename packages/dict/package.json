@@ -8,7 +8,8 @@
     "LICENSE"
   ],
   "exports": {
-    "./common": "./dist/common.js"
+    "./common": "./dist/common.js",
+    "./unit": "./dist/unit.js"
   },
   "scripts": {
     "build": "tsc -b"
