@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "target": "es6",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "strict": true,
     "declaration": true,
     "declarationMap": false,
@@ -12,6 +12,7 @@
   },
   "references": [
     { "path": "./packages/core" },
+    { "path": "./packages/dict" },
     { "path": "./packages/plugins/algebra" },
     { "path": "./packages/plugins/unit-si" },
     { "path": "./packages/types" },

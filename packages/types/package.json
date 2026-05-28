@@ -1,0 +1,13 @@
+{
+  "name": "@unitra/types",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -b"
+  }
+}
