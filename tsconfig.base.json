@@ -9,5 +9,12 @@
     "sourceMap": false,
     "composite": true,
     "skipLibCheck": true
-  }
+  },
+  "references": [
+    { "path": "./packages/core" },
+    { "path": "./packages/plugins/algebra" },
+    { "path": "./packages/plugins/unit-si" },
+    { "path": "./packages/types" },
+    { "path": "./packages/unitra" }
+  ]
 }
