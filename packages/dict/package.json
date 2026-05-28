@@ -12,6 +12,7 @@
     "./unit": "./dist/unit.js"
   },
   "scripts": {
-    "build": "tsc -b"
+    "build": "tsc -b",
+    "lint": "tsc --noEmit"
   }
 }

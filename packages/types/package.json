@@ -7,6 +7,9 @@
     "README.md",
     "LICENSE"
   ],
+  "scripts": {
+    "lint": "tsc --noEmit"
+  },
   "dependencies": {
     "@unitra/dict": "workspace:*"
   }
