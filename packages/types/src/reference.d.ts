@@ -1,11 +1,11 @@
-import type { Modifier } from './common';
+import type { PrefixRef } from './prefix';
 import type { UnitRef } from './unit';
 
 export type UnitReferenceNode = {
   type: 'unit';
   unit: UnitRef;
   exp: number;
-  modifier?: Modifier;
+  prefix?: PrefixRef;
 };
 
 export type ConstantReferenceNode = {
