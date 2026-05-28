@@ -7,6 +7,15 @@
     "README.md",
     "LICENSE"
   ],
+  "exports": {
+    "./common": "./src/common.d.ts",
+    "./constant": "./src/constant.d.ts",
+    "./dim": "./src/dim.d.ts",
+    "./node": "./src/node.d.ts",
+    "./prefix": "./src/prefix.d.ts",
+    "./quantity": "./src/quantity.d.ts",
+    "./unit": "./src/unit.d.ts"
+  },
   "scripts": {
     "lint": "tsc --noEmit"
   },
