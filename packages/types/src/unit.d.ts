@@ -3,6 +3,7 @@ import type { UnitStatus, UnitType } from '@unitra/dict/unit';
 import type { Deprecated, Meta } from './common';
 import type { Dimension } from './dim';
 import type { PrefixRef } from './prefix';
+import type { QuantityRef } from './quantity';
 
 declare const unitBrand: unique symbol;
 
@@ -80,10 +81,11 @@ export type UnitProps = {
   constant?: boolean;
 };
 
-export type UnitContext = {
+export type UnitContext< D extends Dimension = Dimension > = {
   system: ReadonlyArray< System >;
   status?: UnitStatus;
   si?: SIType;
+  quantities?: ReadonlyArray< QuantityRef< D > >;
   props?: UnitProps;
 };
 
@@ -96,7 +98,7 @@ export type UnitDef<
   readonly id: R;
   readonly dim: D;
   aliases?: ReadonlyArray< string >;
-  context: UnitContext;
+  context: UnitContext< D >;
   deprecated?: Deprecated< UnitRef< D > >;
   meta: Meta;
 } & ( T extends UnitType.NAMED ? {
