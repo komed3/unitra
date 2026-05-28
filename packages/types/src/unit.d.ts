@@ -1,6 +1,6 @@
-import type { System } from '@unitra/dict/common';
+import type { SIType, System } from '@unitra/dict/common';
 import type { UnitStatus, UnitType } from '@unitra/dict/unit';
-import type { Modifier } from './common';
+import type { Meta, Modifier } from './common';
 import type { Dimension } from './dim';
 
 export type UnitRef<
@@ -31,12 +31,17 @@ export type UnitConv< D extends Dimension = Dimension > =
   | { base: UnitRef< D >, scale: number, offset: number, uncertainty?: number }
   | 1;
 
+export type UnitProps = {
+  logarithmic?: boolean;
+  dimensionless?: boolean;
+  constant?: boolean;
+};
+
 export type UnitContext = {
   system: ReadonlyArray< System >;
   status?: UnitStatus;
-  dimensionless?: boolean;
-  constant?: boolean;
   si?: SIType;
+  props?: UnitProps;
 };
 
 export type UnitDef<
@@ -49,6 +54,8 @@ export type UnitDef<
   readonly dim: D;
   aliases?: ReadonlyArray< string >;
   context: UnitContext;
+  deprecated?: Deprecated< UnitRef< D > >;
+  meta: Meta;
 } & ( T extends UnitType.NAMED ? {
   structure: UnitStruct;
   conversion: UnitConv< D >;

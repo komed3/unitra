@@ -38,3 +38,9 @@ export type Meta = {
   name?: LangGroup< Name >;
   description?: LangGroup< string >;
 };
+
+export type Deprecated< R = unknown > = {
+  replacement: R;
+  since?: string;
+  reason?: LangGroup< string >;
+};
