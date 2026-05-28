@@ -1,0 +1,15 @@
+{
+  "name": "unitra",
+  "private": true,
+  "packageManager": "pnpm@11.4.0",
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm -r dev",
+    "test": "pnpm -r test",
+    "lint": "pnpm -r lint"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.0",
+    "typescript": "^6.0.3"
+  }
+}
