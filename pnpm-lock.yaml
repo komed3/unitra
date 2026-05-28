@@ -14,6 +14,8 @@ importers:
 
   packages/dict: {}
 
+  packages/dim: {}
+
   packages/types:
     dependencies:
       '@unitra/dict':
