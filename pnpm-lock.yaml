@@ -16,6 +16,18 @@ importers:
 
   packages/dim: {}
 
+  packages/quantity-base:
+    dependencies:
+      '@unitra/dict':
+        specifier: workspace:*
+        version: link:../dict
+      '@unitra/dim':
+        specifier: workspace:*
+        version: link:../dim
+      '@unitra/types':
+        specifier: workspace:*
+        version: link:../types
+
   packages/types:
     dependencies:
       '@unitra/dict':

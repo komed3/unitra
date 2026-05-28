@@ -1,0 +1,19 @@
+{
+  "name": "@unitra/quantity-base",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@unitra/dict": "workspace:*",
+    "@unitra/dim": "workspace:*",
+    "@unitra/types": "workspace:*"
+  }
+}
