@@ -8,10 +8,12 @@ declare const unitBrand: unique symbol;
 
 type UnitBrand<
   D extends Dimension,
-  T extends UnitType
+  T extends UnitType,
+  S extends string
 > = {
   readonly type: T;
   readonly dim: D;
+  readonly id: S;
 };
 
 export type UnitRef<
@@ -19,11 +21,12 @@ export type UnitRef<
   T extends UnitType = UnitType,
   S extends string = string
 > = S & {
-  readonly [ unitBrand ]: UnitBrand< D, T >;
+  readonly [ unitBrand ]: UnitBrand< D, T, S >;
 };
 
 export type UnitDim< R extends UnitRef > = R[ typeof unitBrand ][ 'dim' ];
 export type UnitKind< R extends UnitRef > = R[ typeof unitBrand ][ 'type' ];
+export type UnitId< R extends UnitRef > = R[ typeof unitBrand ][ 'id' ];
 
 export type UnitStruct = ReadonlyArray< {
   unit: UnitRef;
@@ -61,11 +64,15 @@ export type AffineUnitConv< D extends Dimension = Dimension > = {
   uncertainty?: number;
 };
 
+export type IdentityUnitConv = {
+  type: 'identity';
+};
+
 export type UnitConv< D extends Dimension = Dimension > =
   | LinearUnitConv< D >
   | LogUnitConv< D >
   | AffineUnitConv< D >
-  | 1;
+  | IdentityUnitConv;
 
 export type UnitProps = {
   logarithmic?: boolean;

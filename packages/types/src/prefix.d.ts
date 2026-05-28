@@ -2,11 +2,15 @@ import type { Deprecated, Meta } from './common';
 
 declare const prefixBrand: unique symbol;
 
-type PrefixBrand = {};
+type PrefixBrand< S extends string > = {
+  readonly id: S;
+};
 
 export type PrefixRef< S extends string = string > = S & {
-  readonly [ prefixBrand ]: PrefixBrand;
+  readonly [ prefixBrand ]: PrefixBrand< S >;
 };
+
+export type PrefixId< R extends PrefixRef > = R[ typeof prefixBrand ][ 'id' ];
 
 export type PrefixDef< R extends PrefixRef = PrefixRef > = {
   readonly id: R;

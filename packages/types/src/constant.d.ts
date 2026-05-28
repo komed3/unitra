@@ -4,18 +4,23 @@ import type { UnitStruct } from './unit';
 
 declare const constantBrand: unique symbol;
 
-type ConstantBrand< D extends Dimension > = {
+type ConstantBrand<
+  D extends Dimension,
+  S extends string
+> = {
   readonly dim: D;
+  readonly id: S;
 };
 
 export type ConstantRef<
   D extends Dimension = Dimension,
   S extends string = string
 > = S & {
-  readonly [ constantBrand ]: ConstantBrand< D >;
+  readonly [ constantBrand ]: ConstantBrand< D, S >;
 };
 
 export type ConstantDim< R extends ConstantRef > = R[ typeof constantBrand ][ 'dim' ];
+export type ConstantId< R extends ContantRef > = R[ typeof constantBrand ][ 'id' ];
 
 export type ConstantDef<
   D extends Dimension = Dimension,
