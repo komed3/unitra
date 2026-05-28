@@ -1,7 +1,8 @@
 import type { SIType, System } from '@unitra/dict/common';
 import type { UnitStatus, UnitType } from '@unitra/dict/unit';
-import type { Meta, Modifier } from './common';
+import type { Meta } from './common';
 import type { Dimension } from './dim';
+import type { PrefixRef } from './prefix';
 
 export type UnitRef<
   D extends Dimension = Dimension,
@@ -16,7 +17,7 @@ export type UnitRef<
 export type UnitStruct = ReadonlyArray< {
   unit: UnitRef;
   exp: number;
-  modifier?: Modifier;
+  prefix?: PrefixRef;
 } | {
   factor: number;
 } >;
