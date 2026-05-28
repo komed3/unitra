@@ -26,9 +26,33 @@ export type CompoundStruct = ReadonlyArray< {
   exp: number;
 } >;
 
+export type LinearUnitConv< D extends Dimension = Dimension > = {
+  type: 'linear';
+  base: UnitRef< D >;
+  factor: number;
+  uncertainty?: number;
+};
+
+export type LogUnitConv< D extends Dimension = Dimension > = {
+  type: 'log';
+  base: UnitRef< D >;
+  baseValue: number;
+  factor: number;
+  uncertainty?: number;
+};
+
+export type AffineUnitConv< D extends Dimension = Dimension > = {
+  type: 'affine';
+  base: UnitRef< D >;
+  scale: number;
+  offset: number;
+  uncertainty?: number;
+};
+
 export type UnitConv< D extends Dimension = Dimension > =
-  | { base: UnitRef< D >, factor: number, uncertainty?: number }
-  | { base: UnitRef< D >, scale: number, offset: number, uncertainty?: number }
+  | LinearUnitConv
+  | LogUnitConv
+  | AffineUnitConv
   | 1;
 
 export type UnitProps = {
