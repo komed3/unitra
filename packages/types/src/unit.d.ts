@@ -1,18 +1,29 @@
 import type { SIType, System } from '@unitra/dict/common';
 import type { UnitStatus, UnitType } from '@unitra/dict/unit';
-import type { Meta } from './common';
+import type { Deprecated, Meta } from './common';
 import type { Dimension } from './dim';
 import type { PrefixRef } from './prefix';
+
+declare const unitBrand: unique symbol;
+
+type UnitBrand<
+  D extends Dimension,
+  T extends UnitType
+> = {
+  readonly type: T;
+  readonly dim: D;
+};
 
 export type UnitRef<
   D extends Dimension = Dimension,
   T extends UnitType = UnitType,
   S extends string = string
 > = S & {
-  readonly __brand: 'unit';
-  readonly __type: T;
-  readonly __dim: D;
+  readonly [ unitBrand ]: UnitBrand< D, T >;
 };
+
+export type UnitDim< R extends UnitRef > = R[ typeof unitBrand ][ 'dim' ];
+export type UnitKind< R extends UnitRef > = R[ typeof unitBrand ][ 'type' ];
 
 export type UnitStruct = ReadonlyArray< {
   unit: UnitRef;
@@ -51,9 +62,9 @@ export type AffineUnitConv< D extends Dimension = Dimension > = {
 };
 
 export type UnitConv< D extends Dimension = Dimension > =
-  | LinearUnitConv
-  | LogUnitConv
-  | AffineUnitConv
+  | LinearUnitConv< D >
+  | LogUnitConv< D >
+  | AffineUnitConv< D >
   | 1;
 
 export type UnitProps = {
@@ -89,6 +100,6 @@ export type UnitDef<
   structure: CompoundStruct;
 } : never );
 
-export type DerivedUnitDef< R extends UnitRef > = UnitDef< R[ '__dim' ], R[ '__type' ], R >;
+export type DerivedUnitDef< R extends UnitRef > = UnitDef< UnitDim< R >, UnitKind< R >, R >;
 
 export type UnitLike = UnitRef | UnitDef | string;
