@@ -13,6 +13,7 @@
   "references": [
     { "path": "./packages/core" },
     { "path": "./packages/dict" },
+    { "path": "./packages/dim" },
     { "path": "./packages/plugins/algebra" },
     { "path": "./packages/plugins/unit-si" },
     { "path": "./packages/types" },
