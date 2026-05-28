@@ -12,7 +12,13 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
-  packages/types: {}
+  packages/dict: {}
+
+  packages/types:
+    dependencies:
+      '@unitra/dict':
+        specifier: workspace:*
+        version: link:../dict
 
 packages:
 

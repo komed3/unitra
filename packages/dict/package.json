@@ -7,6 +7,9 @@
     "README.md",
     "LICENSE"
   ],
+  "exports": {
+    "./common": "./dist/common.js"
+  },
   "scripts": {
     "build": "tsc -b"
   }
