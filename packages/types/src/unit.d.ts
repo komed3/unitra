@@ -1,6 +1,7 @@
-import type { UnitType } from '@unitra/dict/unit';
+import type { System } from '@unitra/dict/common';
+import type { UnitStatus, UnitType } from '@unitra/dict/unit';
+import type { Modifier } from './common';
 import type { Dimension } from './dim';
-import { Modifier } from './common';
 
 export type UnitRef<
   D extends Dimension = Dimension,
@@ -24,6 +25,19 @@ export type CompoundStruct = ReadonlyArray< {
   unit: UnitRef;
   exp: number;
 } >;
+
+export type UnitConv< D extends Dimension = Dimension > =
+  | { base: UnitRef< D >, factor: number, uncertainty?: number }
+  | { base: UnitRef< D >, scale: number, offset: number, uncertainty?: number }
+  | 1;
+
+export type UnitContext = {
+  system: ReadonlyArray< System >;
+  status?: UnitStatus;
+  dimensionless?: boolean;
+  constant?: boolean;
+  si?: SIType;
+};
 
 export type UnitDef<
   D extends Dimension = Dimension,
