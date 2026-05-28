@@ -1,6 +1,11 @@
+import type { Modifier } from './common';
+import type { UnitRef } from './unit';
+
 export type UnitReferenceNode = {
   type: 'unit';
+  unit: UnitRef;
   exp: number;
+  modifier?: Modifier;
 };
 
 export type ConstantReferenceNode = {
