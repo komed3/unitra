@@ -47,7 +47,15 @@ export type UnitDef<
   readonly type: T;
   readonly id: R;
   readonly dim: D;
-};
+  aliases?: ReadonlyArray< string >;
+  context: UnitContext;
+} & ( T extends UnitType.NAMED ? {
+  structure: UnitStruct;
+  conversion: UnitConv< D >;
+  prefixable: boolean;
+} : T extends UnitType.COMPOUND ? {
+  structure: CompoundStruct;
+} : never );
 
 export type DerivedUnitDef< R extends UnitRef > = UnitDef< R[ '__dim' ], R[ '__type' ], R >;
 
