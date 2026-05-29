@@ -69,34 +69,35 @@ export type IdentityUnitConv = {
   type: 'identity';
 };
 
-export type UnitConv< D extends Dimension = Dimension > =
+export type UnitConv< D extends Dimension = Dimension > = Readonly<
   | LinearUnitConv< D >
   | LogUnitConv< D >
   | AffineUnitConv< D >
-  | IdentityUnitConv;
+  | IdentityUnitConv
+>;
 
-export type UnitProps = {
+export type UnitProps = Readonly< {
   logarithmic?: boolean;
   dimensionless?: boolean;
   constant?: boolean;
-};
+} >;
 
-export type UnitContext< D extends Dimension = Dimension > = {
+export type UnitContext< D extends Dimension = Dimension > = Readonly< {
   system: ReadonlyArray< System >;
   status?: UnitStatus;
   si?: SIType;
   quantities?: ReadonlyArray< QuantityRef< D > >;
   props?: UnitProps;
-};
+} >;
 
 export type UnitDef<
   D extends Dimension = Dimension,
   T extends UnitType = UnitType,
   R extends UnitRef< D > = UnitRef< D >
-> = {
-  readonly type: T;
-  readonly id: R;
-  readonly dim: D;
+> = Readonly< {
+  type: T;
+  id: R;
+  dim: D;
   aliases?: ReadonlyArray< string >;
   context: UnitContext< D >;
   deprecated?: Deprecated< UnitRef< D > >;
@@ -107,7 +108,7 @@ export type UnitDef<
   prefixable: boolean;
 } : T extends UnitType.COMPOUND ? {
   structure: CompoundStruct;
-} : never );
+} : never ) >;
 
 export type DerivedUnitDef< R extends UnitRef > = UnitDef< UnitDim< R >, UnitKind< R >, R >;
 
