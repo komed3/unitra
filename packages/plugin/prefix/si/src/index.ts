@@ -1,38 +1,38 @@
 import { PrefixRegistry } from '@unitra/types/registry';
 
-import _deca, { deca } from './def/pos/deca';
-import _exa, { exa } from './def/pos/exa';
-import _giga, { giga } from './def/pos/giga';
-import _hecto, { hecto } from './def/pos/hecto';
-import _kilo, { kilo } from './def/pos/kilo';
-import _mega, { mega } from './def/pos/mega';
-import _peta, { peta } from './def/pos/peta';
-import _quetta, { quetta } from './def/pos/quetta';
-import _ronna, { ronna } from './def/pos/ronna';
-import _tera, { tera } from './def/pos/tera';
-import _yotta, { yotta } from './def/pos/yotta';
-import _zetta, { zetta } from './def/pos/zetta';
+import decaDef, { deca } from './def/pos/deca';
+import exaDef, { exa } from './def/pos/exa';
+import gigaDef, { giga } from './def/pos/giga';
+import hectoDef, { hecto } from './def/pos/hecto';
+import kiloDef, { kilo } from './def/pos/kilo';
+import megaDef, { mega } from './def/pos/mega';
+import petaDef, { peta } from './def/pos/peta';
+import quettaDef, { quetta } from './def/pos/quetta';
+import ronnaDef, { ronna } from './def/pos/ronna';
+import teraDef, { tera } from './def/pos/tera';
+import yottaDef, { yotta } from './def/pos/yotta';
+import zettaDef, { zetta } from './def/pos/zetta';
 
-import _atto, { atto } from './def/neg/atto';
-import _centi, { centi } from './def/neg/centi';
-import _deci, { deci } from './def/neg/deci';
-import _femto, { femto } from './def/neg/femto';
-import _micro, { micro } from './def/neg/micro';
-import _milli, { milli } from './def/neg/milli';
-import _nano, { nano } from './def/neg/nano';
-import _pico, { pico } from './def/neg/pico';
-import _quecto, { quecto } from './def/neg/quecto';
-import _ronto, { ronto } from './def/neg/ronto';
-import _yocto, { yocto } from './def/neg/yocto';
-import _zepto, { zepto } from './def/neg/zepto';
+import attoDef, { atto } from './def/neg/atto';
+import centiDef, { centi } from './def/neg/centi';
+import deciDef, { deci } from './def/neg/deci';
+import femtoDef, { femto } from './def/neg/femto';
+import microDef, { micro } from './def/neg/micro';
+import milliDef, { milli } from './def/neg/milli';
+import nanoDef, { nano } from './def/neg/nano';
+import picoDef, { pico } from './def/neg/pico';
+import quectoDef, { quecto } from './def/neg/quecto';
+import rontoDef, { ronto } from './def/neg/ronto';
+import yoctoDef, { yocto } from './def/neg/yocto';
+import zeptoDef, { zepto } from './def/neg/zepto';
 
 export default ( {
-  [ quetta ]: _quetta,  [ ronna ]: _ronna,  [ yotta ]: _yotta,
-  [ zetta ]: _zetta,    [ exa ]: _exa,      [ peta ]: _peta,
-  [ tera ]: _tera,      [ giga ]: _giga,    [ mega ]: _mega,
-  [ kilo ]: _kilo,      [ hecto ]: _hecto,  [ deca ]: _deca,
-  [ deci ]: _deci,      [ centi ]: _centi,  [ milli ]: _milli,
-  [ micro ]: _micro,    [ nano ]: _nano,    [ pico ]: _pico,
-  [ femto ]: _femto,    [ atto ]: _atto,    [ zepto ]: _zepto,
-  [ yocto ]: _yocto,    [ ronto ]: _ronto,  [ quecto ]: _quecto
+  [ quetta ]: quettaDef,  [ ronna ]: ronnaDef,  [ yotta ]: yottaDef,
+  [ zetta ]: zettaDef,    [ exa ]: exaDef,      [ peta ]: petaDef,
+  [ tera ]: teraDef,      [ giga ]: gigaDef,    [ mega ]: megaDef,
+  [ kilo ]: kiloDef,      [ hecto ]: hectoDef,  [ deca ]: decaDef,
+  [ deci ]: deciDef,      [ centi ]: centiDef,  [ milli ]: milliDef,
+  [ micro ]: microDef,    [ nano ]: nanoDef,    [ pico ]: picoDef,
+  [ femto ]: femtoDef,    [ atto ]: attoDef,    [ zepto ]: zeptoDef,
+  [ yocto ]: yoctoDef,    [ ronto ]: rontoDef,  [ quecto ]: quectoDef
 } ) as const satisfies PrefixRegistry;
