@@ -12,56 +12,56 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
-  packages/core: {}
+  packages/kernel/core: {}
 
-  packages/dict: {}
+  packages/kernel/dict: {}
 
-  packages/dim: {}
+  packages/kernel/dim: {}
+
+  packages/kernel/types:
+    dependencies:
+      '@unitra/dict':
+        specifier: workspace:*
+        version: link:../dict
 
   packages/plugin/prefix/si:
     dependencies:
       '@unitra/core':
         specifier: workspace:*
-        version: link:../../../core
+        version: link:../../../kernel/core
       '@unitra/dict':
         specifier: workspace:*
-        version: link:../../../dict
+        version: link:../../../kernel/dict
       '@unitra/types':
         specifier: workspace:*
-        version: link:../../../types
+        version: link:../../../kernel/types
 
   packages/plugin/quantity/base:
     dependencies:
       '@unitra/dict':
         specifier: workspace:*
-        version: link:../../../dict
+        version: link:../../../kernel/dict
       '@unitra/dim':
         specifier: workspace:*
-        version: link:../../../dim
+        version: link:../../../kernel/dim
       '@unitra/types':
         specifier: workspace:*
-        version: link:../../../types
+        version: link:../../../kernel/types
 
   packages/plugin/unit/si-base:
     dependencies:
       '@unitra/dict':
         specifier: workspace:*
-        version: link:../../../dict
+        version: link:../../../kernel/dict
       '@unitra/dim':
         specifier: workspace:*
-        version: link:../../../dim
+        version: link:../../../kernel/dim
       '@unitra/plugin-quantity-base':
         specifier: workspace:*
         version: link:../../quantity/base
       '@unitra/types':
         specifier: workspace:*
-        version: link:../../../types
-
-  packages/types:
-    dependencies:
-      '@unitra/dict':
-        specifier: workspace:*
-        version: link:../dict
+        version: link:../../../kernel/types
 
 packages:
 
