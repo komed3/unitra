@@ -43,14 +43,14 @@ export type CompoundStruct = ReadonlyArray< {
 } >;
 
 export type LinearUnitConv< D extends Dimension = Dimension > = {
-  type: 'linear';
+  readonly type: 'linear';
   base: UnitRef< D >;
   factor: number;
   uncertainty?: number;
 };
 
 export type LogUnitConv< D extends Dimension = Dimension > = {
-  type: 'log';
+  readonly type: 'log';
   base: UnitRef< D >;
   baseValue: number;
   factor: number;
@@ -58,7 +58,7 @@ export type LogUnitConv< D extends Dimension = Dimension > = {
 };
 
 export type AffineUnitConv< D extends Dimension = Dimension > = {
-  type: 'affine';
+  readonly type: 'affine';
   base: UnitRef< D >;
   scale: number;
   offset: number;
@@ -66,38 +66,37 @@ export type AffineUnitConv< D extends Dimension = Dimension > = {
 };
 
 export type IdentityUnitConv = {
-  type: 'identity';
+  readonly type: 'identity';
 };
 
-export type UnitConv< D extends Dimension = Dimension > = Readonly<
+export type UnitConv< D extends Dimension = Dimension > =
   | LinearUnitConv< D >
   | LogUnitConv< D >
   | AffineUnitConv< D >
-  | IdentityUnitConv
->;
+  | IdentityUnitConv;
 
-export type UnitProps = Readonly< {
+export type UnitProps = {
   logarithmic?: boolean;
   dimensionless?: boolean;
   constant?: boolean;
-} >;
+};
 
-export type UnitContext< D extends Dimension = Dimension > = Readonly< {
+export type UnitContext< D extends Dimension = Dimension > = {
   system: ReadonlyArray< System >;
   status?: UnitStatus;
   si?: SIType;
   quantities?: ReadonlyArray< QuantityRef< D > >;
   props?: UnitProps;
-} >;
+};
 
 export type UnitDef<
   D extends Dimension = Dimension,
   T extends UnitType = UnitType,
   R extends UnitRef< D > = UnitRef< D >
-> = Readonly< {
-  type: T;
-  id: R;
-  dim: D;
+> = {
+  readonly type: T;
+  readonly id: R;
+  readonly dim: D;
   aliases?: ReadonlyArray< string >;
   context: UnitContext< D >;
   deprecated?: Deprecated< UnitRef< D > >;
@@ -108,7 +107,7 @@ export type UnitDef<
   prefixable: boolean;
 } : T extends UnitType.COMPOUND ? {
   structure: CompoundStruct;
-} : never ) >;
+} : never );
 
 export type DerivedUnitDef< R extends UnitRef > = UnitDef< UnitDim< R >, UnitKind< R >, R >;
 

@@ -25,13 +25,13 @@ export type QuantityId< R extends QuantityRef > = R[ typeof quantityBrand ][ 'id
 export type QuantityDef<
   D extends Dimension = Dimension,
   R extends QuantityRef< D > = QuantityRef< D >
-> = Readonly< {
+> = {
   id: R;
   dim: D;
   branch?: Branch;
   deprecated?: Deprecated< QuantityRef< D > >;
   meta: Meta;
-} >;
+};
 
 export type DerivedQuantityDef< R extends QuantityRef > = QuantityDef< QuantityDim< R >, R >;
 

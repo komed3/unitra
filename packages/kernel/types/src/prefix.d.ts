@@ -12,13 +12,13 @@ export type PrefixRef< S extends string = string > = S & {
 
 export type PrefixId< R extends PrefixRef > = R[ typeof prefixBrand ][ 'id' ];
 
-export type PrefixDef< R extends PrefixRef = PrefixRef > = Readonly< {
+export type PrefixDef< R extends PrefixRef = PrefixRef > = {
   id: R;
   factor: number;
   aliases?: ReadonlyArray< string >;
   deprecated?: Deprecated< PrefixRef >;
   meta: Meta;
-} >;
+};
 
 export type DerivedPrefixDef< R extends PrefixRef > = PrefixDef< R >;
 

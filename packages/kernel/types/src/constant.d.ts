@@ -25,7 +25,7 @@ export type ConstantId< R extends ContantRef > = R[ typeof constantBrand ][ 'id'
 export type ConstantDef<
   D extends Dimension = Dimension,
   R extends ConstantRef = ConstantRef
-> = Readonly< {
+> = {
   id: R;
   dim: D;
   value: number;
@@ -34,7 +34,7 @@ export type ConstantDef<
   aliases?: ReadonlyArray< string >;
   deprecated?: Deprecated< ConstantRef >;
   meta: Meta;
-} >;
+};
 
 export type DerivedConstantDef< R extends ConstantRef > = ConstantDef< ConstantDim< R >, R >;
 

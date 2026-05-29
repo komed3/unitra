@@ -3,20 +3,20 @@ import type { PrefixRef } from './prefix';
 import type { UnitRef } from './unit';
 
 export type UnitNode = {
-  type: 'unit';
+  readonly type: 'unit';
   unit: UnitRef;
   exp: number;
   prefix?: PrefixRef;
 };
 
 export type ConstantNode = {
-  type: 'constant';
+  readonly type: 'constant';
   constant: ConstantRef;
   exp: number;
 };
 
 export type FactorNode = {
-  type: 'factor';
+  readonly type: 'factor';
   value: number;
 };
 

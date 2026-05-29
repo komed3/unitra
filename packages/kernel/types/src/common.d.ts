@@ -1,14 +1,13 @@
 import type { Format, Lang, System } from '@unitra/dict/common';
 
-export type LangGroup< T = unknown > =
-  { [ L in Lang ]?: T };
+export type LangGroup< T = unknown > = { [ L in Lang ]?: T };
 
 export type FormatGroup< T = unknown > =
   { [ F in Format.PLAIN ]: T } &
   { [ F in Exclude< Format, Format.PLAIN > ]?: T };
 
 export type Symbol = {
-  readonly id: string;
+  id: string;
   canonical?: boolean;
   deprecated?: boolean;
   context?: {
@@ -28,7 +27,7 @@ export type Name = string | readonly [
 ];
 
 export type Meta = {
-  symbol: Symbol[];
+  symbol: ReadonlyArray< Symbol >;
   formula?: Formula;
   name?: LangGroup< Name >;
   description?: LangGroup< string >;
