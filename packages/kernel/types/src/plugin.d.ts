@@ -4,8 +4,15 @@ export type SemverRange = `${ SemverOperator }${ SemverVersion }` | `${ SemverVe
 
 export type DependencyMap = Readonly< Record< string, SemverRange > >;
 
+export type PluginMeta = {
+  name: string;
+  description?: string;
+  tags?: ReadonlyArray< string >;
+};
+
 export type PluginDefinition = {
   readonly id: string;
   readonly version: string;
+  meta: PluginMeta;
   dependencies?: DependencyMap;
 };
