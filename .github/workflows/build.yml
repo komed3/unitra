@@ -7,3 +7,27 @@ on:
   pull_request:
     branches:
       - master
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+        with:
+          version: 10
+          cache: true
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Type Check
+        run: pnpm lint
+
+      - name: Build
+        run: pnpm build
