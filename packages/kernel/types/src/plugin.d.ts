@@ -9,7 +9,7 @@ type PluginBrand<
   V extends SemverRange
 > = {
   readonly id: S;
-  readonly vers: V;
+  readonly version: V;
 };
 
 export type PluginRef<
@@ -20,4 +20,12 @@ export type PluginRef<
 };
 
 export type PluginId< R extends PluginRef > = R[ typeof pluginBrand ][ 'id' ];
-export type PluginVers< R extends PluginRef > = R[ typeof pluginBrand ][ 'vers' ];
+export type PluginVersion< R extends PluginRef > = R[ typeof pluginBrand ][ 'version' ];
+
+export type PluginDef<
+  S extends string = string,
+  V extends SemverRange = SemverRange
+> = {
+  readonly id: S;
+  readonly version: V;
+};
