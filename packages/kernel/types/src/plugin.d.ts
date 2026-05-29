@@ -1,13 +1,23 @@
-import type { DependencyMap, SemverRange } from './manifest';
+export type SemverVersion = `${ number }.${ number }.${ number }${ string }`;
+export type SemverOperator = '^' | '~' | '>' | '>=' | '<' | '<=' | '=';
+export type SemverRange = `${ SemverOperator }${ SemverVersion }` | `${ SemverVersion }`;
 
-export type PluginId<
+declare const pluginBrand: unique symbol;
+
+type PluginBrand<
+  S extends string,
+  V extends SemverRange
+> = {
+  readonly id: S;
+  readonly vers: V;
+};
+
+export type PluginRef<
   S extends string = string,
   V extends SemverRange = SemverRange
 > = S & {
-  //
+  readonly [ pluginBrand ]: PluginBrand< S, V >;
 };
 
-export type PluginDefinition< ID extends PluginId = PluginId > = {
-  readonly id: ID;
-  dependencies?: DependencyMap;
-};
+export type PluginId< R extends PluginRef > = R[ typeof pluginBrand ][ 'id' ];
+export type PluginVers< R extends PluginRef > = R[ typeof pluginBrand ][ 'vers' ];
