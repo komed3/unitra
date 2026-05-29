@@ -1,3 +1,5 @@
+import { PrefixRegistry } from '@unitra/types/registry';
+
 import _deca, { deca } from './def/pos/deca';
 import _exa, { exa } from './def/pos/exa';
 import _giga, { giga } from './def/pos/giga';
@@ -33,4 +35,4 @@ export default ( {
   [ micro ]: _micro,    [ nano ]: _nano,    [ pico ]: _pico,
   [ femto ]: _femto,    [ atto ]: _atto,    [ zepto ]: _zepto,
   [ yocto ]: _yocto,    [ ronto ]: _ronto,  [ quecto ]: _quecto
-} ) as const;
+} ) as const satisfies PrefixRegistry;
