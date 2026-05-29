@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - master
+    paths:
+      - packages/**
+      - package.json
+      - pnpm-lock.yaml
+
   pull_request:
     branches:
       - master
@@ -22,8 +27,13 @@ jobs:
         with:
           cache: true
 
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
       - name: Install Dependencies
-        run: pnpm install
+        run: pnpm install --frozen-lockfile
 
       - name: Type Check
         run: pnpm lint
