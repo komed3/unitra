@@ -1,5 +1,3 @@
-export const unitraServices = {
-  loader: {
-    plugin: ( config: any ) => void config
-  }
+export const plugin = {
+  add: ( config: any ) => void config
 };

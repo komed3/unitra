@@ -12,6 +12,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
+  packages/core: {}
+
   packages/dict: {}
 
   packages/dim: {}
