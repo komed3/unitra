@@ -1,0 +1,23 @@
+{
+  "name": "@unitra/plugin-prefix-si",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./def/*": "./dist/def/*.js"
+  },
+  "scripts": {
+    "build": "tsc -b",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@unitra/dict": "workspace:*",
+    "@unitra/dim": "workspace:*",
+    "@unitra/types": "workspace:*"
+  }
+}
