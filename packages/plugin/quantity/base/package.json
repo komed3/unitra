@@ -9,6 +9,7 @@
   ],
   "exports": {
     ".": "./dist/index.js",
+    "./plugin": "./dist/plugin.js",
     "./def/*": "./dist/def/*.js"
   },
   "scripts": {
