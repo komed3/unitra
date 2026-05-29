@@ -24,5 +24,9 @@ export type PluginDefinition = {
   readonly version: SemverVersion;
   meta: PluginMeta;
   dependencies?: DependencyMap;
+  install?: ( ctx: any ) => void;
   contributions?: PluginContributions;
+  modules?: any;
+  hooks?: any;
+  overrides?: any;
 };
