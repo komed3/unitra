@@ -17,7 +17,6 @@
   },
   "dependencies": {
     "@unitra/dict": "workspace:*",
-    "@unitra/dim": "workspace:*",
     "@unitra/types": "workspace:*"
   }
 }

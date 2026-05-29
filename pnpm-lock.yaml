@@ -16,6 +16,15 @@ importers:
 
   packages/dim: {}
 
+  packages/plugin/prefix/si:
+    dependencies:
+      '@unitra/dict':
+        specifier: workspace:*
+        version: link:../../../dict
+      '@unitra/types':
+        specifier: workspace:*
+        version: link:../../../types
+
   packages/plugin/quantity/base:
     dependencies:
       '@unitra/dict':
