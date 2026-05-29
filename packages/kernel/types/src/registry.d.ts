@@ -6,4 +6,4 @@ import type { DerivedUnitDef, UnitRef } from './unit';
 export type PrefixRegistry = Readonly< { [ R in PrefixRef ]: DerivedPrefixDef< R > } >;
 export type QuantityRegistry = Readonly< { [ R in QuantityRef ]: DerivedQuantityDef< R > } >;
 export type UnitRegistry = Readonly< { [ R in UnitRef ]: DerivedUnitDef< R > } >;
-export type ConstRegistry = Readonly< { [ R in ConstantRef ]: DerivedConstantDef< R > } >;
+export type ConstantRegistry = Readonly< { [ R in ConstantRef ]: DerivedConstantDef< R > } >;
