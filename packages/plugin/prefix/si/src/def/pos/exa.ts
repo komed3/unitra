@@ -6,7 +6,9 @@ export const exa = 'E' as PrefixRef< 'E' >;
 export default ( {
   id: exa,
   factor: 1e18,
-  aliases: [ 'exa' ],
+  aliases: [
+    'exa'
+  ],
   meta: {
     symbol: [ {
       id: 'E',

@@ -6,7 +6,9 @@ export const peta = 'P' as PrefixRef< 'P' >;
 export default ( {
   id: peta,
   factor: 1e15,
-  aliases: [ 'peta' ],
+  aliases: [
+    'peta'
+  ],
   meta: {
     symbol: [ {
       id: 'P',

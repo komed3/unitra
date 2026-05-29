@@ -6,7 +6,9 @@ export const deca = 'da' as PrefixRef< 'da' >;
 export default ( {
   id: deca,
   factor: 10,
-  aliases: [ 'deca' ],
+  aliases: [
+    'deca'
+  ],
   meta: {
     symbol: [ {
       id: 'da',

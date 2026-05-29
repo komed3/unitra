@@ -6,7 +6,9 @@ export const hecto = 'h' as PrefixRef< 'h' >;
 export default ( {
   id: hecto,
   factor: 100,
-  aliases: [ 'hecto' ],
+  aliases: [
+    'hecto'
+  ],
   meta: {
     symbol: [ {
       id: 'h',

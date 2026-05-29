@@ -6,7 +6,9 @@ export const zetta = 'Z' as PrefixRef< 'Z' >;
 export default ( {
   id: zetta,
   factor: 1e21,
-  aliases: [ 'zetta' ],
+  aliases: [
+    'zetta'
+  ],
   meta: {
     symbol: [ {
       id: 'Z',

@@ -6,7 +6,9 @@ export const tera = 'T' as PrefixRef< 'T' >;
 export default ( {
   id: tera,
   factor: 1e12,
-  aliases: [ 'tera' ],
+  aliases: [
+    'tera'
+  ],
   meta: {
     symbol: [ {
       id: 'T',

@@ -6,7 +6,9 @@ export const quetta = 'Q' as PrefixRef< 'Q' >;
 export default ( {
   id: quetta,
   factor: 1e30,
-  aliases: [ 'quetta' ],
+  aliases: [
+    'quetta'
+  ],
   meta: {
     symbol: [ {
       id: 'Q',

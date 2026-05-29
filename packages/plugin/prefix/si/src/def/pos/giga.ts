@@ -6,7 +6,9 @@ export const giga = 'G' as PrefixRef< 'G' >;
 export default ( {
   id: giga,
   factor: 1e9,
-  aliases: [ 'giga' ],
+  aliases: [
+    'giga'
+  ],
   meta: {
     symbol: [ {
       id: 'G',

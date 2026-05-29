@@ -6,7 +6,9 @@ export const kilo = 'k' as PrefixRef< 'k' >;
 export default ( {
   id: kilo,
   factor: 1000,
-  aliases: [ 'kilo' ],
+  aliases: [
+    'kilo'
+  ],
   meta: {
     symbol: [ {
       id: 'k',

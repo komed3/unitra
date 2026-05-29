@@ -6,7 +6,9 @@ export const ronna = 'R' as PrefixRef< 'R' >;
 export default ( {
   id: ronna,
   factor: 1e27,
-  aliases: [ 'ronna' ],
+  aliases: [
+    'ronna'
+  ],
   meta: {
     symbol: [ {
       id: 'R',
