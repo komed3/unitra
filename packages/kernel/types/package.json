@@ -12,6 +12,7 @@
     "./constant": "./src/constant.d.ts",
     "./dim": "./src/dim.d.ts",
     "./node": "./src/node.d.ts",
+    "./plugin": "./src/plugin.d.ts",
     "./prefix": "./src/prefix.d.ts",
     "./quantity": "./src/quantity.d.ts",
     "./registry": "./src/registry.d.ts",
