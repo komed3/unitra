@@ -1,4 +1,5 @@
 import type { PluginDefinition } from '@unitra/types/plugin';
+import siPrefixRegistry from './';
 
 export default ( {
   id: '@unitra/plugin-prefix-si',
@@ -6,5 +7,10 @@ export default ( {
   meta: {
     name: 'SI Prefixes',
     tags: [ 'si', 'prefixes' ]
+  },
+  contributions: {
+    prefixes: [
+      siPrefixRegistry
+    ]
   }
 } ) as const satisfies PluginDefinition;
