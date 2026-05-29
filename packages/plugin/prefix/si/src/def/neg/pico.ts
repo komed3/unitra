@@ -6,7 +6,9 @@ export const pico = 'p' as PrefixRef< 'p' >;
 export default ( {
   id: pico,
   factor: 1e-12,
-  aliases: [ 'pico' ],
+  aliases: [
+    'pico'
+  ],
   meta: {
     symbol: [ {
       id: 'p',

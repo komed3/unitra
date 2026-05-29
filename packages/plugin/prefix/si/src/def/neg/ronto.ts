@@ -6,7 +6,9 @@ export const ronto = 'r' as PrefixRef< 'r' >;
 export default ( {
   id: ronto,
   factor: 1e-27,
-  aliases: [ 'ronto' ],
+  aliases: [
+    'ronto'
+  ],
   meta: {
     symbol: [ {
       id: 'r',

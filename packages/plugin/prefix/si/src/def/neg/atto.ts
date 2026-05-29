@@ -6,7 +6,9 @@ export const atto = 'a' as PrefixRef< 'a' >;
 export default ( {
   id: atto,
   factor: 1e-18,
-  aliases: [ 'atto' ],
+  aliases: [
+    'atto'
+  ],
   meta: {
     symbol: [ {
       id: 'a',

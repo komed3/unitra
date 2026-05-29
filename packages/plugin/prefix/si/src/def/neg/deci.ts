@@ -6,7 +6,9 @@ export const deci = 'd' as PrefixRef< 'd' >;
 export default ( {
   id: deci,
   factor: 0.1,
-  aliases: [ 'deci' ],
+  aliases: [
+    'deci'
+  ],
   meta: {
     symbol: [ {
       id: 'd',

@@ -6,7 +6,9 @@ export const milli = 'm' as PrefixRef< 'm' >;
 export default ( {
   id: milli,
   factor: 0.001,
-  aliases: [ 'milli' ],
+  aliases: [
+    'milli'
+  ],
   meta: {
     symbol: [ {
       id: 'm',

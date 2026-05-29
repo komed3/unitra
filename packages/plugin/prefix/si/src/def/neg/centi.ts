@@ -6,7 +6,9 @@ export const centi = 'c' as PrefixRef< 'c' >;
 export default ( {
   id: centi,
   factor: 0.01,
-  aliases: [ 'centi' ],
+  aliases: [
+    'centi'
+  ],
   meta: {
     symbol: [ {
       id: 'c',

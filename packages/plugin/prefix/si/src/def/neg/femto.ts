@@ -6,7 +6,9 @@ export const femto = 'f' as PrefixRef< 'f' >;
 export default ( {
   id: femto,
   factor: 1e-15,
-  aliases: [ 'femto' ],
+  aliases: [
+    'femto'
+  ],
   meta: {
     symbol: [ {
       id: 'f',

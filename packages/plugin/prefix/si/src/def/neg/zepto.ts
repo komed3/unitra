@@ -6,7 +6,9 @@ export const zepto = 'z' as PrefixRef< 'z' >;
 export default ( {
   id: zepto,
   factor: 1e-21,
-  aliases: [ 'zepto' ],
+  aliases: [
+    'zepto'
+  ],
   meta: {
     symbol: [ {
       id: 'z',

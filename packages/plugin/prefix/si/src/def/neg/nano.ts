@@ -6,7 +6,9 @@ export const nano = 'n' as PrefixRef< 'n' >;
 export default ( {
   id: nano,
   factor: 1e-9,
-  aliases: [ 'nano' ],
+  aliases: [
+    'nano'
+  ],
   meta: {
     symbol: [ {
       id: 'n',

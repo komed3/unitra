@@ -6,7 +6,9 @@ export const quecto = 'q' as PrefixRef< 'q' >;
 export default ( {
   id: quecto,
   factor: 1e-30,
-  aliases: [ 'quecto' ],
+  aliases: [
+    'quecto'
+  ],
   meta: {
     symbol: [ {
       id: 'q',
