@@ -11,12 +11,11 @@
     "skipLibCheck": true
   },
   "references": [
-    { "path": "./packages/core" },
     { "path": "./packages/dict" },
     { "path": "./packages/dim" },
-    { "path": "./packages/plugins/algebra" },
-    { "path": "./packages/plugins/unit-si" },
-    { "path": "./packages/types" },
-    { "path": "./packages/unitra" }
+    { "path": "./packages/plugin/prefix/si" },
+    { "path": "./packages/plugin/quantity/base" },
+    { "path": "./packages/plugin/unit/si-base" },
+    { "path": "./packages/types" }
   ]
 }
