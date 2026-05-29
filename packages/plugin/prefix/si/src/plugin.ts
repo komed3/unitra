@@ -1,11 +1,10 @@
-import { plugin } from '@unitra/core/service';
-import siPrefixRegistry from './';
+import type { PluginDefinition } from '@unitra/types/plugin';
 
-plugin.add( {
-  id: '@unitra-plugin-prefix-si',
-  type: 'prefix',
-  requires: [],
-  registries: {
-    prefix: [ siPrefixRegistry ]
+export default ( {
+  id: '@unitra/plugin-prefix-si',
+  version: '0.0.1',
+  meta: {
+    name: 'SI Prefixes',
+    tags: [ 'si', 'prefixes' ]
   }
-} );
+} ) as const satisfies PluginDefinition;
