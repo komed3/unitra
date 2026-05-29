@@ -1,7 +1,7 @@
 import { Format, Lang, SIType, System } from '@unitra/dict/common';
 import { UnitStatus, UnitType } from '@unitra/dict/unit';
 import { MassDim } from '@unitra/dim/base';
-import { mass } from '@unitra/quantity-base/def/mass';
+import { mass } from '@unitra/plugin-quantity-base/def/mass';
 import type { DerivedUnitDef, UnitRef } from '@unitra/types/unit';
 
 export const gram = 'g' as UnitRef< typeof MassDim, UnitType.NAMED, 'g' >;

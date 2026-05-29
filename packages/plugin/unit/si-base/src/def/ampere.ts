@@ -1,7 +1,7 @@
 import { Format, Lang, SIType, System } from '@unitra/dict/common';
 import { UnitStatus, UnitType } from '@unitra/dict/unit';
 import { ElectricCurrentDim } from '@unitra/dim/base';
-import { electricCurrent } from '@unitra/quantity-base/def/electricCurrent';
+import { electricCurrent } from '@unitra/plugin-quantity-base/def/electricCurrent';
 import type { DerivedUnitDef, UnitRef } from '@unitra/types/unit';
 
 export const ampere = 'A' as UnitRef< typeof ElectricCurrentDim, UnitType.NAMED, 'A' >;

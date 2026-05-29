@@ -1,5 +1,5 @@
 {
-  "name": "@unitra/unit-base",
+  "name": "@unitra/plugin-unit-si-base",
   "version": "0.0.1",
   "type": "module",
   "files": [
@@ -18,7 +18,7 @@
   "dependencies": {
     "@unitra/dict": "workspace:*",
     "@unitra/dim": "workspace:*",
-    "@unitra/quantity-base": "workspace:*",
+    "@unitra/plugin-quantity-base": "workspace:*",
     "@unitra/types": "workspace:*"
   }
 }

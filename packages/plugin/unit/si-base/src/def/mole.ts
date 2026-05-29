@@ -1,7 +1,7 @@
 import { Format, Lang, SIType, System } from '@unitra/dict/common';
 import { UnitStatus, UnitType } from '@unitra/dict/unit';
 import { AmountOfSubstanceDim } from '@unitra/dim/base';
-import { amountOfSubstance } from '@unitra/quantity-base/def/amountOfSubstance';
+import { amountOfSubstance } from '@unitra/plugin-quantity-base/def/amountOfSubstance';
 import type { DerivedUnitDef, UnitRef } from '@unitra/types/unit';
 
 export const mole = 'mol' as UnitRef< typeof AmountOfSubstanceDim, UnitType.NAMED, 'mol' >;

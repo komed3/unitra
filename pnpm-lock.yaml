@@ -28,7 +28,7 @@ importers:
         specifier: workspace:*
         version: link:../../../types
 
-  packages/plugin/unit/base:
+  packages/plugin/unit/si-base:
     dependencies:
       '@unitra/dict':
         specifier: workspace:*
@@ -36,7 +36,7 @@ importers:
       '@unitra/dim':
         specifier: workspace:*
         version: link:../../../dim
-      '@unitra/quantity-base':
+      '@unitra/plugin-quantity-base':
         specifier: workspace:*
         version: link:../../quantity/base
       '@unitra/types':

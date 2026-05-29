@@ -1,7 +1,7 @@
 import { Format, Lang, SIType, System } from '@unitra/dict/common';
 import { UnitStatus, UnitType } from '@unitra/dict/unit';
 import { TemperatureDim } from '@unitra/dim/base';
-import { temperature } from '@unitra/quantity-base/def/temperature';
+import { temperature } from '@unitra/plugin-quantity-base/def/temperature';
 import type { DerivedUnitDef, UnitRef } from '@unitra/types/unit';
 
 export const kelvin = 'K' as UnitRef< typeof TemperatureDim, UnitType.NAMED, 'K' >;
