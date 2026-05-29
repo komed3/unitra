@@ -8,8 +8,7 @@
     "LICENSE"
   ],
   "exports": {
-    ".": "./dist/index.js",
-    "./service": "./dist/service.js"
+    ".": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc -b",
