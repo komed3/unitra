@@ -9,6 +9,7 @@
   ],
   "exports": {
     ".": "./dist/index.js",
+    "./plugin": "./dist/plugin.js",
     "./def/*": "./dist/def/*.js"
   },
   "scripts": {
@@ -16,6 +17,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
+    "@unitra/core": "workspace:*",
     "@unitra/dict": "workspace:*",
     "@unitra/types": "workspace:*"
   }

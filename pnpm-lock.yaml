@@ -20,6 +20,9 @@ importers:
 
   packages/plugin/prefix/si:
     dependencies:
+      '@unitra/core':
+        specifier: workspace:*
+        version: link:../../../core
       '@unitra/dict':
         specifier: workspace:*
         version: link:../../../dict

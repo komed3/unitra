@@ -11,6 +11,7 @@
     "skipLibCheck": true
   },
   "references": [
+    { "path": "./packages/core" },
     { "path": "./packages/dict" },
     { "path": "./packages/dim" },
     { "path": "./packages/plugin/prefix/si" },
