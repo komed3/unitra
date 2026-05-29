@@ -1,3 +1,5 @@
+import type { ConstantRegistry, PrefixRegistry, QuantityRegistry, UnitRegistry } from './registry';
+
 export type SemverVersion = `${ number }.${ number }.${ number }${ string }`;
 export type SemverOperator = '^' | '~' | '>' | '>=' | '<' | '<=' | '=';
 export type SemverRange = `${ SemverOperator }${ SemverVersion }` | `${ SemverVersion }`;
@@ -10,9 +12,17 @@ export type PluginMeta = {
   tags?: ReadonlyArray< string >;
 };
 
+export type PluginContributions = {
+  prefixes?: ReadonlyArray< PrefixRegistry >;
+  quantities?: ReadonlyArray< QuantityRegistry >;
+  units?: ReadonlyArray< UnitRegistry >;
+  constants?: ReadonlyArray< ConstantRegistry >;
+};
+
 export type PluginDefinition = {
   readonly id: string;
-  readonly version: string;
+  readonly version: SemverVersion;
   meta: PluginMeta;
   dependencies?: DependencyMap;
+  contributions?: PluginContributions;
 };
