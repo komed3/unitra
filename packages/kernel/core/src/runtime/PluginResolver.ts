@@ -102,6 +102,21 @@ export class PluginResolver {
 
       visiting.add( id );
 
+      for ( const plugin of candidates ) {
+        if ( ! this.isCompatible( plugin, selection ) ) continue;
+
+        selection.set( id, plugin );
+
+        if ( resolveNode( idx + 1 ) ) {
+          visiting.delete( id );
+          visited.add( id );
+          return true;
+        }
+
+        selection.delete( id );
+      }
+
+      visiting.delete( id );
       return false;
     }
 
