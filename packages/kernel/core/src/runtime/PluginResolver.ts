@@ -114,11 +114,27 @@ export class PluginResolver {
     return graph;
   }
 
+  private static detectMissing ( catalog: PluginCatalog, reqs: Map< string, Requirement[] > ) : string[] {
+    const out: string[] = [];
+
+    for ( const [ id, list ] of reqs ) {
+      if ( ! catalog.has( id ) ) {
+        for ( const r of list ) {
+          out.push( `${ r.plugin.id } requires ${ id }@${ r.range } (not installed)` );
+        }
+      }
+    }
+
+    return out;
+  }
+
   public static resolve () : PluginResolveResult {
     const catalog = PluginRegistry.catalog;
 
     const requirements = this.collectRequirements( catalog );
     const graph = this.buildGraph( catalog );
+
+    const missing = this.detectMissing( catalog, requirements );
   }
 }
 
