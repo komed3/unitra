@@ -38,4 +38,16 @@ export type PluginDefinition = {
 };
 
 export type PluginList = Readonly< Record< string, ReadonlyArray< SemverVersion > > >;
-export type PluginCatalog = Map< string, PluginDefinition[] >;
+export type PluginCatalog = Map< string, ReadonlyArray< PluginDefinition > >;
+
+export type PluginResolveError = {
+  message: string;
+  missing: string[];
+  conflicts: string[];
+  cycles: string[];
+};
+
+export type PluginResolveResult = {
+  plugins: ReadonlyArray< PluginDefinition >;
+  error?: PluginResolveError;
+};
