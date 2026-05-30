@@ -208,6 +208,12 @@ export class PluginResolver {
         missing, conflicts, cycles
       }
     };
+
+    const sorted = this.topologicalSort(graph, catalog);
+
+    return {
+      plugins: sorted
+    };
   }
 }
 
