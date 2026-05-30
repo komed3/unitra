@@ -48,20 +48,20 @@ importers:
         specifier: workspace:*
         version: link:../../../kernel/types
 
-  packages/plugin/unit/si-base:
+  packages/plugin/unit/si/base:
     dependencies:
       '@unitra/dict':
         specifier: workspace:*
-        version: link:../../../kernel/dict
+        version: link:../../../../kernel/dict
       '@unitra/dim':
         specifier: workspace:*
-        version: link:../../../kernel/dim
+        version: link:../../../../kernel/dim
       '@unitra/plugin-quantity-base':
         specifier: workspace:*
-        version: link:../../quantity/base
+        version: link:../../../quantity/base
       '@unitra/types':
         specifier: workspace:*
-        version: link:../../../kernel/types
+        version: link:../../../../kernel/types
 
 packages:
 

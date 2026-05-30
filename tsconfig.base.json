@@ -17,6 +17,6 @@
     { "path": "./packages/kernel/types" },
     { "path": "./packages/plugin/prefix/si" },
     { "path": "./packages/plugin/quantity/base" },
-    { "path": "./packages/plugin/unit/si-base" }
+    { "path": "./packages/plugin/unit/si/base" }
   ]
 }
