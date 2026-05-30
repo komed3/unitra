@@ -1,4 +1,4 @@
-import type { DependencyMap, PluginDefinition, SemverRange } from '@unitra/types/plugin';
+import type { DependencyMap, PluginDefinition } from '@unitra/types/plugin';
 
 export class PluginLoader {
   private static readonly registry = new Map < string, PluginDefinition > ();
@@ -18,9 +18,8 @@ export class PluginLoader {
     for ( const id of ids ) this.registry.delete( id );
   }
 
-  public static has ( id: string, version?: SemverRange ) : boolean {
-    const existing = this.get( id );
-    return !!( existing && ( existing.version === ( version ?? existing.version ) ) );
+  public static has ( id: string ) : boolean {
+    return this.registry.has( id );
   }
 
   public static get ( id: string ) : PluginDefinition | undefined {
@@ -28,13 +27,13 @@ export class PluginLoader {
   }
 
   public static all () : ReadonlyArray< PluginDefinition > {
-    return Object.freeze( [ ...this.registry.values() ] );
+    return [ ...this.registry.values() ];
   }
 
   public static list () : DependencyMap {
-    return Object.freeze( Object.fromEntries( [ ...this.registry.entries() ].map(
+    return Object.fromEntries( [ ...this.registry.entries() ].map(
       ( [ id, plugin ] ) => [ id, plugin.version ]
-    ) ) );
+    ) );
   }
 
   public static size () : number {
@@ -48,5 +47,5 @@ export class PluginLoader {
 
 export const addPlugin = ( ...plugins: PluginDefinition[] ) => PluginLoader.add( ...plugins );
 export const removePlugin = ( ...ids: string[] ) => PluginLoader.remove( ...ids );
-export const hasPlugin = ( id: string, version?: SemverRange ) => PluginLoader.has( id, version );
+export const hasPlugin = ( id: string ) => PluginLoader.has( id );
 export const listPlugins = () => PluginLoader.list();
