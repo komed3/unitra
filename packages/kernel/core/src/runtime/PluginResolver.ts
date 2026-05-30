@@ -209,11 +209,7 @@ export class PluginResolver {
       }
     };
 
-    const sorted = this.topologicalSort(graph, catalog);
-
-    return {
-      plugins: sorted
-    };
+    return { plugins: this.topologicalSort( graph, catalog ) };
   }
 }
 
