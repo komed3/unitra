@@ -1,5 +1,5 @@
 import type { ParsedSemverVersion, PluginDefinition, SemverOperator } from '@unitra/types/plugin';
-import { PluginLoader } from './PluginLoader';
+import { PluginRegistry } from './PluginRegistry';
 
 type Selection = Map< string, PluginDefinition >;
 
@@ -74,9 +74,9 @@ export class PluginResolver {
   }
 
   public static resolve () : ReadonlyArray< PluginDefinition > {
-    if ( PluginLoader.size === 0 ) return [] as const;
+    if ( PluginRegistry.size === 0 ) return [] as const;
 
-    const catalog = PluginLoader.catalog;
+    const catalog = PluginRegistry.catalog;
     const ids = [ ...catalog.keys() ].sort( ( a, b ) =>
       ( catalog.get( a )?.length ?? 0 ) -
       ( catalog.get( b )?.length ?? 0 )

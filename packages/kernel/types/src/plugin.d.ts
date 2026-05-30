@@ -37,5 +37,5 @@ export type PluginDefinition = {
   overrides?: any;
 };
 
-export type PluginRegistry = Readonly< Record< string, ReadonlyArray< SemverVersion > > >;
+export type PluginList = Readonly< Record< string, ReadonlyArray< SemverVersion > > >;
 export type PluginCatalog = Map< string, PluginDefinition[] >;

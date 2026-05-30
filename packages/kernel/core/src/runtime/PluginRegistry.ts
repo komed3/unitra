@@ -1,6 +1,6 @@
-import type { PluginCatalog, PluginDefinition, PluginRegistry, SemverVersion } from '@unitra/types/plugin';
+import type { PluginCatalog, PluginDefinition, PluginList, SemverVersion } from '@unitra/types/plugin';
 
-export class PluginLoader {
+export class PluginRegistry {
   private static readonly registry = new Map< string, Map< SemverVersion, PluginDefinition > >();
 
   public static get size () : number {
@@ -12,7 +12,7 @@ export class PluginLoader {
   public static get catalog () : PluginCatalog {
     const catalog: PluginCatalog = new Map();
 
-    for ( const plugin of PluginLoader.all() ) {
+    for ( const plugin of PluginRegistry.all() ) {
       const list = catalog.get( plugin.id ) ?? [];
 
       list.push( plugin );
@@ -65,7 +65,7 @@ export class PluginLoader {
     return [ ...this.registry.values() ].flatMap( versions => [ ...versions.values() ] );
   }
 
-  public static list () : PluginRegistry {
+  public static list () : PluginList {
     return Object.fromEntries( [ ...this.registry.entries() ].map(
       ( [ id, versions ] ) => [ id, [ ...versions.keys() ] ] )
     );
@@ -76,8 +76,8 @@ export class PluginLoader {
   }
 }
 
-export const addPlugins = ( ...plugins: PluginDefinition[] ) => PluginLoader.add( ...plugins );
-export const addPlugin = ( plugin: PluginDefinition ) => PluginLoader.add( plugin );
-export const removePlugin = ( id: string, version?: SemverVersion ) => PluginLoader.remove( id, version );
-export const hasPlugin = ( id: string, version?: SemverVersion ) => PluginLoader.has( id, version );
-export const listPlugins = () => PluginLoader.list();
+export const addPlugins = ( ...plugins: PluginDefinition[] ) => PluginRegistry.add( ...plugins );
+export const addPlugin = ( plugin: PluginDefinition ) => PluginRegistry.add( plugin );
+export const removePlugin = ( id: string, version?: SemverVersion ) => PluginRegistry.remove( id, version );
+export const hasPlugin = ( id: string, version?: SemverVersion ) => PluginRegistry.has( id, version );
+export const listPlugins = () => PluginRegistry.list();
