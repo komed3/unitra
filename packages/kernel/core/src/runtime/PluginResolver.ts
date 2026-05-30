@@ -9,6 +9,9 @@ type Requirement = {
   range: SemverRange;
 };
 
+type Requirements = Map< string, Requirement[] >;
+type Graph = Map< string, Set< string > >;
+
 export class PluginResolver {
   private static buildErrorMessage ( missing: string[], conflicts: string[], cycles: string[] ) : string {
     const parts: string[] = [];
@@ -78,8 +81,8 @@ export class PluginResolver {
     }
   }
 
-  private static collectRequirements ( catalog: PluginCatalog ) : Map< string, Requirement[] > {
-    const map = new Map< string, Requirement[] >();
+  private static collectRequirements ( catalog: PluginCatalog ) : Requirements {
+    const map: Requirements = new Map();
 
     for ( const list of catalog.values() ) {
       for ( const plugin of list ) {
@@ -96,8 +99,8 @@ export class PluginResolver {
     return map;
   }
 
-  private static buildGraph ( catalog: PluginCatalog ) : Map< string, Set< string > > {
-    const graph = new Map< string, Set< string > >();
+  private static buildGraph ( catalog: PluginCatalog ) : Graph {
+    const graph: Graph = new Map();
 
     for ( const [ id, list ] of catalog ) {
       const edges = new Set< string >();
@@ -114,7 +117,7 @@ export class PluginResolver {
     return graph;
   }
 
-  private static detectMissing ( catalog: PluginCatalog, reqs: Map< string, Requirement[] > ) : string[] {
+  private static detectMissing ( catalog: PluginCatalog, reqs: Requirements ) : string[] {
     const out: string[] = [];
 
     for ( const [ id, list ] of reqs ) {
@@ -128,7 +131,7 @@ export class PluginResolver {
     return out;
   }
 
-  private static detectConflicts ( catalog: PluginCatalog, reqs: Map< string, Requirement[] > ) : string[] {
+  private static detectConflicts ( catalog: PluginCatalog, reqs: Requirements ) : string[] {
     const out: string[] = [];
 
     for ( const [ id, list ] of reqs ) {
@@ -147,7 +150,7 @@ export class PluginResolver {
     return out;
   }
 
-  private static detectCycles ( graph: Map< string, Set< string > > ) : string[] {
+  private static detectCycles ( graph: Graph ) : string[] {
     const visited = new Set< string >();
     const stack = new Set< string >();
     const path: string[] = [];
@@ -176,7 +179,7 @@ export class PluginResolver {
     return cycles;
   }
 
-  private static topologicalSort ( graph: Map< string, Set< string > >, catalog: PluginCatalog ) : PluginDefinition[] {
+  private static topologicalSort ( graph: Graph, catalog: PluginCatalog ) : PluginDefinition[] {
     const visited = new Set< string >();
     const result: PluginDefinition[] = [];
 
