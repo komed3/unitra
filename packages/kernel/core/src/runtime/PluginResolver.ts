@@ -1,5 +1,4 @@
 import type { ParsedSemverVersion, SemverOperator } from '@unitra/types/plugin';
-import { PluginLoader } from './PluginLoader';
 
 export class PluginResolver {
   private static parse ( version: string ) : ParsedSemverVersion {
