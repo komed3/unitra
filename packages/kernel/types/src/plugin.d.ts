@@ -38,8 +38,8 @@ export type PluginDefinition = {
   overrides?: any;
 };
 
-export type PluginList = Readonly< Record< string, ReadonlyArray< SemverVersion > > >;
-export type PluginCatalog = Map< string, ReadonlyArray< PluginDefinition > >;
+export type PluginList = Readonly< Record< string, SemverVersion[] > >;
+export type PluginCatalog = Readonly< Map< string, PluginDefinition[] > >;
 
 export type PluginResolveError = {
   message: string;
