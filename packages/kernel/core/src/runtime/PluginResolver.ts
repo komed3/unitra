@@ -1,4 +1,5 @@
-import type { ParsedSemverVersion, SemverOperator } from '@unitra/types/plugin';
+import type { ParsedSemverVersion, PluginDefinition, SemverOperator } from '@unitra/types/plugin';
+import { PluginLoader } from './PluginLoader';
 
 export class PluginResolver {
   private static parse ( version: string ) : ParsedSemverVersion {
@@ -32,8 +33,16 @@ export class PluginResolver {
     }
   }
 
-  public static resolve () {
-    //
+  public static resolve () : ReadonlyArray< PluginDefinition > {
+    if ( PluginLoader.size === 0 ) return [] as const;
+
+    const catalog = PluginLoader.catalog;
+    const ids = [ ...catalog.keys() ].sort( ( a, b ) =>
+      ( catalog.get( a )?.length ?? 0 ) -
+      ( catalog.get( b )?.length ?? 0 )
+    );
+
+    return [] as const;
   }
 }
 
