@@ -9,19 +9,6 @@ export class PluginRegistry {
     );
   }
 
-  public static get catalog () : PluginCatalog {
-    const catalog: PluginCatalog = new Map();
-
-    for ( const plugin of PluginRegistry.all() ) {
-      const list = catalog.get( plugin.id ) ?? [];
-
-      list.push( plugin );
-      catalog.set( plugin.id, list );
-    }
-
-    return catalog;
-  }
-
   public static add ( ...plugins: PluginDefinition[] ) : void {
     for ( const plugin of plugins ) this.registry.set( plugin.id, (
       this.registry.get( plugin.id ) ||
@@ -69,6 +56,19 @@ export class PluginRegistry {
     return Object.fromEntries( [ ...this.registry.entries() ].map(
       ( [ id, versions ] ) => [ id, [ ...versions.keys() ] ] )
     );
+  }
+
+  public static catalog () : PluginCatalog {
+    const catalog: PluginCatalog = new Map();
+
+    for ( const plugin of PluginRegistry.all() ) {
+      const list = catalog.get( plugin.id ) ?? [];
+
+      list.push( plugin );
+      catalog.set( plugin.id, list );
+    }
+
+    return catalog;
   }
 
   public static clear () : void {
