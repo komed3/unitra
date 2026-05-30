@@ -1,15 +1,13 @@
 import type {
-  ParsedSemverVersion, PluginCatalog, PluginDefinition, PluginResolveGraph, PluginResolveResult,
-  SemverOperator, SemverRange, SemverVersion
+  PluginResolveGraph as Graph, ParsedSemverVersion, PluginCatalog, PluginDefinition,
+  PluginResolveResult, SemverOperator, SemverRange, SemverVersion
 } from '@unitra/types/plugin';
 import { PluginRegistry } from './PluginRegistry';
 
-type Requirement = {
+type Requirements = Map< string, Array< {
   plugin: PluginDefinition;
   range: SemverRange;
-};
-
-type Requirements = Map< string, Requirement[] >;
+} > >;
 
 export class PluginResolver {
   private static buildErrorMessage ( missing: string[], conflicts: string[], cycles: string[] ) : string {
@@ -98,8 +96,8 @@ export class PluginResolver {
     return map;
   }
 
-  private static buildGraph ( catalog: PluginCatalog ) : PluginResolveGraph {
-    const graph: PluginResolveGraph = new Map();
+  private static buildGraph ( catalog: PluginCatalog ) : Graph {
+    const graph: Graph = new Map();
 
     for ( const [ id, list ] of catalog ) {
       const edges = new Set< string >();
@@ -149,7 +147,7 @@ export class PluginResolver {
     return out;
   }
 
-  private static detectCycles ( graph: PluginResolveGraph ) : string[] {
+  private static detectCycles ( graph: Graph ) : string[] {
     const visited = new Set< string >();
     const stack = new Set< string >();
     const path: string[] = [];
@@ -178,7 +176,7 @@ export class PluginResolver {
     return cycles;
   }
 
-  private static topologicalSort ( graph: PluginResolveGraph, catalog: PluginCatalog ) : PluginDefinition[] {
+  private static topologicalSort ( graph: Graph, catalog: PluginCatalog ) : ReadonlyArray< PluginDefinition > {
     const visited = new Set< string >();
     const result: PluginDefinition[] = [];
 
