@@ -96,11 +96,17 @@ export class PluginResolver {
       const id = ids[ idx ];
       const candidates = catalog.get( id )!;
 
-      return true;
+      if ( visiting.has( id ) ) throw new Error(
+        `Cycle detected involving plugin "${ id }"`
+      );
+
+      visiting.add( id );
+
+      return false;
     }
 
     if ( ! resolveNode( 0 ) ) throw new Error(
-      'No consistent plugin configuration found'
+      `No consistent plugin configuration found`
     );
 
     return [ ...selection.values() ] as const;
