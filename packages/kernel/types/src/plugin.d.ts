@@ -8,6 +8,7 @@ export type ParsedSemverVersion = {
   major: number;
   minor: number;
   patch: number;
+  tag?: string;
 };
 
 export type DependencyMap = Readonly< Record< string, SemverRange > >;
