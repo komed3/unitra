@@ -18,13 +18,18 @@ export class PluginLoader {
     for ( const id of ids ) this.registry.delete( id );
   }
 
-  public static has ( id: string, version?: SemverRange ) : boolean {}
+  public static has ( id: string, version?: SemverRange ) : boolean {
+    const existing = this.get( id );
+    return !!( existing && ( existing.version === ( version ?? existing.version ) ) );
+  }
 
   public static get ( id: string ) : PluginDefinition | undefined {
     return this.registry.get( id );
   }
 
-  public static all () : ReadonlyArray< PluginDefinition > {}
+  public static all () : ReadonlyArray< PluginDefinition > {
+    return Object.freeze( Array.from( this.registry.values() ) );
+  }
 
   public static list () : ReadonlyArray< DependencyMap > {}
 
