@@ -62,19 +62,7 @@ export class PluginLoader {
   }
 }
 
-export const addPlugin = (
-  ...plugins: PluginDefinition[]
-) => PluginLoader.add( ...plugins );
-
-export const removePlugin = (
-  id: string,
-  version?: SemverVersion
-) => PluginLoader.remove( id, version );
-
-export const hasPlugin = (
-  id: string,
-  version?: SemverVersion
-) => PluginLoader.has( id, version );
-
-export const listPlugins = () =>
-  PluginLoader.list();
+export const addPlugin = ( ...plugins: PluginDefinition[] ) => PluginLoader.add( ...plugins );
+export const removePlugin = ( id: string, version?: SemverVersion ) => PluginLoader.remove( id, version );
+export const hasPlugin = ( id: string, version?: SemverVersion ) => PluginLoader.has( id, version );
+export const listPlugins = () => PluginLoader.list();
