@@ -1,7 +1,5 @@
-import type {
-  PluginResolveGraph as Graph, ParsedSemverVersion, PluginCatalog, PluginDefinition,
-  PluginResolveResult, SemverOperator, SemverRange, SemverVersion
-} from '@unitra/types/plugin';
+import type { PluginResolveGraph, PluginCatalog, PluginDefinition, PluginResolveResult, SemverRange } from '@unitra/types/plugin';
+import { Semver } from '../utils';
 import { PluginRegistry } from './PluginRegistry';
 
 type Requirements = Map< string, Array< {
@@ -18,64 +16,6 @@ export class PluginResolver {
     if ( cycles.length ) parts.push( `Dependency cycles:\n- ${ cycles.join( '\n- ' ) }` );
 
     return parts.join( '\n\n' );
-  }
-
-  private static parse ( version: SemverVersion ) : ParsedSemverVersion {
-    const [ semver, tag ] = version.split( '-' );
-    const [ major, minor, patch ] = semver.split( '.' ).map( Number );
-
-    return { major, minor, patch, tag };
-  }
-
-  private static compare ( a: ParsedSemverVersion, b: ParsedSemverVersion ) : number {
-    if ( a.major !== b.major ) return a.major - b.major;
-    if ( a.minor !== b.minor ) return a.minor - b.minor;
-    return a.patch - b.patch;
-  }
-
-  private static satisfies ( version: SemverVersion, range: SemverRange ) : boolean {
-    const match = range.match( /^(^|~|>=|<=|>|<|=)/ );
-    const op = ( match?.[ 1 ] ?? '=' ) as SemverOperator;
-    const raw = ( op === '=' ? range : range.slice( op.length ) ) as SemverVersion;
-
-    const v = this.parse( version );
-    const r = this.parse( raw );
-    const cmp = this.compare( v, r );
-
-    switch ( op ) {
-      case '=':
-        return cmp === 0;
-      case '>':
-        return cmp > 0;
-      case '>=':
-        return cmp >= 0;
-      case '<':
-        return cmp < 0;
-      case '<=':
-        return cmp <= 0;
-      case '~':
-        return (
-          v.major === r.major &&
-          v.minor === r.minor &&
-          cmp >= 0
-        );
-      case '^':
-        return (
-          r.major > 0 &&
-          v.major === r.major &&
-          cmp >= 0
-        ) || (
-          r.major === 0 &&
-          r.minor > 0 &&
-          v.major === 0 &&
-          v.minor === r.minor &&
-          cmp >= 0
-        ) || (
-          v.major === 0 &&
-          v.minor === 0 &&
-          v.patch === r.patch
-        );
-    }
   }
 
   private static collectRequirements ( catalog: PluginCatalog ) : Requirements {
@@ -96,8 +36,8 @@ export class PluginResolver {
     return map;
   }
 
-  private static buildGraph ( catalog: PluginCatalog ) : Graph {
-    const graph: Graph = new Map();
+  private static buildGraph ( catalog: PluginCatalog ) : PluginResolveGraph {
+    const graph: PluginResolveGraph = new Map();
 
     for ( const [ id, list ] of catalog ) {
       const edges = new Set< string >();
@@ -138,7 +78,7 @@ export class PluginResolver {
       const available = versions.map( v => v.version );
 
       for ( const req of list ) {
-        if ( ! available.some( v => this.satisfies( v, req.range ) ) ) out.push(
+        if ( ! available.some( v => Semver.satisfies( v, req.range ) ) ) out.push(
           `${ req.plugin.id } requires ${ id }@${ req.range } but none of [${ available.join( ', ' ) }] satisfy it`
         );
       }
@@ -147,7 +87,7 @@ export class PluginResolver {
     return out;
   }
 
-  private static detectCycles ( graph: Graph ) : string[] {
+  private static detectCycles ( graph: PluginResolveGraph ) : string[] {
     const visited = new Set< string >();
     const stack = new Set< string >();
     const path: string[] = [];
@@ -176,7 +116,7 @@ export class PluginResolver {
     return cycles;
   }
 
-  private static topologicalSort ( graph: Graph, catalog: PluginCatalog ) : ReadonlyArray< PluginDefinition > {
+  private static topologicalSort ( graph: PluginResolveGraph, catalog: PluginCatalog ) : ReadonlyArray< PluginDefinition > {
     const visited = new Set< string >();
     const result: PluginDefinition[] = [];
 
