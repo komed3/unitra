@@ -44,7 +44,20 @@ export class PluginResolver {
       ( catalog.get( b )?.length ?? 0 )
     );
 
-    return [] as const;
+    const selection: Selection = new Map();
+
+    const visiting = new Set< string >();
+    const visited = new Set< string >();
+
+    const resolveNode = ( idx: number ) : boolean => {
+      return true;
+    }
+
+    if ( ! resolveNode( 0 ) ) throw new Error(
+      'No consistent plugin configuration found'
+    );
+
+    return [ ...selection.values() ] as const;
   }
 }
 
