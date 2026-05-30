@@ -55,6 +55,24 @@ export class PluginResolver {
     return true;
   }
 
+  private static validateFinal ( selection: Selection ) : void {
+    for ( const plugin of selection.values() ) {
+      const deps = plugin.dependencies ?? {};
+
+      for ( const [ depId, range ] of Object.entries( deps ) ) {
+        const dep = selection.get( depId );
+
+        if ( ! dep ) throw new Error(
+          `Missing dependency "${ depId }" required by "${ plugin.id }"`
+        );
+
+        if ( ! this.satisfies( dep.version, range ) ) throw new Error(
+          `Version mismatch: "${ plugin.id }" requires ${ depId }@${ range }, but found ${ dep.version }`
+        );
+      }
+    }
+  }
+
   public static resolve () : ReadonlyArray< PluginDefinition > {
     if ( PluginLoader.size === 0 ) return [] as const;
 
@@ -70,6 +88,14 @@ export class PluginResolver {
     const visited = new Set< string >();
 
     const resolveNode = ( idx: number ) : boolean => {
+      if ( idx === ids.length ) {
+        this.validateFinal( selection );
+        return true;
+      }
+
+      const id = ids[ idx ];
+      const candidates = catalog.get( id )!;
+
       return true;
     }
 
