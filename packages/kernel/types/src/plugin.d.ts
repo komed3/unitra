@@ -6,6 +6,8 @@ export type SemverRange = `${ SemverOperator }${ SemverVersion }` | `${ SemverVe
 
 export type DependencyMap = Readonly< Record< string, SemverRange > >;
 
+export type PluginCatalog = Readonly< Record< string, ReadonlyArray< SemverVersion > > >;
+
 export type PluginMeta = {
   name: string;
   description?: string;
