@@ -96,10 +96,29 @@ export class PluginResolver {
     return map;
   }
 
+  private static buildGraph ( catalog: PluginCatalog ) : Map< string, Set< string > > {
+    const graph = new Map< string, Set< string > >();
+
+    for ( const [ id, list ] of catalog ) {
+      const edges = new Set< string >();
+
+      for ( const plugin of list ) {
+        for ( const dep of Object.keys( plugin.dependencies ?? {} ) ) {
+          edges.add( dep );
+        }
+      }
+
+      graph.set( id, edges );
+    }
+
+    return graph;
+  }
+
   public static resolve () : PluginResolveResult {
     const catalog = PluginRegistry.catalog;
 
     const requirements = this.collectRequirements( catalog );
+    const graph = this.buildGraph( catalog );
   }
 }
 
