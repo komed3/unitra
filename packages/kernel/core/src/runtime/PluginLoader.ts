@@ -28,10 +28,14 @@ export class PluginLoader {
   }
 
   public static all () : ReadonlyArray< PluginDefinition > {
-    return Object.freeze( Array.from( this.registry.values() ) );
+    return Object.freeze( [ ...this.registry.values() ] );
   }
 
-  public static list () : ReadonlyArray< DependencyMap > {}
+  public static list () : DependencyMap {
+    return Object.freeze( Object.fromEntries( [ ...this.registry.entries() ].map(
+      ( [ id, plugin ] ) => [ id, plugin.version ]
+    ) ) );
+  }
 
   public static size () : number {
     return this.registry.size;
