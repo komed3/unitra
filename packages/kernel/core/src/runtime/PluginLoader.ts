@@ -64,6 +64,7 @@ export class PluginLoader {
 }
 
 export const addPlugins = ( ...plugins: PluginDefinition[] ) => PluginLoader.add( ...plugins );
+export const addPlugin = ( plugin: PluginDefinition ) => PluginLoader.add( plugin );
 export const removePlugin = ( id: string, version?: SemverVersion ) => PluginLoader.remove( id, version );
 export const hasPlugin = ( id: string, version?: SemverVersion ) => PluginLoader.has( id, version );
 export const listPlugins = () => PluginLoader.list();
