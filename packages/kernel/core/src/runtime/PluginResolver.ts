@@ -7,6 +7,12 @@ export class PluginResolver {
     return { major, minor, patch };
   }
 
+  private static compare ( a: ParsedSemverVersion, b: ParsedSemverVersion ) : number {
+    if ( a.major !== b.major ) return a.major - b.major;
+    if ( a.minor !== b.minor ) return a.minor - b.minor;
+    return a.patch - b.patch;
+  }
+
   public static resolve () {
     //
   }
