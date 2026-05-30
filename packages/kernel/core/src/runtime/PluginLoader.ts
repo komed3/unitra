@@ -1,7 +1,13 @@
-import type { PluginRegistry, PluginDefinition, SemverVersion, PluginCatalog } from '@unitra/types/plugin';
+import type { PluginCatalog, PluginDefinition, PluginRegistry, SemverVersion } from '@unitra/types/plugin';
 
 export class PluginLoader {
   private static readonly registry = new Map< string, Map< SemverVersion, PluginDefinition > >();
+
+  public static get size () : number {
+    return Array.from( this.registry.values() ).reduce(
+      ( size, versions ) => size + versions.size, 0
+    );
+  }
 
   public static get catalog () : PluginCatalog {
     const catalog: PluginCatalog = new Map();
@@ -62,12 +68,6 @@ export class PluginLoader {
   public static list () : PluginRegistry {
     return Object.fromEntries( [ ...this.registry.entries() ].map(
       ( [ id, versions ] ) => [ id, [ ...versions.keys() ] ] )
-    );
-  }
-
-  public static size () : number {
-    return Array.from( this.registry.values() ).reduce(
-      ( size, versions ) => size + versions.size, 0
     );
   }
 
