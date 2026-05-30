@@ -4,6 +4,12 @@ export type SemverVersion = `${ number }.${ number }.${ number }${ string }`;
 export type SemverOperator = '^' | '~' | '>' | '>=' | '<' | '<=' | '=';
 export type SemverRange = `${ SemverOperator }${ SemverVersion }` | `${ SemverVersion }`;
 
+export type ParsedSemverVersion = {
+  major: number;
+  minor: number;
+  patch: number;
+};
+
 export type DependencyMap = Readonly< Record< string, SemverRange > >;
 
 export type PluginCatalog = Readonly< Record< string, ReadonlyArray< SemverVersion > > >;
