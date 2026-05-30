@@ -1,7 +1,20 @@
-import type { PluginCatalog, PluginDefinition, SemverVersion } from '@unitra/types/plugin';
+import type { PluginRegistry, PluginDefinition, SemverVersion, PluginCatalog } from '@unitra/types/plugin';
 
 export class PluginLoader {
   private static readonly registry = new Map< string, Map< SemverVersion, PluginDefinition > >();
+
+  public static get catalog () : PluginCatalog {
+    const catalog: PluginCatalog = new Map();
+
+    for ( const plugin of PluginLoader.all() ) {
+      const list = catalog.get( plugin.id ) ?? [];
+
+      list.push( plugin );
+      catalog.set( plugin.id, list );
+    }
+
+    return catalog;
+  }
 
   public static add ( ...plugins: PluginDefinition[] ) : void {
     for ( const plugin of plugins ) this.registry.set( plugin.id, (
@@ -46,7 +59,7 @@ export class PluginLoader {
     return [ ...this.registry.values() ].flatMap( versions => [ ...versions.values() ] );
   }
 
-  public static list () : PluginCatalog {
+  public static list () : PluginRegistry {
     return Object.fromEntries( [ ...this.registry.entries() ].map(
       ( [ id, versions ] ) => [ id, [ ...versions.keys() ] ] )
     );
