@@ -35,6 +35,26 @@ export class PluginResolver {
     }
   }
 
+  private static isCompatible ( plugin: PluginDefinition, selection: Selection ) : boolean {
+    const deps = plugin.dependencies ?? {};
+
+    for ( const [ depId, range ] of Object.entries( deps ) ) {
+      const dep = selection.get( depId );
+
+      if ( ! dep ) continue;
+      if ( ! this.satisfies( dep.version, range ) ) return false;
+    }
+
+    for ( const [ , selected ] of selection ) {
+      const selDeps = selected.dependencies ?? {};
+      const range = selDeps[ plugin.id ];
+
+      if ( range && ! this.satisfies( plugin.version, range ) ) return false;
+    }
+
+    return true;
+  }
+
   public static resolve () : ReadonlyArray< PluginDefinition > {
     if ( PluginLoader.size === 0 ) return [] as const;
 
