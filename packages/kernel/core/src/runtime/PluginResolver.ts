@@ -147,6 +147,35 @@ export class PluginResolver {
     return out;
   }
 
+  private static detectCycles ( graph: Map< string, Set< string > > ) : string[] {
+    const visited = new Set< string >();
+    const stack = new Set< string >();
+    const path: string[] = [];
+    const cycles: string[] = [];
+
+    const dfs = ( node: string ) => {
+      if ( stack.has( node ) ) {
+        const start = path.indexOf( node );
+        cycles.push( path.slice( start ).concat( node ).join( ' -> ' ) );
+        return;
+      }
+
+      if ( visited.has( node ) ) return;
+
+      visited.add( node );
+      stack.add( node );
+      path.push( node );
+
+      for ( const n of graph.get( node ) ?? [] ) dfs( n );
+
+      stack.delete( node );
+      path.pop();
+    };
+
+    for ( const node of graph.keys() ) dfs( node );
+    return cycles;
+  }
+
   public static resolve () : PluginResolveResult {
     const catalog = PluginRegistry.catalog;
 
@@ -155,6 +184,7 @@ export class PluginResolver {
 
     const missing = this.detectMissing( catalog, requirements );
     const conflicts = this.detectConflicts( catalog, requirements );
+    const cycles = this.detectCycles( graph );
   }
 }
 
