@@ -10,23 +10,31 @@ export class PluginLoader {
         `Plugin with id "${ plugin.id }" already exists with version "${ existing.version }".`
       );
 
-      if ( ! existing ) this.registry.set( plugin.id, plugin );
+      this.registry.set( plugin.id, plugin );
     }
   }
 
-  public static remove ( ...ids: string[] ) : void {}
+  public static remove ( ...ids: string[] ) : void {
+    for ( const id of ids ) this.registry.delete( id );
+  }
 
   public static has ( id: string, version?: SemverRange ) : boolean {}
 
-  public static get ( id: string ) : PluginDefinition | undefined {}
+  public static get ( id: string ) : PluginDefinition | undefined {
+    return this.registry.get( id );
+  }
 
   public static all () : ReadonlyArray< PluginDefinition > {}
 
   public static list () : ReadonlyArray< DependencyMap > {}
 
-  public static size () : number {}
+  public static size () : number {
+    return this.registry.size;
+  }
 
-  public static clear () : void {}
+  public static clear () : void {
+    this.registry.clear();
+  }
 }
 
 export const addPlugin = ( ...plugins: PluginDefinition[] ) => PluginLoader.add( ...plugins );
