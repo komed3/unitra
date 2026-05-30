@@ -119,9 +119,28 @@ export class PluginResolver {
 
     for ( const [ id, list ] of reqs ) {
       if ( ! catalog.has( id ) ) {
-        for ( const r of list ) {
-          out.push( `${ r.plugin.id } requires ${ id }@${ r.range } (not installed)` );
-        }
+        for ( const r of list ) out.push(
+          `${ r.plugin.id } requires ${ id }@${ r.range } (not installed)`
+        );
+      }
+    }
+
+    return out;
+  }
+
+  private static detectConflicts ( catalog: PluginCatalog, reqs: Map< string, Requirement[] > ) : string[] {
+    const out: string[] = [];
+
+    for ( const [ id, list ] of reqs ) {
+      const versions = catalog.get( id );
+      if ( ! versions ) continue;
+
+      const available = versions.map( v => v.version );
+
+      for ( const req of list ) {
+        if ( ! available.some( v => this.satisfies( v, req.range ) ) ) out.push(
+          `${ req.plugin.id } requires ${ id }@${ req.range } but none of [${ available.join( ', ' ) }] satisfy it`
+        );
       }
     }
 
@@ -135,6 +154,7 @@ export class PluginResolver {
     const graph = this.buildGraph( catalog );
 
     const missing = this.detectMissing( catalog, requirements );
+    const conflicts = this.detectConflicts( catalog, requirements );
   }
 }
 
