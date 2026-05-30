@@ -9,7 +9,8 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./runtime": "./dist/runtime/index.js"
+    "./runtime": "./dist/runtime/index.js",
+    "./utils": "./dist/utils/index.js"
   },
   "scripts": {
     "build": "tsc -b && tsc-alias",
