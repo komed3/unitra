@@ -12,8 +12,6 @@ export type ParsedSemverVersion = {
 
 export type DependencyMap = Readonly< Record< string, SemverRange > >;
 
-export type PluginCatalog = Readonly< Record< string, ReadonlyArray< SemverVersion > > >;
-
 export type PluginMeta = {
   name: string;
   description?: string;
@@ -38,3 +36,6 @@ export type PluginDefinition = {
   hooks?: any;
   overrides?: any;
 };
+
+export type PluginRegistry = Readonly< Record< string, ReadonlyArray< SemverVersion > > >;
+export type PluginCatalog = Map< string, PluginDefinition[] >;
