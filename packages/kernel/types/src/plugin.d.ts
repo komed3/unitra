@@ -48,7 +48,10 @@ export type PluginResolveError = {
   cycles: string[];
 };
 
+export type PluginResolveGraph = Readonly< Map< string, Set< string > > >;
+
 export type PluginResolveResult = {
   plugins: ReadonlyArray< PluginDefinition >;
+  graph: PluginResolveGraph;
   error?: PluginResolveError;
 };

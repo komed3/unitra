@@ -1,5 +1,5 @@
 import type {
-  ParsedSemverVersion, PluginCatalog, PluginDefinition, PluginResolveResult,
+  ParsedSemverVersion, PluginCatalog, PluginDefinition, PluginResolveGraph, PluginResolveResult,
   SemverOperator, SemverRange, SemverVersion
 } from '@unitra/types/plugin';
 import { PluginRegistry } from './PluginRegistry';
@@ -10,7 +10,6 @@ type Requirement = {
 };
 
 type Requirements = Map< string, Requirement[] >;
-type Graph = Map< string, Set< string > >;
 
 export class PluginResolver {
   private static buildErrorMessage ( missing: string[], conflicts: string[], cycles: string[] ) : string {
@@ -99,8 +98,8 @@ export class PluginResolver {
     return map;
   }
 
-  private static buildGraph ( catalog: PluginCatalog ) : Graph {
-    const graph: Graph = new Map();
+  private static buildGraph ( catalog: PluginCatalog ) : PluginResolveGraph {
+    const graph: PluginResolveGraph = new Map();
 
     for ( const [ id, list ] of catalog ) {
       const edges = new Set< string >();
@@ -150,7 +149,7 @@ export class PluginResolver {
     return out;
   }
 
-  private static detectCycles ( graph: Graph ) : string[] {
+  private static detectCycles ( graph: PluginResolveGraph ) : string[] {
     const visited = new Set< string >();
     const stack = new Set< string >();
     const path: string[] = [];
@@ -179,7 +178,7 @@ export class PluginResolver {
     return cycles;
   }
 
-  private static topologicalSort ( graph: Graph, catalog: PluginCatalog ) : PluginDefinition[] {
+  private static topologicalSort ( graph: PluginResolveGraph, catalog: PluginCatalog ) : PluginDefinition[] {
     const visited = new Set< string >();
     const result: PluginDefinition[] = [];
 
@@ -196,8 +195,9 @@ export class PluginResolver {
   }
 
   public static resolve () : PluginResolveResult {
-    const catalog = PluginRegistry.catalog();
+    if ( PluginRegistry.size === 0 ) return { graph: new Map(), plugins: [] as const };
 
+    const catalog = PluginRegistry.catalog();
     const requirements = this.collectRequirements( catalog );
     const graph = this.buildGraph( catalog );
 
@@ -206,13 +206,13 @@ export class PluginResolver {
     const cycles = this.detectCycles( graph );
 
     if ( missing.length || conflicts.length || cycles.length ) return {
-      plugins: [], error: {
+      plugins: [], graph, error: {
         message: this.buildErrorMessage( missing, conflicts, cycles ),
         missing, conflicts, cycles
       }
     };
 
-    return { plugins: this.topologicalSort( graph, catalog ) };
+    return { graph, plugins: this.topologicalSort( graph, catalog ) };
   }
 }
 
