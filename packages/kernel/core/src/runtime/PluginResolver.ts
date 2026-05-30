@@ -185,6 +185,13 @@ export class PluginResolver {
     const missing = this.detectMissing( catalog, requirements );
     const conflicts = this.detectConflicts( catalog, requirements );
     const cycles = this.detectCycles( graph );
+
+    if ( missing.length || conflicts.length || cycles.length ) return {
+      plugins: [], error: {
+        message: this.buildErrorMessage( missing, conflicts, cycles ),
+        missing, conflicts, cycles
+      }
+    };
   }
 }
 
