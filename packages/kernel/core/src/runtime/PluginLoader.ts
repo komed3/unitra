@@ -33,14 +33,13 @@ export class PluginLoader {
     ) : false;
   }
 
-  public static get ( id: string, version?: SemverVersion ) : PluginDefinition | undefined {
+  public static get ( id: string, version?: SemverVersion ) : ReadonlyArray< PluginDefinition > {
     const plugin = this.registry.get( id );
+    if ( ! plugin ) return [];
 
-    return plugin ? (
-      version
-        ? plugin.get( version )
-        : plugin.values().next().value
-    ) : undefined;
+    return version
+      ? plugin.get( version ) ? [ plugin.get( version )! ] : []
+      : [ ...plugin.values() ];
   }
 
   public static all () : ReadonlyArray< PluginDefinition > {
@@ -54,7 +53,9 @@ export class PluginLoader {
   }
 
   public static size () : number {
-    return this.all().length;
+    return Array.from( this.registry.values() ).reduce(
+      ( size, versions ) => size + versions.size, 0
+    );
   }
 
   public static clear () : void {
