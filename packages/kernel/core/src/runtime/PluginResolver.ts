@@ -176,6 +176,22 @@ export class PluginResolver {
     return cycles;
   }
 
+  private static topologicalSort ( graph: Map< string, Set< string > >, catalog: PluginCatalog ) : PluginDefinition[] {
+    const visited = new Set< string >();
+    const result: PluginDefinition[] = [];
+
+    const visit = ( node: string ) => {
+      if ( visited.has( node ) ) return;
+      visited.add( node );
+
+      for ( const dep of graph.get( node ) ?? [] ) visit( dep );
+      for ( const p of catalog.get( node ) ?? [] ) result.push( p );
+    };
+
+    for ( const node of graph.keys() ) visit( node );
+    return result;
+  }
+
   public static resolve () : PluginResolveResult {
     const catalog = PluginRegistry.catalog;
 
