@@ -2,6 +2,16 @@ import type { ParsedSemverVersion, PluginResolveResult, SemverOperator, SemverRa
 import { PluginRegistry } from './PluginRegistry';
 
 export class PluginResolver {
+  private static buildErrorMessage ( missing: string[], conflicts: string[], cycles: string[] ) : string {
+    const parts: string[] = [];
+
+    if ( missing.length ) parts.push( `Missing dependencies:\n- ${ missing.join( '\n- ' ) }` );
+    if ( conflicts.length ) parts.push( `Version conflicts:\n- ${ conflicts.join( '\n- ' ) }` );
+    if ( cycles.length ) parts.push( `Dependency cycles:\n- ${ cycles.join( '\n- ' ) }` );
+
+    return parts.join( '\n\n' );
+  }
+
   private static parse ( version: SemverVersion ) : ParsedSemverVersion {
     const [ semver, tag ] = version.split( '-' );
     const [ major, minor, patch ] = semver.split( '.' ).map( Number );
