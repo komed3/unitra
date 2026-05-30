@@ -13,7 +13,7 @@
     "./scalar": "./dist/scalar.js"
   },
   "scripts": {
-    "build": "tsc -b",
+    "build": "tsc -b && tsc-alias",
     "lint": "tsc --noEmit"
   }
 }
