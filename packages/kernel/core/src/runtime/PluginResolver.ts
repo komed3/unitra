@@ -98,6 +98,8 @@ export class PluginResolver {
 
   public static resolve () : PluginResolveResult {
     const catalog = PluginRegistry.catalog;
+
+    const requirements = this.collectRequirements( catalog );
   }
 }
 
