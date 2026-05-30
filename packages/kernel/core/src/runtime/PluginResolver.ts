@@ -1,5 +1,13 @@
-import type { ParsedSemverVersion, PluginResolveResult, SemverOperator, SemverRange, SemverVersion } from '@unitra/types/plugin';
+import type {
+  ParsedSemverVersion, PluginCatalog, PluginDefinition, PluginResolveResult,
+  SemverOperator, SemverRange, SemverVersion
+} from '@unitra/types/plugin';
 import { PluginRegistry } from './PluginRegistry';
+
+type Requirement = {
+  plugin: PluginDefinition;
+  range: SemverRange;
+};
 
 export class PluginResolver {
   private static buildErrorMessage ( missing: string[], conflicts: string[], cycles: string[] ) : string {
@@ -68,6 +76,24 @@ export class PluginResolver {
           v.patch === r.patch
         );
     }
+  }
+
+  private static collectRequirements ( catalog: PluginCatalog ) : Map< string, Requirement[] > {
+    const map = new Map< string, Requirement[] >();
+
+    for ( const list of catalog.values() ) {
+      for ( const plugin of list ) {
+        const deps = plugin.dependencies ?? {};
+
+        for ( const [ id, range ] of Object.entries( deps ) ) {
+          const arr = map.get( id ) ?? [];
+          arr.push( { plugin, range } );
+          map.set( id, arr );
+        }
+      }
+    }
+
+    return map;
   }
 
   public static resolve () : PluginResolveResult {
