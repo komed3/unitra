@@ -5,7 +5,8 @@ export class PluginLoader {
 
   public static add ( ...plugins: PluginDefinition[] ) : void {
     for ( const plugin of plugins ) this.registry.set( plugin.id, (
-      this.registry.get( plugin.id ) || new Map< SemverVersion, PluginDefinition >()
+      this.registry.get( plugin.id ) ||
+      new Map< SemverVersion, PluginDefinition >()
     ).set( plugin.version, plugin ) );
   }
 
@@ -24,42 +25,33 @@ export class PluginLoader {
 
   public static has ( id: string, version?: SemverVersion ) : boolean {
     const versions = this.registry.get( id );
-    return versions ? ( version ? versions.has( version ) : true ) : false;
+
+    return versions ? (
+      version
+        ? versions.has( version )
+        : true
+    ) : false;
   }
 
-  public static get (
-    id: string,
-    version?: SemverVersion
-  ) : PluginDefinition | undefined {
-    const versions = this.registry.get( id );
+  public static get ( id: string, version?: SemverVersion ) : PluginDefinition | undefined {
+    const plugin = this.registry.get( id );
 
-    if ( !versions ) return;
-
-    if ( version ) {
-      return versions.get( version );
-    }
-
-    return versions.values().next().value;
+    return plugin ? (
+      version
+        ? plugin.get( version )
+        : plugin.values().next().value
+    ) : undefined;
   }
 
   public static all () : ReadonlyArray< PluginDefinition > {
-    return [
-      ...this.registry.values()
-    ].flatMap( versions => [
-      ...versions.values()
-    ] );
+    return [ ...this.registry.values() ].flatMap( versions => [ ...versions.values() ] );
   }
 
-  public static list() : PluginCatalog {
-  return Object.fromEntries(
-    [ ...this.registry.entries() ].map(
-      ( [ id, versions ] ) => [
-        id,
-        [ ...versions.keys() ]
-      ]
-    )
-  );
-}
+  public static list () : PluginCatalog {
+    return Object.fromEntries( [ ...this.registry.entries() ].map(
+      ( [ id, versions ] ) => [ id, [ ...versions.keys() ] ] )
+    );
+  }
 
   public static size () : number {
     return this.all().length;
