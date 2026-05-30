@@ -12,7 +12,17 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
 
-  packages/kernel/core: {}
+  packages/kernel/core:
+    dependencies:
+      '@unitra/dict':
+        specifier: workspace:*
+        version: link:../dict
+      '@unitra/dim':
+        specifier: workspace:*
+        version: link:../dim
+      '@unitra/types':
+        specifier: workspace:*
+        version: link:../types
 
   packages/kernel/dict: {}
 
