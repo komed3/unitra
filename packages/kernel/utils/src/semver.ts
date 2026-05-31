@@ -14,6 +14,14 @@ export class Semver {
     return cmp >= 0 && version[ 0 ] === range[ 0 ] && version[ 1 ] === range[ 1 ];
   }
 
+  private static satisfiesCaret ( version: ParsedSemverVersion, range: ParsedSemverVersion, cmp: number ) : boolean {
+    return cmp >= 0 && (
+      ( range[ 0 ] > 0 && version[ 0 ] === range[ 0 ] ) ||
+      ( range[ 1 ] > 0 && version[ 0 ] === 0 && version[ 1 ] === range[ 1 ] ) ||
+      ( version[ 0 ] === 0 && version[ 1 ] === 0 && version[ 2 ] === range[ 2 ] )
+    );
+  }
+
   public static parse ( version: SemverVersion ) : ParsedSemverVersion {
     const [ semver, tag ] = version.split( '-', 2 );
     const parts = semver.split( '.' );
