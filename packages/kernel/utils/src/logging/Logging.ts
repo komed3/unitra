@@ -9,7 +9,7 @@ export class Logging {
     if ( level < this._level ) return;
 
     const entry: LogEntry = { level, source, message, timestamp: Date.now(), data };
-    for ( const handler of this.handlers ) handler( entry );
+    for ( const handler of this.handlers ) handler.write( entry );
   }
 
   public static get level () : LogLevel {
