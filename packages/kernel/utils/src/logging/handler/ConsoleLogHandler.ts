@@ -1,8 +1,8 @@
-import type { ILogHandler, LogEntry } from '@unitra/types/logging';
-import { LogHandler } from './LogHandler';
 import { LogLevel } from '@unitra/dict/logging';
+import type { LogEntry } from '@unitra/types/logging';
+import { LogHandler } from './LogHandler';
 
-export class ConsoleLogHandler extends LogHandler implements ILogHandler {
+export class ConsoleLogHandler extends LogHandler {
   private static readonly METHODS = {
     [ LogLevel.DEBUG ]: console.debug.bind( console ),
     [ LogLevel.LOG ]: console.log.bind( console ),
