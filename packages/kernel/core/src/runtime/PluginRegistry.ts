@@ -1,4 +1,5 @@
-import type { PluginCatalog, PluginDefinition, PluginList, SemverVersion } from '@unitra/types/plugin';
+import type { PluginCatalog, PluginDefinition, PluginList } from '@unitra/types/plugin';
+import type { SemverVersion } from '@unitra/types/semver';
 
 export class PluginRegistry {
   private static readonly registry = new Map< string, Map< SemverVersion, PluginDefinition > >();
