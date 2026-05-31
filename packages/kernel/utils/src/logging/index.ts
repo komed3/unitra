@@ -7,6 +7,7 @@ export * from './handler/LogHandler';
 export * from './formatter/JsonLogFormatter';
 export * from './formatter/TextLogFormatter';
 
+export * from './handler/BufferedLogHandler';
 export * from './handler/ConsoleLogHandler';
 export * from './handler/FileLogHandler';
 export * from './handler/MemoryLogHandler';
