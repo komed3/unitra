@@ -19,6 +19,7 @@
     { "path": "./packages/kernel/dict" },
     { "path": "./packages/kernel/dim" },
     { "path": "./packages/kernel/types" },
+    { "path": "./packages/kernel/utils" },
     { "path": "./packages/plugin/prefix/si" },
     { "path": "./packages/plugin/quantity/base" },
     { "path": "./packages/plugin/unit/si/base" }
