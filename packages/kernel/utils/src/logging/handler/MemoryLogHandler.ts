@@ -1,11 +1,8 @@
-import type { LogEntry, LogHandler } from '@unitra/types/logging';
+import type { ILogHandler, LogEntry } from '@unitra/types/logging';
+import { LogHandler } from './LogHandler';
 
-export class MemoryLogHandler {
+export class MemoryLogHandler extends LogHandler implements ILogHandler {
   public readonly entries: LogEntry[] = [];
-
-  public readonly handler: LogHandler = entry => {
-    this.entries.push( entry );
-  };
 
   public get all () : LogEntry[] {
     return this.entries;
@@ -25,6 +22,10 @@ export class MemoryLogHandler {
 
   public get size () : number {
     return this.entries.length;
+  }
+
+  public write ( entry: LogEntry ) {
+    this.entries.push( entry );
   }
 
   public clear () : void {
