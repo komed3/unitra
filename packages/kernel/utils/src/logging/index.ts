@@ -1,15 +1,15 @@
 import { Logging } from './Logging';
 export default Logging;
 
-export { LogFormatter } from './formatter/LogFormatter';
-export { LogHandler } from './handler/LogHandler';
+export * from './formatter/LogFormatter';
+export * from './handler/LogHandler';
 
-export { JsonLogFormatter } from './formatter/JsonLogFormatter';
-export { TextLogFormatter } from './formatter/TextLogFormatter';
+export * from './formatter/JsonLogFormatter';
+export * from './formatter/TextLogFormatter';
 
-export { ConsoleLogHandler } from './handler/ConsoleLogHandler';
-export { FileLogHandler } from './handler/FileLogHandler';
-export { MemoryLogHandler } from './handler/MemoryLogHandler';
+export * from './handler/ConsoleLogHandler';
+export * from './handler/FileLogHandler';
+export * from './handler/MemoryLogHandler';
 
 export const debug = ( source: string, message: string, data?: unknown ) =>
   Logging.debug( source, message, data );

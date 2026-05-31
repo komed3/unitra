@@ -2,7 +2,12 @@ import { LogLevel } from '@unitra/dict/logging';
 import type { LogEntry } from '@unitra/types/logging';
 import { LogHandler } from './LogHandler';
 
-export class MemoryLogHandler extends LogHandler< { maxEntries?: number, minLevel?: LogLevel } > {
+export type MemoryLogHandlerConfig = {
+  maxEntries?: number;
+  minLevel?: LogLevel;
+};
+
+export class MemoryLogHandler extends LogHandler< MemoryLogHandlerConfig > {
   public readonly entries: LogEntry[] = [];
 
   public get all () : LogEntry[] {
