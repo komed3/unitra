@@ -8,6 +8,7 @@
     "lint": "pnpm -r lint"
   },
   "devDependencies": {
+    "@types/node": "^25.9.1",
     "tsc-alias": "^1.8.17",
     "typescript": "^6.0.3"
   }
