@@ -12,6 +12,10 @@ export interface ILogHandler {
   write: ( entry: LogEntry ) => void;
 }
 
+export interface ILogFormatter {
+  format: ( entry: LogEntry ) => string;
+}
+
 export interface ILogger {
   debug: ( message: string, data?: unknown ) => void;
   log: ( message: string, data?: unknown ) => void;
