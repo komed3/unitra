@@ -1,9 +1,14 @@
 import { LogLevel } from '@unitra/dict/logging';
 import type { ILogger, ILogHandler, LogEntry } from '@unitra/types/logging';
+import { ConsoleLogHandler } from './handler/ConsoleLogHandler';
 
 export class Logging {
   private static _level = LogLevel.WARN;
   private static handlers = new Set< ILogHandler >();
+
+  static {
+    this.addHandler( new ConsoleLogHandler() );
+  }
 
   private static write ( level: LogLevel, source: string, message: string, data?: unknown ) : void {
     if ( level < this._level ) return;
