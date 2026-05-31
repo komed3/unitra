@@ -8,10 +8,10 @@ export class ConsoleLogHandler extends LogHandler {
     [ LogLevel.LOG ]: console.log.bind( console ),
     [ LogLevel.WARN ]: console.warn.bind( console ),
     [ LogLevel.ERROR ]: console.error.bind( console ),
-    [ LogLevel.NONE ]: () => undefined
+    [ LogLevel.NONE ]: () => {}
   } as const;
 
   public override write ( entry: LogEntry ) : void {
-    ConsoleLogHandler.METHODS[ entry.level ]( this.formatter.format( entry ) );
+    ConsoleLogHandler.METHODS[ entry.level ]( this.formatter?.format( entry ) ?? entry.message );
   }
 }
