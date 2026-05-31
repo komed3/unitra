@@ -2,7 +2,9 @@ import type { ILogFormatter, LogEntry } from '@unitra/types/logging';
 import { LogFormatter } from './LogFormatter';
 
 export class JsonLogFormatter extends LogFormatter implements ILogFormatter {
-  private _pretty: boolean = false;
+  constructor ( private _pretty: boolean = false ) {
+    super();
+  }
 
   public get pretty () : boolean {
     return this._pretty;
