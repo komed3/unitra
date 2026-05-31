@@ -2,6 +2,7 @@
   "name": "unitra",
   "private": true,
   "packageManager": "pnpm@11.4.0",
+  "type": "module",
   "scripts": {
     "build": "pnpm -r build",
     "lint": "pnpm -r lint"
