@@ -7,7 +7,9 @@
     "README.md",
     "LICENSE"
   ],
-  "exports": {},
+  "exports": {
+    "./semver": "./dist/semver.js"
+  },
   "scripts": {
     "build": "tsc -b && tsc-alias",
     "lint": "tsc --noEmit"
