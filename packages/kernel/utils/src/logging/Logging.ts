@@ -1,9 +1,16 @@
 import { LogLevel } from '@unitra/dict/logging';
-import type { Logger, LogHandler } from '@unitra/types/logging';
+import type { LogEntry, Logger, LogHandler } from '@unitra/types/logging';
 
 export class Logging {
   private static _level = LogLevel.WARN;
   private static handlers = new Set< LogHandler >();
+
+  private static write ( level: LogLevel, source: string, message: string, data?: unknown ) : void {
+    if ( level < this.level ) return;
+
+    const entry: LogEntry = { level, source, message, timestamp: Date.now(), data };
+    for ( const handler of this.handlers ) handler( entry );
+  }
 
   public static get level () : LogLevel {
     return this._level;
