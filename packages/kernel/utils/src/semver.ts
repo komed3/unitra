@@ -1,6 +1,7 @@
-import { ParsedSemverVersion, SemverVersion } from '@unitra/types/semver';
+import { ParsedSemverRange, ParsedSemverVersion, SemverOperator, SemverRange, SemverVersion } from '@unitra/types/semver';
 
 export class Semver {
+  private static readonly OPMATCH = /^(\^|~|>=|<=|>|<|=)/;
   private static readonly OPERATORS = {
     '=': ( cmp: number ) => cmp === 0,
     '>': ( cmp: number ) => cmp > 0,
@@ -22,5 +23,13 @@ export class Semver {
       throw new Error( `Invalid semantic version "${ version }".` );
 
     return [ major, minor, patch, tag ];
+  }
+
+  public static parseRange ( range: SemverRange ) : ParsedSemverRange {
+    const match = range.match( this.OPMATCH );
+    const operator = ( match?.[ 1 ] ?? '=' ) as SemverOperator;
+    const version = ( operator === '=' ? range : range.slice( operator.length ) ) as SemverVersion;
+
+    return { operator, version: this.parse( version ) };
   }
 }
