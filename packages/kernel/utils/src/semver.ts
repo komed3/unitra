@@ -38,4 +38,8 @@ export class Semver {
     if ( a[ 1 ] !== b[ 1 ] ) return a[ 1 ] - b[ 1 ];
     return a[ 2 ] - b[ 2 ];
   }
+
+  public static compareVersions ( a: SemverVersion, b: SemverVersion ) : number {
+    return this.compare( this.parse( a ), this.parse( b ) );
+  }
 }
