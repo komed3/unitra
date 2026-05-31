@@ -1,0 +1,28 @@
+{
+  "name": "@unitra/types",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    "./common": "./src/common.d.ts",
+    "./constant": "./src/constant.d.ts",
+    "./dim": "./src/dim.d.ts",
+    "./manifest": "./src/manifest.d.ts",
+    "./node": "./src/node.d.ts",
+    "./plugin": "./src/plugin.d.ts",
+    "./prefix": "./src/prefix.d.ts",
+    "./quantity": "./src/quantity.d.ts",
+    "./registry": "./src/registry.d.ts",
+    "./unit": "./src/unit.d.ts"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@unitra/dict": "workspace:*"
+  }
+}
