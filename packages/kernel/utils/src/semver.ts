@@ -10,6 +10,10 @@ export class Semver {
     '<=': ( cmp: number ) => cmp <= 0
   } as const;
 
+  private static satisfiesTilde ( version: ParsedSemverVersion, range: ParsedSemverVersion, cmp: number ) : boolean {
+    return cmp >= 0 && version[ 0 ] === range[ 0 ] && version[ 1 ] === range[ 1 ];
+  }
+
   public static parse ( version: SemverVersion ) : ParsedSemverVersion {
     const [ semver, tag ] = version.split( '-', 2 );
     const parts = semver.split( '.' );
