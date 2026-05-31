@@ -6,7 +6,7 @@ export class Logging {
   private static handlers = new Set< LogHandler >();
 
   private static write ( level: LogLevel, source: string, message: string, data?: unknown ) : void {
-    if ( level < this.level ) return;
+    if ( level < this._level ) return;
 
     const entry: LogEntry = { level, source, message, timestamp: Date.now(), data };
     for ( const handler of this.handlers ) handler( entry );
