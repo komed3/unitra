@@ -9,8 +9,7 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./runtime": "./dist/runtime/index.js",
-    "./utils": "./dist/utils/index.js"
+    "./runtime": "./dist/runtime/index.js"
   },
   "scripts": {
     "build": "tsc -b && tsc-alias",
@@ -19,6 +18,7 @@
   "dependencies": {
     "@unitra/dict": "workspace:*",
     "@unitra/dim": "workspace:*",
-    "@unitra/types": "workspace:*"
+    "@unitra/types": "workspace:*",
+    "@unitra/utils": "workspace:*"
   }
 }

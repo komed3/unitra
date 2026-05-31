@@ -26,6 +26,9 @@ importers:
       '@unitra/types':
         specifier: workspace:*
         version: link:../types
+      '@unitra/utils':
+        specifier: workspace:*
+        version: link:../utils
 
   packages/kernel/dict: {}
 
