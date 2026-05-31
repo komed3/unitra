@@ -40,4 +40,20 @@ export class Logging {
       error: ( message, data ) => this.error( source, message, data )
     };
   }
+
+  public static debug ( source: string, message: string, data?: unknown ) : void {
+    this.write( LogLevel.DEBUG, source, message, data );
+  }
+
+  public static log ( source: string, message: string, data?: unknown ) : void {
+    this.write( LogLevel.LOG, source, message, data );
+  }
+
+  public static warn ( source: string, message: string, data?: unknown ) : void {
+    this.write( LogLevel.WARN, source, message, data );
+  }
+
+  public static error ( source: string, message: string, data?: unknown ) : void {
+    this.write( LogLevel.ERROR, source, message, data );
+  }
 }
