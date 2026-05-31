@@ -9,12 +9,12 @@ export type LogEntry = {
   data?: unknown;
 };
 
-export interface ILogHandler {
-  write: ( entry: LogEntry ) => void;
-}
-
 export interface ILogFormatter {
   format: ( entry: LogEntry ) => string;
+}
+
+export interface ILogHandler {
+  write: ( entry: LogEntry ) => void;
 }
 
 export interface ILogger {
