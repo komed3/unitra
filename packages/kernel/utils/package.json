@@ -8,6 +8,7 @@
     "LICENSE"
   ],
   "exports": {
+    "./logging": "./dist/logging/index.js",
     "./semver": "./dist/semver/index.js"
   },
   "scripts": {
