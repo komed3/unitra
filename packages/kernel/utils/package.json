@@ -13,5 +13,8 @@
   "scripts": {
     "build": "tsc -b && tsc-alias",
     "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@unitra/types": "workspace:*"
   }
 }
