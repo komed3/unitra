@@ -8,7 +8,7 @@ export class Logging {
   private static handlers = new Set< ILogHandler >();
 
   static {
-    this.addHandler( new ConsoleLogHandler( new TextLogFormatter() ) );
+    this.addHandler( new ConsoleLogHandler( {}, new TextLogFormatter( {} ) ) );
   }
 
   private static write ( level: LogLevel, source: string, message: string, data?: unknown ) : void {
