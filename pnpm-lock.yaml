@@ -37,6 +37,12 @@ importers:
         specifier: workspace:*
         version: link:../dict
 
+  packages/kernel/utils:
+    dependencies:
+      '@unitra/types':
+        specifier: workspace:*
+        version: link:../types
+
   packages/plugin/prefix/si:
     dependencies:
       '@unitra/core':
