@@ -1,5 +1,6 @@
 import { LogLevel } from '@unitra/dict/logging';
 import type { ILogger, ILogHandler, LogEntry } from '@unitra/types/logging';
+import { TextLogFormatter } from './formatter/TextLogFormatter';
 import { ConsoleLogHandler } from './handler/ConsoleLogHandler';
 
 export class Logging {
@@ -7,7 +8,7 @@ export class Logging {
   private static handlers = new Set< ILogHandler >();
 
   static {
-    this.addHandler( new ConsoleLogHandler() );
+    this.addHandler( new ConsoleLogHandler( new TextLogFormatter() ) );
   }
 
   private static write ( level: LogLevel, source: string, message: string, data?: unknown ) : void {
