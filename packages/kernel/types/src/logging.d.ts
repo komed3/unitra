@@ -8,7 +8,9 @@ export type LogEntry = {
   data?: unknown;
 };
 
-export type LogHandler = ( entry: LogEntry ) => void;
+export interface LogHandler {
+  write: ( entry: LogEntry ) => void;
+}
 
 export interface Logger {
   debug: ( message: string, data?: unknown ) => void;
