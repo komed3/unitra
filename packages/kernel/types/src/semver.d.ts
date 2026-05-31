@@ -8,3 +8,8 @@ export type ParsedSemverVersion = readonly [
   patch: number,
   tag?: string
 ];
+
+export type ParsedSemverRange = {
+  operator: SemverOperator;
+  version: ParsedSemverVersion;
+};
