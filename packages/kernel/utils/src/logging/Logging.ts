@@ -1,5 +1,5 @@
 import { LogLevel } from '@unitra/dict/logging';
-import type { LogHandler } from '@unitra/types/logging';
+import type { Logger, LogHandler } from '@unitra/types/logging';
 
 export class Logging {
   private static _level = LogLevel.WARN;
@@ -23,5 +23,14 @@ export class Logging {
 
   public static clearHandlers () : void {
     this.handlers.clear();
+  }
+
+  public static createSource ( source: string ) : Logger {
+    return {
+      debug: ( message, data ) => this.debug( source, message, data ),
+      log: ( message, data ) => this.log( source, message, data ),
+      warn: ( message, data ) => this.warn( source, message, data ),
+      error: ( message, data ) => this.error( source, message, data )
+    };
   }
 }
