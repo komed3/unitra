@@ -9,6 +9,7 @@
   ],
   "exports": {
     "./common": "./dist/common.js",
+    "./logging": "./dist/logging.js",
     "./quantity": "./dist/quantity.js",
     "./unit": "./dist/unit.js"
   },
