@@ -14,7 +14,8 @@ export interface ILogFormatter< T extends object = {} > {
   format: ( entry: LogEntry ) => string;
 }
 
-export interface ILogHandler {
+export interface ILogHandler< T extends object = {} > {
+  readonly config: Readonly< T >;
   write: ( entry: LogEntry ) => void;
 }
 
