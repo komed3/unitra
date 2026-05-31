@@ -4,10 +4,7 @@ import { LogFormatter } from './LogFormatter';
 
 export class TextLogFormatter extends LogFormatter implements ILogFormatter {
   public format ( entry: LogEntry ) : string {
-    const timestamp = new Date( entry.timestamp ).toISOString();
-    const level = LogLevel[ entry.level ];
-
-    let output = `[${ timestamp }] [${ level }] [${ entry.source }] ${ entry.message }`;
+    let output = `[${ entry.isoTimestamp }] [${ LogLevel[ entry.level ] }] [${ entry.source }] ${ entry.message }`;
     if ( entry.data !== undefined ) output += '\n' + JSON.stringify( entry.data, null, 2 );
     return output;
   }

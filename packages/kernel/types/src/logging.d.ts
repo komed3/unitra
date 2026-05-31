@@ -5,6 +5,7 @@ export type LogEntry = {
   source: string;
   message: string;
   timestamp: number;
+  isoTimestamp: string;
   data?: unknown;
 };
 

@@ -8,7 +8,12 @@ export class Logging {
   private static write ( level: LogLevel, source: string, message: string, data?: unknown ) : void {
     if ( level < this._level ) return;
 
-    const entry: LogEntry = { level, source, message, timestamp: Date.now(), data };
+    const now = Date.now();
+    const entry: LogEntry = {
+      level, source, message, data, timestamp: now,
+      isoTimestamp: new Date( now ).toISOString()
+    };
+
     for ( const handler of this.handlers ) handler.write( entry );
   }
 
