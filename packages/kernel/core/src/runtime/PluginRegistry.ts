@@ -1,7 +1,9 @@
 import type { PluginCatalog, PluginDefinition, PluginList } from '@unitra/types/plugin';
 import type { SemverVersion } from '@unitra/types/semver';
+import Logging from '@unitra/utils/logging';
 
 export class PluginRegistry {
+  private static readonly logger = Logging.createSource( 'plugin-registry' );
   private static readonly registry = new Map< string, Map< SemverVersion, PluginDefinition > >();
 
   public static get size () : number {
@@ -11,33 +13,34 @@ export class PluginRegistry {
   }
 
   public static add ( ...plugins: PluginDefinition[] ) : void {
-    for ( const plugin of plugins ) this.registry.set( plugin.id, (
-      this.registry.get( plugin.id ) ||
-      new Map< SemverVersion, PluginDefinition >()
-    ).set( plugin.version, plugin ) );
+    for ( const plugin of plugins ) {
+      this.registry.set( plugin.id, (
+        this.registry.get( plugin.id ) ||
+        new Map< SemverVersion, PluginDefinition >()
+      ).set( plugin.version, plugin ) );
+
+      this.logger.debug( `registered plugin "${ plugin.id }@${ plugin.version }"` );
+    }
   }
 
   public static remove ( id: string, version?: SemverVersion ) : void {
     const versions = this.registry.get( id );
     if ( ! versions ) return;
 
-    version ? (
+    const ok = version ? (
       versions.delete( version ) &&
       versions.size === 0 &&
       this.registry.delete( id )
     ) : (
       this.registry.delete( id )
     );
+
+    this.logger.debug( `deregistered plugin "${ id }": ${ ok ? 'success' : 'failed' }` );
   }
 
   public static has ( id: string, version?: SemverVersion ) : boolean {
     const versions = this.registry.get( id );
-
-    return versions ? (
-      version
-        ? versions.has( version )
-        : true
-    ) : false;
+    return versions ? version ? versions.has( version ) : true : false;
   }
 
   public static get ( id: string, version?: SemverVersion ) : ReadonlyArray< PluginDefinition > {
