@@ -1,4 +1,4 @@
-import { ParsedSemverRange, ParsedSemverVersion, SemverOperator, SemverRange, SemverVersion } from '@unitra/types/semver';
+import type { ParsedSemverRange, ParsedSemverVersion, SemverOperator, SemverRange, SemverVersion } from '@unitra/types/semver';
 
 export class Semver {
   private static readonly OPMATCH = /^(\^|~|>=|<=|>|<|=)/;
