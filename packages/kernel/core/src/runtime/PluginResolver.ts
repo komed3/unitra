@@ -1,5 +1,6 @@
-import type { PluginResolveGraph, PluginCatalog, PluginDefinition, PluginResolveResult, SemverRange } from '@unitra/types/plugin';
-import { Semver } from '../utils';
+import type { PluginCatalog, PluginDefinition, PluginResolveGraph, PluginResolveResult } from '@unitra/types/plugin';
+import type { SemverRange } from '@unitra/types/semver';
+import { Semver } from '@unitra/utils/semver';
 import { PluginRegistry } from './PluginRegistry';
 
 type Requirements = Map< string, Array< {
