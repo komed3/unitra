@@ -26,11 +26,11 @@ export class MemoryLogHandler extends LogHandler< { maxEntries?: number, minLeve
   }
 
   public get errorCount () : number {
-    return this.entries.reduce( ( acc, e ) => acc + ( e.level === LogLevel.ERROR ? 1 : 0 ), 0 );
+    return this.entries.reduce( ( acc, e ) => acc + +( e.level === LogLevel.ERROR ), 0 );
   }
 
   public get warnCount () : number {
-    return this.entries.reduce( ( acc, e ) => acc + ( e.level === LogLevel.WARN ? 1 : 0 ), 0 );
+    return this.entries.reduce( ( acc, e ) => acc + +( e.level === LogLevel.WARN ), 0 );
   }
 
   public write ( entry: LogEntry ) : void {
