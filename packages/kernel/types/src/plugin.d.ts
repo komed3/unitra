@@ -1,15 +1,5 @@
 import type { ConstantRegistry, PrefixRegistry, QuantityRegistry, UnitRegistry } from './registry';
-
-export type SemverVersion = `${ number }.${ number }.${ number }${ string }`;
-export type SemverOperator = '^' | '~' | '>' | '>=' | '<' | '<=' | '=';
-export type SemverRange = `${ SemverOperator }${ SemverVersion }` | `${ SemverVersion }`;
-
-export type ParsedSemverVersion = {
-  major: number;
-  minor: number;
-  patch: number;
-  tag?: string;
-};
+import type { SemverRange, SemverVersion } from './semver';
 
 export type DependencyMap = Readonly< Record< string, SemverRange > >;
 

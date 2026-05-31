@@ -17,6 +17,7 @@
     "./prefix": "./src/prefix.d.ts",
     "./quantity": "./src/quantity.d.ts",
     "./registry": "./src/registry.d.ts",
+    "./semver": "./src/semver.d.ts",
     "./unit": "./src/unit.d.ts"
   },
   "scripts": {
