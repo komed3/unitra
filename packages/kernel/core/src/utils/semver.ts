@@ -15,7 +15,7 @@ export class Semver {
   }
 
   public static satisfies ( version: SemverVersion, range: SemverRange ) : boolean {
-    const match = range.match( /^(^|~|>=|<=|>|<|=)/ );
+    const match = range.match( /^(\^|~|>=|<=|>|<|=)/ );
     const op = ( match?.[ 1 ] ?? '=' ) as SemverOperator;
     const raw = ( op === '=' ? range : range.slice( op.length ) ) as SemverVersion;
 
