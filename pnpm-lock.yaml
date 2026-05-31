@@ -42,6 +42,9 @@ importers:
 
   packages/kernel/utils:
     dependencies:
+      '@unitra/dict':
+        specifier: workspace:*
+        version: link:../dict
       '@unitra/types':
         specifier: workspace:*
         version: link:../types

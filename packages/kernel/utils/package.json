@@ -16,6 +16,7 @@
     "lint": "tsc --noEmit"
   },
   "dependencies": {
+    "@unitra/dict": "workspace:*",
     "@unitra/types": "workspace:*"
   }
 }
