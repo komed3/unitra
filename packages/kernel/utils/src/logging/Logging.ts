@@ -1,9 +1,9 @@
 import { LogLevel } from '@unitra/dict/logging';
-import type { LogEntry, Logger, LogHandler } from '@unitra/types/logging';
+import type { ILogger, ILogHandler, LogEntry } from '@unitra/types/logging';
 
 export class Logging {
   private static _level = LogLevel.WARN;
-  private static handlers = new Set< LogHandler >();
+  private static handlers = new Set< ILogHandler >();
 
   private static write ( level: LogLevel, source: string, message: string, data?: unknown ) : void {
     if ( level < this._level ) return;
@@ -20,11 +20,11 @@ export class Logging {
     this._level = level;
   }
 
-  public static addHandler ( handler: LogHandler ) : void {
+  public static addHandler ( handler: ILogHandler ) : void {
     this.handlers.add( handler );
   }
 
-  public static removeHandler ( handler: LogHandler ) : void {
+  public static removeHandler ( handler: ILogHandler ) : void {
     this.handlers.delete( handler );
   }
 
@@ -32,7 +32,7 @@ export class Logging {
     this.handlers.clear();
   }
 
-  public static createSource ( source: string ) : Logger {
+  public static createSource ( source: string ) : ILogger {
     return {
       debug: ( message, data ) => this.debug( source, message, data ),
       log: ( message, data ) => this.log( source, message, data ),
