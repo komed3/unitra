@@ -15,6 +15,11 @@ export class PluginResolver {
   private static cacheHash = '';
   private static cache: PluginResolveResult | null = null;
 
+  private static err ( obj: string[], msg: string ) : void {
+    this.log.error( msg );
+    obj.push( msg );
+  }
+
   private static hash ( catalog: PluginCatalog ) : string {
     let hash = '';
 
@@ -68,10 +73,7 @@ export class PluginResolver {
     for ( const [ id, list ] of req ) {
       if ( ! catalog.has( id ) ) {
         for ( const r of list ) {
-          const msg = `${ r.plugin.id } → missing ${ id }@${ r.range }`;
-
-          this.log.error( msg );
-          out.push( msg );
+          this.err( out, `${ r.plugin.id } → missing ${ id }@${ r.range }` );
         }
       }
     }
@@ -90,10 +92,7 @@ export class PluginResolver {
 
       for ( const r of list ) {
         if ( ! available.some( v => Semver.satisfies( v, r.range ) ) ) {
-          const msg = `${ r.plugin.id } → conflict ${ id }@${ r.range }`;
-
-          this.log.error( msg );
-          out.push( msg );
+          this.err( out, `${ r.plugin.id } → conflict ${ id }@${ r.range }` );
         }
       }
     }
