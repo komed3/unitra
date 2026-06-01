@@ -174,7 +174,7 @@ export class PluginResolver {
       return {
         plugins: [], graph,
         error: new PluginResolutionError( 'resolution failed due to errors', {
-          data: { missing, conflicts, cycles, errCount }
+          data: { graph, missing, conflicts, cycles, errCount }
         } )
       };
     }

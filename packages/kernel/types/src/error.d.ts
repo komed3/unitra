@@ -1,4 +1,5 @@
-import { UnitraErrorCode } from '@unitra/dict/error';
+import type { UnitraErrorCode } from '@unitra/dict/error';
+import type { PluginResolveGraph } from './plugin';
 
 export type UnitraErrorOptions< T = unknown > = {
   data?: T;
@@ -36,6 +37,7 @@ export interface IUnitraError< C extends UnitraErrorCode = UnitraErrorCode, T = 
 }
 
 export type PluginResolutionError = IUnitraError< UnitraErrorCode.PLUGIN_RESOLUTION_ERROR, {
+  graph: PluginResolveGraph;
   missing: ReadonlyArray< string >;
   conflicts: ReadonlyArray< string >;
   cycles: ReadonlyArray< string >;
