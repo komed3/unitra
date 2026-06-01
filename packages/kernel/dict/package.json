@@ -9,10 +9,10 @@
   ],
   "exports": {
     "./common": "./dist/common.js",
+    "./error": "./dist/error.js",
     "./logging": "./dist/logging.js",
     "./quantity": "./dist/quantity.js",
-    "./unit": "./dist/unit.js",
-    "./unitra": "./dist/unitra.js"
+    "./unit": "./dist/unit.js"
   },
   "scripts": {
     "build": "tsc -b && tsc-alias",

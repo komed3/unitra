@@ -1,0 +1,3 @@
+export enum UnitraErrorCode {
+  PLUGIN_RESOLUTION_ERROR = 'PLUGIN_RESOLUTION_ERROR'
+}
