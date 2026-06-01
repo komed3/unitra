@@ -16,8 +16,8 @@ export class PluginResolver {
   private static cacheHash = '';
   private static cache: PluginResolveResult | null = null;
 
-  private static pushError ( obj: string[], msg: string ) : void {
-    this.log.error( msg );
+  private static pushError ( obj: string[], msg: string, label?: string ) : void {
+    this.log.error( `${ label ? `${ label } ::` : '' } ${ msg }` );
     obj.push( msg );
   }
 
@@ -74,7 +74,7 @@ export class PluginResolver {
     for ( const [ id, list ] of req ) {
       if ( ! catalog.has( id ) ) {
         for ( const r of list ) {
-          this.pushError( out, `${ r.plugin.id } → missing ${ id }@${ r.range }` );
+          this.pushError( out, `${ r.plugin.id } → missing ${ id }@${ r.range }`, 'not installed' );
         }
       }
     }
@@ -93,7 +93,7 @@ export class PluginResolver {
 
       for ( const r of list ) {
         if ( ! available.some( v => Semver.satisfies( v, r.range ) ) ) {
-          this.pushError( out, `${ r.plugin.id } → conflict ${ id }@${ r.range }` );
+          this.pushError( out, `${ r.plugin.id } → conflict ${ id }@${ r.range }`, 'version mismatch' );
         }
       }
     }
@@ -110,7 +110,7 @@ export class PluginResolver {
     const dfs = ( node: string ) => {
       if ( stack.has( node ) ) {
         const i = path.indexOf( node );
-        this.pushError( cycles, path.slice( i ).concat( node ).join( ' → ' ) );
+        this.pushError( cycles, path.slice( i ).concat( node ).join( ' → ' ), 'cycle detected' );
         return;
       }
 
