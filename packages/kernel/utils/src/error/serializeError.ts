@@ -1,5 +1,5 @@
 import type { SerializedError } from '@unitra/types/error';
-import { UnitraError } from '../UnitraError';
+import { UnitraError } from './UnitraError';
 
 export function serializeError ( error: Error ) : SerializedError;
 export function serializeError ( error: unknown ) : unknown;

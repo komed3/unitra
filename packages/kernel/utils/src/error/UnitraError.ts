@@ -1,6 +1,6 @@
 import type { UnitraErrorCode } from '@unitra/dict/unitra';
 import type { SerializedError, UnitraErrorOptions } from '@unitra/types/error';
-import { serializeError } from './helper/serializeError';
+import { serializeError } from './serializeError';
 
 export class UnitraError extends Error {
   public readonly code?: UnitraErrorCode;
@@ -31,8 +31,7 @@ export class UnitraError extends Error {
 
     if ( error instanceof Error ) return new UnitraError( error.message, {
       ...options, cause: error.cause ?? options.cause, data: {
-        original: serializeError( error ),
-        data: options.data
+        original: serializeError( error ), data: options.data
       }
     } );
 
