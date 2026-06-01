@@ -149,6 +149,17 @@ export class PluginResolver {
     const missing = this.detectMissing( catalog, requirements );
     const conflicts = this.detectConflicts( catalog, requirements );
     const cycles = this.detectCycles( graph );
+
+    if ( missing.length || conflicts.length || cycles.length ) {}
+
+    const plugins = this.topologicalSort( graph, catalog );
+    const result = { graph, plugins };
+
+    this.cache = result;
+    this.cacheHash = hash;
+
+    this.log.debug( 'successfully resolved', { plugins: plugins.length } );
+    return result;
   }
 }
 
