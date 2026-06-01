@@ -23,7 +23,7 @@ export class UnitraError extends Error {
   }
 
   public serialize () : SerializedError {
-    return serializeError( this ) as SerializedError;
+    return serializeError( this );
   }
 
   public static from ( error: unknown, options: UnitraErrorOptions = {} ) : UnitraError {

@@ -1,7 +1,10 @@
 import type { SerializedError } from '@unitra/types/error';
 import { UnitraError } from '../UnitraError';
 
-export const serializeError = ( error: unknown ) : SerializedError | unknown => {
+export function serializeError ( error: Error ) : SerializedError;
+export function serializeError ( error: unknown ) : unknown;
+
+export function serializeError ( error: unknown ) : SerializedError | unknown {
   if ( ! ( error instanceof Error ) ) return error;
 
   return {
@@ -10,8 +13,6 @@ export const serializeError = ( error: unknown ) : SerializedError | unknown => 
     message: error.message,
     stack: error.stack,
     data: error instanceof UnitraError ? error.data : undefined,
-    cause: serializeError(
-      ( error as Error & { cause?: unknown } ).cause
-    )
+    cause: serializeError( ( error as Error & { cause?: unknown } ).cause )
   };
 };
