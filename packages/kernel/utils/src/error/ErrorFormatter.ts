@@ -44,6 +44,9 @@ export class ErrorFormatter {
     if ( this.options.showData && data.data !== undefined )
       lines.push( '', 'Data:', safeJsonStringify( data.data, 2 ) );
 
+    if ( this.options.showCauses && data.cause && typeof data.cause === 'object' )
+      lines.push( '', 'Caused by:', ...this.formatCauseTree( data.cause as SerializedError ) );
+
     if ( this.options.showStack && data.stack )
       lines.push( '', 'Stack Trace:', data.stack );
 
