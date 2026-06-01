@@ -22,3 +22,14 @@ export type ErrorFormatterConfig = {
   showCauses?: boolean;
   indent?: string;
 };
+
+export interface IUnitraError extends Error {
+  readonly code?: UnitraErrorCode;
+  readonly data?: unknown;
+  readonly cause?: unknown;
+  readonly type: string;
+  toString: () => string;
+  serialize: () => SerializedError;
+  format: ( options?: ErrorFormatterConfig ) => string;
+  log: () => void;
+}
