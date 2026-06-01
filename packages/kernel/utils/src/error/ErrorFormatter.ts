@@ -1,4 +1,5 @@
 import type { ErrorFormatterConfig, SerializedError } from '@unitra/types/error';
+import { safeJsonStringify } from '../helper';
 import { serializeError } from './serializeError';
 
 export class ErrorFormatter {
@@ -25,6 +26,9 @@ export class ErrorFormatter {
 
     const data = this.serialized as SerializedError;
     const lines: string[] = [ this.formatHeader(), '', data.message ];
+
+    if ( this.options.showData && data.data !== undefined )
+      lines.push( '', 'Data:', safeJsonStringify( data.data, 2 ) );
 
     return '';
   }
