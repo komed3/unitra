@@ -7,19 +7,16 @@ export class PluginRegistry {
   private static readonly registry = new Map< string, Map< SemverVersion, PluginDefinition > >();
 
   public static get size () : number {
-    return Array.from( this.registry.values() ).reduce(
-      ( size, versions ) => size + versions.size, 0
-    );
+    return [ ...this.registry.values() ].reduce( ( size, versions ) => size + versions.size, 0 );
   }
 
   public static add ( ...plugins: PluginDefinition[] ) : void {
     for ( const plugin of plugins ) {
-      this.registry.set( plugin.id, (
-        this.registry.get( plugin.id ) ||
-        new Map< SemverVersion, PluginDefinition >()
-      ).set( plugin.version, plugin ) );
+      const versions = this.registry.get( plugin.id ) ?? new Map< SemverVersion, PluginDefinition >();
+      const exists = versions.has( plugin.version );
 
-      this.logger.debug( `registered plugin "${ plugin.id }@${ plugin.version }"` );
+      this.registry.set( plugin.id, versions.set( plugin.version, plugin ) );
+      this.logger.debug( `${ exists ? 'updated' : 'registered' } plugin "${ plugin.id }@${ plugin.version }"` );
     }
   }
 
@@ -27,13 +24,9 @@ export class PluginRegistry {
     const versions = this.registry.get( id );
     if ( ! versions ) return;
 
-    const ok = version ? (
-      versions.delete( version ) &&
-      versions.size === 0 &&
-      this.registry.delete( id )
-    ) : (
-      this.registry.delete( id )
-    );
+    const ok = version
+      ? ( versions.delete( version ) && versions.size === 0 && this.registry.delete( id ) )
+      : ( this.registry.delete( id ) );
 
     this.logger.debug( `deregistered plugin "${ id }": ${ ok ? 'success' : 'failed' }` );
   }
@@ -65,7 +58,7 @@ export class PluginRegistry {
   public static catalog () : PluginCatalog {
     const catalog: PluginCatalog = new Map();
 
-    for ( const plugin of PluginRegistry.all() ) {
+    for ( const plugin of this.all() ) {
       const list = catalog.get( plugin.id ) ?? [];
 
       list.push( plugin );
