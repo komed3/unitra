@@ -39,8 +39,8 @@ export class ErrorFormatter {
   }
 
   public format () : string {
-    const { message, data, cause, stack } = this.serialized;
-    const lines: string[] = [ `${ this.formatHeader( this.serialized ) } :: ${ message }` ];
+    const { message, header, data, cause, stack } = this.serialized;
+    const lines: string[] = [ `${ this.formatHeader( this.serialized ) } :: ${ header ?? message }` ];
 
     if ( this.options.showCauses && cause && typeof cause === 'object' )
       lines.push( '', 'Caused by:', ...this.formatCauseTree( cause as SerializedError ) );

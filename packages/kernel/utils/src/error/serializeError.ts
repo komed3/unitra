@@ -7,12 +7,10 @@ export function serializeError ( error: unknown ) : unknown;
 export function serializeError ( error: unknown ) : SerializedError | unknown {
   if ( ! ( error instanceof Error ) ) return error;
 
-  return {
-    name: error.name,
-    code: error instanceof UnitraError ? error.code : undefined,
-    message: error.message,
-    stack: error.stack,
-    data: error instanceof UnitraError ? error.data : undefined,
+  return { ...{
+    name: error.name, message: error.message, stack: error.stack,
     cause: serializeError( ( error as Error & { cause?: unknown } ).cause )
-  };
+  }, ...( error instanceof UnitraError ? {
+    code: error.code, header: error.header, data: error.data
+  } : {} ) };
 };

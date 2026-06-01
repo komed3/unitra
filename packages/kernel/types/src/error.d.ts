@@ -9,6 +9,7 @@ export type SerializedError = {
   name: string;
   code?: UnitraErrorCode;
   message: string;
+  header?: string;
   stack?: string;
   data?: unknown;
   cause?: SerializedError;
@@ -27,6 +28,7 @@ export interface IUnitraError< C extends UnitraErrorCode = UnitraErrorCode, T = 
   readonly data?: T;
   readonly cause?: unknown;
   readonly type: string;
+  header?: string;
   toString: () => string;
   serialize: () => SerializedError;
   format: ( options?: ErrorFormatterConfig ) => string;

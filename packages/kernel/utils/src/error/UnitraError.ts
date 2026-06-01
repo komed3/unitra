@@ -6,10 +6,11 @@ import { serializeError } from './serializeError';
 export class UnitraError< T extends IUnitraError = IUnitraError > extends Error implements IUnitraError {
   public readonly code?: T[ 'code' ];
   public readonly data?: T[ 'data' ];
+  public header?: string;
 
   public override readonly cause?: unknown;
 
-  protected onInit () : void {}
+  protected afterInit () : void {}
 
   constructor ( message: string, options: UnitraErrorOptions< T[ 'data' ] > = {} ) {
     super( message, { cause: options.cause } );
@@ -18,7 +19,7 @@ export class UnitraError< T extends IUnitraError = IUnitraError > extends Error 
     this.data = options.data;
     this.cause = options.cause;
 
-    this.onInit();
+    this.afterInit();
   }
 
   public get type () : string {
