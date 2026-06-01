@@ -1,7 +1,7 @@
 import { UnitraErrorCode } from '@unitra/dict/error';
 
-export type UnitraErrorOptions = {
-  data?: unknown;
+export type UnitraErrorOptions< T = unknown > = {
+  data?: T;
   cause?: unknown;
 };
 
@@ -22,7 +22,7 @@ export type ErrorFormatterConfig = {
   indent?: string;
 };
 
-export interface IUnitraError< C extends UnitraErrorCode = undefined, T = unknown > extends Error {
+export interface IUnitraError< C extends UnitraErrorCode = UnitraErrorCode, T = unknown > extends Error {
   readonly code?: C;
   readonly data?: T;
   readonly cause?: unknown;
@@ -32,3 +32,10 @@ export interface IUnitraError< C extends UnitraErrorCode = undefined, T = unknow
   format: ( options?: ErrorFormatterConfig ) => string;
   log: () => void;
 }
+
+export type PluginResolutionError = IUnitraError< UnitraErrorCode.PLUGIN_RESOLUTION_ERROR, {
+  missing: ReadonlyArray< string >;
+  conflicts: ReadonlyArray< string >;
+  cycles: ReadonlyArray< string >;
+  errCount: number;
+} >;
