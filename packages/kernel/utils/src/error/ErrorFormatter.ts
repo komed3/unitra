@@ -9,12 +9,23 @@ export class ErrorFormatter {
   private readonly options: Required< ErrorFormatterConfig >;
   private readonly serialized: SerializedError | unknown;
 
+  private formatHeader () : string {
+    const data = this.serialized as SerializedError;
+    return this.options.showCode && data.code !== undefined ? `${ data.name } [${ data.code }]` : data.name;
+  }
+
   constructor ( private readonly error: unknown, options?: ErrorFormatterConfig ) {
     this.options = { ...ErrorFormatter.DEFAULT_CONFIG, ...options };
     this.serialized = serializeError( error );
   }
 
   public format () : string {
+    if ( typeof this.serialized !== 'object' || this.serialized === null )
+      return String( this.serialized );
+
+    const data = this.serialized as SerializedError;
+    const lines: string[] = [ this.formatHeader(), '', data.message ];
+
     return '';
   }
 }
