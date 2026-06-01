@@ -14,8 +14,6 @@ export class UnitraError extends Error implements IUnitraError {
     super( message, { cause: options.cause } );
 
     this.name = this.constructor.name;
-
-    this.code = options.code;
     this.data = options.data;
     this.cause = options.cause;
   }
