@@ -10,9 +10,23 @@ export class ErrorFormatter {
   private readonly options: Required< ErrorFormatterConfig >;
   private readonly serialized: SerializedError | unknown;
 
-  private formatHeader () : string {
-    const data = this.serialized as SerializedError;
+  private formatHeader ( data: SerializedError ) : string {
     return this.options.showCode && data.code !== undefined ? `${ data.name } [${ data.code }]` : data.name;
+  }
+
+  private formatCauseTree ( data: SerializedError, _prefix: string = '' ) : string[] {
+    const lines = [
+      `${ _prefix }└─ ${ this.formatHeader( data ) }`,
+      `${ _prefix }${ this.options.indent }${ data.message }`
+    ];
+
+    if ( data.cause && typeof data.cause === 'object' )
+      lines.push( ...this.formatCauseTree(
+        data.cause as SerializedError,
+        _prefix + this.options.indent
+      ) );
+
+    return lines;
   }
 
   constructor ( private readonly error: unknown, options?: ErrorFormatterConfig ) {
@@ -25,7 +39,7 @@ export class ErrorFormatter {
       return String( this.serialized );
 
     const data = this.serialized as SerializedError;
-    const lines: string[] = [ this.formatHeader(), '', data.message ];
+    const lines: string[] = [ this.formatHeader( data ), '', data.message ];
 
     if ( this.options.showData && data.data !== undefined )
       lines.push( '', 'Data:', safeJsonStringify( data.data, 2 ) );
