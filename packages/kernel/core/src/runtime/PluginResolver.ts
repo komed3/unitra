@@ -1,6 +1,12 @@
-import { PluginCatalog, PluginResolveResult } from '@unitra/types/plugin';
+import type { PluginCatalog, PluginDefinition, PluginResolveGraph, PluginResolveResult } from '@unitra/types/plugin';
+import type { SemverRange } from '@unitra/types/semver';
 import Logging from '@unitra/utils/logging';
 import { PluginRegistry } from './PluginRegistry';
+
+type Requirements = Map< string, Array< {
+  plugin: PluginDefinition;
+  range: SemverRange;
+} > >;
 
 export class PluginResolver {
   private static readonly log = Logging.createSource( 'plugin-resolver' );
@@ -20,6 +26,41 @@ export class PluginResolver {
     return hash;
   }
 
+  private static buildGraph ( catalog: PluginCatalog ) : PluginResolveGraph {
+    const graph: PluginResolveGraph = new Map();
+
+    for ( const [ id, list ] of catalog ) {
+      const edges = new Set< string >();
+
+      for ( const plugin of list ) {
+        for ( const dep of Object.keys( plugin.dependencies ?? {} ) ) {
+          edges.add( dep );
+        }
+      }
+
+      graph.set( id, edges );
+    }
+
+    return graph;
+  }
+
+  private static buildRequirements ( catalog: PluginCatalog ) : Requirements {
+    const req: Requirements = new Map();
+
+    for ( const list of catalog.values() ) {
+      for ( const plugin of list ) {
+        for ( const [ id, range ] of Object.entries( plugin.dependencies ?? {} ) ) {
+          const arr = req.get( id ) ?? [];
+
+          arr.push( { plugin, range } );
+          req.set( id, arr );
+        }
+      }
+    }
+
+    return req;
+  }
+
   public static resolve () : PluginResolveResult {
     const catalog = PluginRegistry.catalog();
 
@@ -28,6 +69,11 @@ export class PluginResolver {
       this.log.debug( 'cache hit' );
       return this.cache;
     }
+
+    this.log.debug( 'resolving plugin catalog ...' );
+
+    const graph = this.buildGraph( catalog );
+    const requirements = this.buildRequirements( catalog );
   }
 }
 
