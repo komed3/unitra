@@ -30,7 +30,10 @@ export class ErrorFormatter {
     if ( this.options.showData && data.data !== undefined )
       lines.push( '', 'Data:', safeJsonStringify( data.data, 2 ) );
 
-    return '';
+    if ( this.options.showStack && data.stack )
+      lines.push( '', 'Stack Trace:', data.stack );
+
+    return lines.join( '\n' );
   }
 }
 
