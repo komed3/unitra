@@ -81,6 +81,23 @@ export class PluginResolver {
     const conflicts = this.detectConflicts( catalog, requirements );
     const cycles = this.detectCycles( graph );
   }
+
+  private static detectMissing ( catalog: PluginCatalog, req: any ) : string[] {
+    const out: string[] = [];
+
+    for ( const [ id, list ] of req ) {
+      if ( ! catalog.has( id ) ) {
+        for ( const r of list ) {
+          const msg = `${ r.plugin.id } → missing ${ id }@${ r.range }`;
+
+          this.log.error( msg );
+          out.push( msg );
+        }
+      }
+    }
+
+    return out;
+  }
 }
 
 export const resolvePlugins = () => PluginResolver.resolve();
