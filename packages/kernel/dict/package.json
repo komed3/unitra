@@ -11,7 +11,8 @@
     "./common": "./dist/common.js",
     "./logging": "./dist/logging.js",
     "./quantity": "./dist/quantity.js",
-    "./unit": "./dist/unit.js"
+    "./unit": "./dist/unit.js",
+    "./unitra": "./dist/unitra.js"
   },
   "scripts": {
     "build": "tsc -b && tsc-alias",
