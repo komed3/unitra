@@ -1,5 +1,6 @@
 import type { UnitraErrorCode } from '@unitra/dict/unitra';
-import type { UnitraErrorOptions } from '@unitra/types/error';
+import type { SerializedError, UnitraErrorOptions } from '@unitra/types/error';
+import { serializeError } from './helper/serializeError';
 
 export class UnitraError extends Error {
   public readonly code?: UnitraErrorCode;
@@ -17,13 +18,19 @@ export class UnitraError extends Error {
     this.cause = options.cause;
   }
 
+  public get type () : string {
+    return this.constructor.name;
+  }
+
+  public serialize () : SerializedError {
+    return serializeError( this ) as SerializedError;
+  }
+
   public static from ( error: unknown, options: UnitraErrorOptions = {} ) : UnitraError {
     if ( error instanceof UnitraError ) return error;
 
     if ( error instanceof Error ) return new UnitraError( error.message, {
-      ...options,
-      cause: error.cause ?? options.cause,
-      data: {
+      ...options, cause: error.cause ?? options.cause, data: {
         ...(
           typeof options.data === 'object' && options.data !== null
             ? options.data as object : {}
@@ -34,5 +41,9 @@ export class UnitraError extends Error {
     } );
 
     return new UnitraError( String( error ), options );
+  }
+
+  public static is ( value: unknown ) : value is UnitraError {
+    return value instanceof UnitraError;
   }
 }
