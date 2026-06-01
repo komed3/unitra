@@ -8,47 +8,48 @@ export class ErrorFormatter {
   };
 
   private readonly options: Required< ErrorFormatterConfig >;
-  private readonly serialized: SerializedError | unknown;
+  private readonly serialized: SerializedError;
 
   private formatHeader ( data: SerializedError ) : string {
     return this.options.showCode && data.code !== undefined ? `${ data.name } [${ data.code }]` : data.name;
   }
 
-  private formatCauseTree ( data: SerializedError, _prefix: string = '' ) : string[] {
+  private formatCauseTree ( data: SerializedError, prefix: string = '' ) : string[] {
     const lines = [
-      `${ _prefix }└─ ${ this.formatHeader( data ) }`,
-      `${ _prefix }${ this.options.indent }${ data.message }`
+      `${ prefix }└─ ${ this.formatHeader( data ) }`,
+      `${ prefix }${ this.options.indent }${ data.message }`
     ];
 
     if ( data.cause && typeof data.cause === 'object' )
       lines.push( ...this.formatCauseTree(
         data.cause as SerializedError,
-        _prefix + this.options.indent
+        prefix + this.options.indent
       ) );
 
     return lines;
   }
 
-  constructor ( private readonly error: unknown, options?: ErrorFormatterConfig ) {
+  constructor ( error: unknown, options?: ErrorFormatterConfig ) {
     this.options = { ...ErrorFormatter.DEFAULT_CONFIG, ...options };
-    this.serialized = serializeError( error );
+
+    const data = serializeError( error );
+    this.serialized = typeof data !== 'object' || data === null
+      ? { name: 'UnknownError', message: String( error ) }
+      : data as SerializedError;
   }
 
   public format () : string {
-    if ( typeof this.serialized !== 'object' || this.serialized === null )
-      return String( this.serialized );
+    const { message, data, cause, stack } = this.serialized;
+    const lines: string[] = [ this.formatHeader( this.serialized ), '', message ];
 
-    const data = this.serialized as SerializedError;
-    const lines: string[] = [ this.formatHeader( data ), '', data.message ];
+    if ( this.options.showData && data !== undefined )
+      lines.push( '', 'Data:', safeJsonStringify( data, 2 ) );
 
-    if ( this.options.showData && data.data !== undefined )
-      lines.push( '', 'Data:', safeJsonStringify( data.data, 2 ) );
+    if ( this.options.showCauses && cause && typeof cause === 'object' )
+      lines.push( '', 'Caused by:', ...this.formatCauseTree( cause as SerializedError ) );
 
-    if ( this.options.showCauses && data.cause && typeof data.cause === 'object' )
-      lines.push( '', 'Caused by:', ...this.formatCauseTree( data.cause as SerializedError ) );
-
-    if ( this.options.showStack && data.stack )
-      lines.push( '', 'Stack Trace:', data.stack );
+    if ( this.options.showStack && stack )
+      lines.push( '', 'Stack Trace:', stack );
 
     return lines.join( '\n' );
   }
