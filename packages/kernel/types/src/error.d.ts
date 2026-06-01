@@ -14,3 +14,11 @@ export type SerializedError = {
   data?: unknown;
   cause?: SerializedError;
 };
+
+export type ErrorFormatterConfig = {
+  showCode?: boolean;
+  showData?: boolean;
+  showStack?: boolean;
+  showCauses?: boolean;
+  indent?: string;
+};
