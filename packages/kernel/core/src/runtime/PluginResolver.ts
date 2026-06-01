@@ -74,6 +74,12 @@ export class PluginResolver {
 
     const graph = this.buildGraph( catalog );
     const requirements = this.buildRequirements( catalog );
+
+    this.log.debug( 'check for dependency inconsistencies ...' );
+
+    const missing = this.detectMissing( catalog, requirements );
+    const conflicts = this.detectConflicts( catalog, requirements );
+    const cycles = this.detectCycles( graph );
   }
 }
 
