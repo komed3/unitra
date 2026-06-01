@@ -1,10 +1,10 @@
 import type { UnitraErrorCode } from '@unitra/dict/unitra';
-import type { ErrorFormatterConfig, SerializedError, UnitraErrorOptions } from '@unitra/types/error';
+import type { ErrorFormatterConfig, IUnitraError, SerializedError, UnitraErrorOptions } from '@unitra/types/error';
 import Logging from '../logging';
 import { formatError } from './ErrorFormatter';
 import { serializeError } from './serializeError';
 
-export class UnitraError extends Error {
+export class UnitraError extends Error implements IUnitraError {
   public readonly code?: UnitraErrorCode;
   public readonly data?: unknown;
 
