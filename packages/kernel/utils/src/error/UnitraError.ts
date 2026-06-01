@@ -31,12 +31,8 @@ export class UnitraError extends Error {
 
     if ( error instanceof Error ) return new UnitraError( error.message, {
       ...options, cause: error.cause ?? options.cause, data: {
-        ...(
-          typeof options.data === 'object' && options.data !== null
-            ? options.data as object : {}
-        ),
-        name: error.name,
-        stack: error.stack
+        original: serializeError( error ),
+        data: options.data
       }
     } );
 
