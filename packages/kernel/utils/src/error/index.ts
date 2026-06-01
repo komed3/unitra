@@ -5,4 +5,4 @@ export * from './ErrorFormatter';
 export * from './errorUtils';
 export * from './serializeError';
 
-export * from './errors/PluginError';
+export * from './errors/PluginResolutionError';

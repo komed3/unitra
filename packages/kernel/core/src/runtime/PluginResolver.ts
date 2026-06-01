@@ -1,5 +1,6 @@
 import type { PluginCatalog, PluginDefinition, PluginResolveGraph, PluginResolveResult } from '@unitra/types/plugin';
 import type { SemverRange } from '@unitra/types/semver';
+import { PluginResolutionError } from '@unitra/utils/error';
 import Logging from '@unitra/utils/logging';
 import { Semver } from '@unitra/utils/semver';
 import { PluginRegistry } from './PluginRegistry';
@@ -18,16 +19,6 @@ export class PluginResolver {
   private static pushError ( obj: string[], msg: string ) : void {
     this.log.error( msg );
     obj.push( msg );
-  }
-
-  private static buildErrorMessage ( missing: string[], conflicts: string[], cycles: string[] ) : string {
-    const parts: string[] = [];
-
-    if ( missing.length ) parts.push( `Missing dependencies:\n- ${ missing.join( '\n- ' ) }` );
-    if ( conflicts.length ) parts.push( `Version conflicts:\n- ${ conflicts.join( '\n- ' ) }` );
-    if ( cycles.length ) parts.push( `Dependency cycles:\n- ${ cycles.join( '\n- ' ) }` );
-
-    return parts.join( '\n\n' );
   }
 
   private static hash ( catalog: PluginCatalog ) : string {
@@ -179,6 +170,13 @@ export class PluginResolver {
 
     if ( errCount ) {
       this.log.debug( 'resolution failed', { errors: errCount } );
+
+      return {
+        plugins: [], graph: new Map(),
+        error: new PluginResolutionError( 'resolution failed due to errors', {
+          data: { missing, conflicts, cycles, errCount }
+        } )
+      };
     }
 
     const plugins = this.topologicalSort( graph, catalog );

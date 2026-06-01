@@ -1,4 +1,4 @@
-import type { UnitraErrorCode } from '@unitra/dict/unitra';
+import type { UnitraErrorCode } from '@unitra/dict/error';
 import type { ErrorFormatterConfig, IUnitraError, SerializedError, UnitraErrorOptions } from '@unitra/types/error';
 import Logging from '../logging';
 import { formatError } from './ErrorFormatter';
