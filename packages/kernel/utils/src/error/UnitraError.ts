@@ -44,11 +44,7 @@ export class UnitraError extends Error implements IUnitraError {
     if ( error instanceof UnitraError ) return error;
 
     if ( error instanceof Error ) {
-      const cause = new UnitraError( error.message );
-      cause.name = error.name;
-      cause.stack = error.stack;
-
-      const res = new UnitraError( error.message, { ...options, cause } );
+      const res = new UnitraError( error.message, { ...options, cause: error } );
       res.stack = error.stack;
 
       return res;

@@ -1,8 +1,9 @@
+import type { UnitraErrorOptions } from '@unitra/types/error';
 import { UnitraErrorCode } from '@unitra/dict/unitra';
 import { UnitraError } from '../UnitraError';
 
 export class PluginError extends UnitraError {
-  public constructor ( message: string, data?: unknown, cause?: unknown ) {
-    super( message, { code: UnitraErrorCode.PLUGIN_ERROR, data, cause } );
+  public constructor ( message: string, options: UnitraErrorOptions = {} ) {
+    super( message, { ...options, code: UnitraErrorCode.PLUGIN_ERROR } );
   }
 }
