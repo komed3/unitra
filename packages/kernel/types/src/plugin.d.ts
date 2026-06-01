@@ -1,3 +1,4 @@
+import type { IUnitraError } from './error';
 import type { ConstantRegistry, PrefixRegistry, QuantityRegistry, UnitRegistry } from './registry';
 import type { SemverRange, SemverVersion } from './semver';
 
@@ -31,17 +32,10 @@ export type PluginDefinition = {
 export type PluginList = Readonly< Record< string, SemverVersion[] > >;
 export type PluginCatalog = Readonly< Map< string, PluginDefinition[] > >;
 
-export type PluginResolveError = {
-  message: string;
-  missing: string[];
-  conflicts: string[];
-  cycles: string[];
-};
-
 export type PluginResolveGraph = Readonly< Map< string, Set< string > > >;
 
 export type PluginResolveResult = {
   plugins: ReadonlyArray< PluginDefinition >;
   graph: PluginResolveGraph;
-  error?: PluginResolveError;
+  error?: IUnitraError;
 };
