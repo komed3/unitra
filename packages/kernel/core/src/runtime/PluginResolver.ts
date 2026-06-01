@@ -172,7 +172,7 @@ export class PluginResolver {
       this.log.debug( 'resolution failed', { errors: errCount } );
 
       return {
-        plugins: [], graph: new Map(),
+        plugins: [], graph,
         error: new PluginResolutionError( 'resolution failed due to errors', {
           data: { missing, conflicts, cycles, errCount }
         } )
