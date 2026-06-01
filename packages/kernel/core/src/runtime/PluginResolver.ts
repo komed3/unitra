@@ -15,9 +15,19 @@ export class PluginResolver {
   private static cacheHash = '';
   private static cache: PluginResolveResult | null = null;
 
-  private static err ( obj: string[], msg: string ) : void {
+  private static pushError ( obj: string[], msg: string ) : void {
     this.log.error( msg );
     obj.push( msg );
+  }
+
+  private static buildErrorMessage ( missing: string[], conflicts: string[], cycles: string[] ) : string {
+    const parts: string[] = [];
+
+    if ( missing.length ) parts.push( `Missing dependencies:\n- ${ missing.join( '\n- ' ) }` );
+    if ( conflicts.length ) parts.push( `Version conflicts:\n- ${ conflicts.join( '\n- ' ) }` );
+    if ( cycles.length ) parts.push( `Dependency cycles:\n- ${ cycles.join( '\n- ' ) }` );
+
+    return parts.join( '\n\n' );
   }
 
   private static hash ( catalog: PluginCatalog ) : string {
@@ -73,7 +83,7 @@ export class PluginResolver {
     for ( const [ id, list ] of req ) {
       if ( ! catalog.has( id ) ) {
         for ( const r of list ) {
-          this.err( out, `${ r.plugin.id } → missing ${ id }@${ r.range }` );
+          this.pushError( out, `${ r.plugin.id } → missing ${ id }@${ r.range }` );
         }
       }
     }
@@ -92,7 +102,7 @@ export class PluginResolver {
 
       for ( const r of list ) {
         if ( ! available.some( v => Semver.satisfies( v, r.range ) ) ) {
-          this.err( out, `${ r.plugin.id } → conflict ${ id }@${ r.range }` );
+          this.pushError( out, `${ r.plugin.id } → conflict ${ id }@${ r.range }` );
         }
       }
     }
@@ -109,7 +119,7 @@ export class PluginResolver {
     const dfs = ( node: string ) => {
       if ( stack.has( node ) ) {
         const i = path.indexOf( node );
-        this.err( cycles, path.slice( i ).concat( node ).join( ' → ' ) );
+        this.pushError( cycles, path.slice( i ).concat( node ).join( ' → ' ) );
         return;
       }
 
