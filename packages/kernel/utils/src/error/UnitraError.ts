@@ -24,6 +24,10 @@ export class UnitraError extends Error {
     return this.constructor.name;
   }
 
+  public override toString () : string {
+    return this.format();
+  }
+
   public serialize () : SerializedError {
     return serializeError( this );
   }
