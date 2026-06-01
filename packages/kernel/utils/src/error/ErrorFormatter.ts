@@ -13,4 +13,11 @@ export class ErrorFormatter {
     this.options = { ...ErrorFormatter.DEFAULT_CONFIG, ...options };
     this.serialized = serializeError( error );
   }
+
+  public format () : string {
+    return '';
+  }
 }
+
+export const formatError = ( error: unknown, options?: ErrorFormatterConfig ) =>
+  new ErrorFormatter( error, options ).format();
