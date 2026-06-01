@@ -100,6 +100,36 @@ export class PluginResolver {
     return out;
   }
 
+  private static detectCycles ( graph: PluginResolveGraph ) : string[] {
+    const visited = new Set< string >();
+    const stack = new Set< string >();
+    const path: string[] = [];
+    const cycles: string[] = [];
+
+    const dfs = ( node: string ) => {
+      if ( stack.has( node ) ) {
+        const i = path.indexOf( node );
+        this.err( cycles, path.slice( i ).concat( node ).join( ' → ' ) );
+        return;
+      }
+
+      if ( visited.has( node ) ) return;
+
+      visited.add( node );
+      stack.add( node );
+      path.push( node );
+
+      for ( const n of graph.get( node ) ?? [] ) dfs( n );
+
+      stack.delete( node );
+      path.pop();
+    };
+
+    for ( const n of graph.keys() ) dfs( n );
+
+    return cycles;
+  }
+
   public static resolve () : PluginResolveResult {
     const catalog = PluginRegistry.catalog();
 
