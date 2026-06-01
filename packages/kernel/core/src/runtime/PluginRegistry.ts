@@ -3,7 +3,7 @@ import type { SemverVersion } from '@unitra/types/semver';
 import Logging from '@unitra/utils/logging';
 
 export class PluginRegistry {
-  private static readonly logger = Logging.createSource( 'plugin-registry' );
+  private static readonly log = Logging.createSource( 'plugin-registry' );
   private static readonly registry = new Map< string, Map< SemverVersion, PluginDefinition > >();
 
   public static get size () : number {
@@ -16,7 +16,7 @@ export class PluginRegistry {
       const exists = versions.has( plugin.version );
 
       this.registry.set( plugin.id, versions.set( plugin.version, plugin ) );
-      this.logger.debug( `${ exists ? 'updated' : 'registered' } plugin "${ plugin.id }@${ plugin.version }"` );
+      this.log.debug( `${ exists ? 'updated' : 'registered' } plugin "${ plugin.id }@${ plugin.version }"` );
     }
   }
 
@@ -28,7 +28,7 @@ export class PluginRegistry {
       ? ( versions.delete( version ) && versions.size === 0 && this.registry.delete( id ) )
       : ( this.registry.delete( id ) );
 
-    this.logger.debug( `deregistered plugin "${ id }": ${ ok ? 'success' : 'failed' }` );
+    this.log.debug( `deregistered plugin "${ id }": ${ ok ? 'success' : 'failed' }` );
   }
 
   public static has ( id: string, version?: SemverVersion ) : boolean {
