@@ -166,7 +166,7 @@ export class PluginResolver {
     const missing = this.detectMissing( catalog, requirements );
     const conflicts = this.detectConflicts( catalog, requirements );
     const cycles = this.detectCycles( graph );
-    const errCount = missing.length || conflicts.length || cycles.length;
+    const errCount = missing.length + conflicts.length + cycles.length;
 
     if ( errCount ) {
       this.log.debug( 'resolution failed', { errors: errCount } );
