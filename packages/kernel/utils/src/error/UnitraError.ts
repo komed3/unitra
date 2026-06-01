@@ -1,5 +1,7 @@
 import type { UnitraErrorCode } from '@unitra/dict/unitra';
-import type { SerializedError, UnitraErrorOptions } from '@unitra/types/error';
+import type { ErrorFormatterConfig, SerializedError, UnitraErrorOptions } from '@unitra/types/error';
+import Logging from '../logging';
+import { formatError } from './ErrorFormatter';
 import { serializeError } from './serializeError';
 
 export class UnitraError extends Error {
@@ -24,6 +26,14 @@ export class UnitraError extends Error {
 
   public serialize () : SerializedError {
     return serializeError( this );
+  }
+
+  public format ( options?: ErrorFormatterConfig ) : string {
+    return formatError( this, options );
+  }
+
+  public log () : void {
+    Logging.error( this.code ?? this.name, this.message, this.data );
   }
 
   public static from ( error: unknown, options: UnitraErrorOptions = {} ) : UnitraError {
