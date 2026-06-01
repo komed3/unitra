@@ -40,16 +40,16 @@ export class ErrorFormatter {
 
   public format () : string {
     const { message, data, cause, stack } = this.serialized;
-    const lines: string[] = [ this.formatHeader( this.serialized ), '', message ];
-
-    if ( this.options.showData && data !== undefined )
-      lines.push( '', 'Data:', safeJsonStringify( data, 2 ) );
+    const lines: string[] = [ `${ this.formatHeader( this.serialized ) } :: ${ message }` ];
 
     if ( this.options.showCauses && cause && typeof cause === 'object' )
       lines.push( '', 'Caused by:', ...this.formatCauseTree( cause as SerializedError ) );
 
     if ( this.options.showStack && stack )
       lines.push( '', 'Stack Trace:', stack );
+
+    if ( this.options.showData && data !== undefined )
+      lines.push( '', 'Data:', safeJsonStringify( data, 2 ) );
 
     return lines.join( '\n' );
   }
