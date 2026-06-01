@@ -11,6 +11,7 @@
     "./common": "./src/common.d.ts",
     "./constant": "./src/constant.d.ts",
     "./dim": "./src/dim.d.ts",
+    "./error": "./src/error.d.ts",
     "./logging": "./src/logging.d.ts",
     "./manifest": "./src/manifest.d.ts",
     "./node": "./src/node.d.ts",
