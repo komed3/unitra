@@ -1,6 +1,7 @@
 import type { PluginCatalog, PluginDefinition, PluginResolveGraph, PluginResolveResult } from '@unitra/types/plugin';
 import type { SemverRange } from '@unitra/types/semver';
 import Logging from '@unitra/utils/logging';
+import { Semver } from '@unitra/utils/semver';
 import { PluginRegistry } from './PluginRegistry';
 
 type Requirements = Map< string, Array< {
@@ -61,6 +62,45 @@ export class PluginResolver {
     return req;
   }
 
+  private static detectMissing ( catalog: PluginCatalog, req: Requirements ) : string[] {
+    const out: string[] = [];
+
+    for ( const [ id, list ] of req ) {
+      if ( ! catalog.has( id ) ) {
+        for ( const r of list ) {
+          const msg = `${ r.plugin.id } → missing ${ id }@${ r.range }`;
+
+          this.log.error( msg );
+          out.push( msg );
+        }
+      }
+    }
+
+    return out;
+  }
+
+  private static detectConflicts ( catalog: PluginCatalog, req: Requirements ) : string[] {
+    const out: string[] = [];
+
+    for ( const [ id, list ] of req ) {
+      const versions = catalog.get( id );
+      if ( ! versions ) continue;
+
+      const available = versions.map( v => v.version );
+
+      for ( const r of list ) {
+        if ( ! available.some( v => Semver.satisfies( v, r.range ) ) ) {
+          const msg = `${ r.plugin.id } → conflict ${ id }@${ r.range }`;
+
+          this.log.error( msg );
+          out.push( msg );
+        }
+      }
+    }
+
+    return out;
+  }
+
   public static resolve () : PluginResolveResult {
     const catalog = PluginRegistry.catalog();
 
@@ -80,23 +120,6 @@ export class PluginResolver {
     const missing = this.detectMissing( catalog, requirements );
     const conflicts = this.detectConflicts( catalog, requirements );
     const cycles = this.detectCycles( graph );
-  }
-
-  private static detectMissing ( catalog: PluginCatalog, req: any ) : string[] {
-    const out: string[] = [];
-
-    for ( const [ id, list ] of req ) {
-      if ( ! catalog.has( id ) ) {
-        for ( const r of list ) {
-          const msg = `${ r.plugin.id } → missing ${ id }@${ r.range }`;
-
-          this.log.error( msg );
-          out.push( msg );
-        }
-      }
-    }
-
-    return out;
   }
 }
 
