@@ -43,11 +43,16 @@ export class UnitraError extends Error implements IUnitraError {
   public static from ( error: unknown, options: UnitraErrorOptions = {} ) : UnitraError {
     if ( error instanceof UnitraError ) return error;
 
-    if ( error instanceof Error ) return new UnitraError( error.message, {
-      ...options, cause: error.cause ?? options.cause, data: {
-        original: serializeError( error ), data: options.data
-      }
-    } );
+    if ( error instanceof Error ) {
+      const cause = new UnitraError( error.message );
+      cause.name = error.name;
+      cause.stack = error.stack;
+
+      const res = new UnitraError( error.message, { ...options, cause } );
+      res.stack = error.stack;
+
+      return res;
+    }
 
     return new UnitraError( String( error ), options );
   }
