@@ -18,7 +18,7 @@ export class BufferedLogHandler extends LogHandler< BufferedLogHandlerConfig > {
     return this.buffer;
   }
 
-  public constructor (
+  constructor (
     private readonly target: ILogHandler,
     config: BufferedLogHandlerConfig = {}
   ) {

@@ -10,7 +10,7 @@ export class UnitraError extends Error implements IUnitraError {
 
   public override readonly cause?: unknown;
 
-  public constructor ( message: string, options: UnitraErrorOptions = {} ) {
+  constructor ( message: string, options: UnitraErrorOptions = {} ) {
     super( message, { cause: options.cause } );
 
     this.name = this.constructor.name;
