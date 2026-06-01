@@ -16,4 +16,23 @@ export class UnitraError extends Error {
     this.data = options.data;
     this.cause = options.cause;
   }
+
+  public static from ( error: unknown, options: UnitraErrorOptions = {} ) : UnitraError {
+    if ( error instanceof UnitraError ) return error;
+
+    if ( error instanceof Error ) return new UnitraError( error.message, {
+      ...options,
+      cause: error.cause ?? options.cause,
+      data: {
+        ...(
+          typeof options.data === 'object' && options.data !== null
+            ? options.data as object : {}
+        ),
+        name: error.name,
+        stack: error.stack
+      }
+    } );
+
+    return new UnitraError( String( error ), options );
+  }
 }
