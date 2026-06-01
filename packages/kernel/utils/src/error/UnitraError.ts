@@ -9,12 +9,16 @@ export class UnitraError< T extends IUnitraError = IUnitraError > extends Error 
 
   public override readonly cause?: unknown;
 
+  protected onInit () : void {}
+
   constructor ( message: string, options: UnitraErrorOptions< T[ 'data' ] > = {} ) {
     super( message, { cause: options.cause } );
 
     this.name = this.constructor.name;
     this.data = options.data;
     this.cause = options.cause;
+
+    this.onInit();
   }
 
   public get type () : string {
