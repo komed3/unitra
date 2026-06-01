@@ -175,8 +175,11 @@ export class PluginResolver {
     const missing = this.detectMissing( catalog, requirements );
     const conflicts = this.detectConflicts( catalog, requirements );
     const cycles = this.detectCycles( graph );
+    const errCount = missing.length || conflicts.length || cycles.length;
 
-    if ( missing.length || conflicts.length || cycles.length ) {}
+    if ( errCount ) {
+      this.log.debug( 'resolution failed', { errors: errCount } );
+    }
 
     const plugins = this.topologicalSort( graph, catalog );
     const result = { graph, plugins };
