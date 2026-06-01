@@ -1,4 +1,4 @@
-import { UnitraErrorCode } from '@unitra/dict/unitra';
+import { UnitraErrorCode } from '@unitra/dict/error';
 
 export type UnitraErrorOptions = {
   data?: unknown;
@@ -22,9 +22,9 @@ export type ErrorFormatterConfig = {
   indent?: string;
 };
 
-export interface IUnitraError extends Error {
-  readonly code?: UnitraErrorCode;
-  readonly data?: unknown;
+export interface IUnitraError< C extends UnitraErrorCode = undefined, T = unknown > extends Error {
+  readonly code?: C;
+  readonly data?: T;
   readonly cause?: unknown;
   readonly type: string;
   toString: () => string;
