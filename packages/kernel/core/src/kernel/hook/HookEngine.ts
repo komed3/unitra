@@ -43,13 +43,14 @@ export class HookEngine {
   constructor () {}
 
   public invalidate ( id: HookId ) : void {
+    HookEngine.log.debug( `invalidate cached pipeline for "${ id }"` );
     this.cache.delete( id );
   }
 
   public add < K extends HookId > ( id: K, handler: HookHandler< HookSpec< K > >, priority?: number ) : void {
-    const list = this.hooks.get( id );
-    if ( list ) list.push( { handler, priority } );
-    else this.hooks.set( id, [ { handler, priority } ] );
+    const list = this.hooks.get( id ) || [];
+    list.push( { handler, priority } );
+    this.hooks.set( id, list );
 
     this.invalidate( id );
   }
@@ -67,7 +68,7 @@ export class HookEngine {
   }
 
   public run < K extends HookId > ( id: K, ctx: HookCtx< K >, input: HookIn< K > ) : HookOut< K > {
-    HookEngine.log.debug( `run ${ id }` );
+    HookEngine.log.debug( `run "${ id }"` );
 
     return ( this.getPipeline( id ) )( ctx, input as any ) as HookOut< K >;
   }
