@@ -34,3 +34,6 @@ export type HookDef< K extends HookId > = {
 export type HookPipeline< K extends HookId > = HookDef< K >[ 'handler' ];
 
 export type HookImplMap = { readonly [ K in HookId ]?: ReadonlyArray< HookDef< K > > };
+
+export type HookMap = Map< HookId, HookDef< HookId >[] >;
+export type HookCache = Map< HookId, HookPipeline< HookId > >;

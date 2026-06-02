@@ -1,11 +1,11 @@
-import type { HookCtx, HookDef, HookHandler, HookId, HookImplMap, HookIn, HookOut, HookPipeline, HookSpec } from '@unitra/types/hook';
+import type { HookCache, HookCtx, HookHandler, HookId, HookImplMap, HookIn, HookMap, HookOut, HookSpec } from '@unitra/types/hook';
 import Logging from '@unitra/utils/logging';
 
 export class HookEngine {
   private static readonly log = Logging.createSource( 'hook' );
 
-  private readonly hooks = new Map< HookId, HookDef< any >[] >();
-  private readonly cache = new Map< HookId, HookPipeline< any > >();
+  private readonly hooks: HookMap = new Map();
+  private readonly cache: HookCache = new Map();
 
   constructor () {}
 
