@@ -5,9 +5,19 @@ import Logging from '@unitra/utils/logging';
 export class PluginRegistry {
   private static readonly log = Logging.createSource( 'plugin-registry' );
   private static readonly registry = new Map< string, Map< SemverVersion, PluginDefinition > >();
+  private static revId: number = 0;
 
   public static get size () : number {
     return [ ...this.registry.values() ].reduce( ( size, versions ) => size + versions.size, 0 );
+  }
+
+  public static get revision () : number {
+    return this.revId;
+  }
+
+  public static clear () : void {
+    this.registry.clear();
+    this.revId++;
   }
 
   public static add ( ...plugins: PluginDefinition[] ) : void {
@@ -18,6 +28,8 @@ export class PluginRegistry {
       this.registry.set( plugin.id, versions.set( plugin.version, plugin ) );
       this.log.debug( `${ exists ? 'updated' : 'registered' } plugin "${ plugin.id }@${ plugin.version }"` );
     }
+
+    ( plugins && this.revId++ );
   }
 
   public static remove ( id: string, version?: SemverVersion ) : void {
@@ -29,6 +41,7 @@ export class PluginRegistry {
       : ( this.registry.delete( id ) );
 
     this.log.debug( `deregistered plugin "${ id }": ${ ok ? 'success' : 'failed' }` );
+    ( ok && this.revId++ );
   }
 
   public static has ( id: string, version?: SemverVersion ) : boolean {
@@ -66,10 +79,6 @@ export class PluginRegistry {
     }
 
     return catalog;
-  }
-
-  public static clear () : void {
-    this.registry.clear();
   }
 }
 
