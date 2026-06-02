@@ -13,24 +13,12 @@ type Requirements = Map< string, Array< {
 export class PluginResolver {
   private static readonly log = Logging.createSource( 'plugin-resolver' );
 
-  private static cacheHash = '';
+  private static cacheRevision: number = -1;
   private static cache: PluginResolveResult | null = null;
 
   private static pushError ( obj: string[], msg: string, label?: string ) : void {
     this.log.error( `${ label ? `${ label } ::` : '' } ${ msg }` );
     obj.push( msg );
-  }
-
-  private static hash ( catalog: PluginCatalog ) : string {
-    let hash = '';
-
-    for ( const [ id, list ] of catalog ) {
-      hash += id + ':';
-      for ( const p of list ) hash += p.version + '|';
-      hash += ';';
-    }
-
-    return hash;
   }
 
   private static buildGraph ( catalog: PluginCatalog ) : PluginResolveGraph {
@@ -148,16 +136,16 @@ export class PluginResolver {
   }
 
   public static resolve () : PluginResolveResult {
-    const catalog = PluginRegistry.catalog();
+    const revision = PluginRegistry.revision;
 
-    const hash = this.hash( catalog );
-    if ( this.cache && this.cacheHash === hash ) {
+    if ( this.cache && this.cacheRevision === revision ) {
       this.log.debug( 'cache hit' );
       return this.cache;
     }
 
     this.log.debug( 'resolving plugin catalog ...' );
 
+    const catalog = PluginRegistry.catalog();
     const graph = this.buildGraph( catalog );
     const requirements = this.buildRequirements( catalog );
 
@@ -183,7 +171,7 @@ export class PluginResolver {
     const result = { graph, plugins };
 
     this.cache = result;
-    this.cacheHash = hash;
+    this.cacheRevision = revision;
 
     this.log.debug( 'successfully resolved', { plugins: plugins.length } );
     return result;
