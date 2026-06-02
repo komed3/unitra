@@ -31,6 +31,5 @@ export type HookDef< K extends HookId > = {
 export type HookImplMap = { readonly [ K in HookId ]?: ReadonlyArray< HookDef< K > > };
 
 export type HookPipeline< K extends HookId > = (
-  ctx: HookCtx< K >,
-  value?: HookValue< K >
+  ctx: HookCtx< K >, value?: HookValue< K >
 ) => HookValue< K > | undefined;
