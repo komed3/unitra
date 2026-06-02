@@ -1,4 +1,4 @@
-import type { HookCtx, HookDef, HookHandler, HookId, HookImplMap, HookIn, HookOut, HookPipeline, HookSpec } from '@unitra/types/hook';
+import type { HookCtx, HookDef, HookHandler, HookId, HookImplMap, HookPipeline, HookValue } from '@unitra/types/hook';
 import Logging from '@unitra/utils/logging';
 
 class HookStorage extends Map {
@@ -24,7 +24,12 @@ export class HookEngine {
     const list = ( this.hooks.get( id ) ?? [] );
     const sorted = list.slice().sort( ( a, b ) => ( b.priority ?? 0 ) - ( a.priority ?? 0 ) );
 
-    const pipeline = ( ( ctx, value ) => sorted.reduce( ( v, h ) => h.handler( ctx, v ), value ) ) as HookPipeline< K >;
+    const pipeline = ( ( ctx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K > | undefined => {
+      let v = value;
+
+      for ( const h of sorted ) v = h.handler( ctx, v ) as HookValue< K > | undefined;
+      return v;
+    } );
 
     this.cache.set( id, pipeline );
     return pipeline;
@@ -37,7 +42,7 @@ export class HookEngine {
     this.cache.delete( id );
   }
 
-  public add < K extends HookId > ( id: K, handler: HookHandler< HookSpec< K > >, priority?: number ) : void {
+  public add < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) : void {
     const list = this.hooks.get( id ) || [];
     list.push( { handler, priority } );
     this.hooks.set( id, list );
@@ -57,9 +62,11 @@ export class HookEngine {
     }
   }
 
-  public run < K extends HookId > ( id: K, ctx: HookCtx< K >, input: HookIn< K > ) : HookOut< K > {
-    HookEngine.log.debug( `run "${ id }"` );
+  public run < K extends HookId > ( id: K, ctx: HookCtx< K > ) : void;
+  public run < K extends HookId > ( id: K, ctx: HookCtx< K >, value: HookValue< K > ) : HookValue< K >;
 
-    return ( this.getPipeline( id ) )( ctx, input as any ) as HookOut< K >;
+  public run < K extends HookId > ( id: K, ctx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K > | void {
+    HookEngine.log.debug( `run "${ id }"` );
+    return this.getPipeline( id )( ctx, value );
   }
 }
