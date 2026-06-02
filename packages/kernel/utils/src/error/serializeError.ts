@@ -11,6 +11,6 @@ export function serializeError ( error: unknown ) : SerializedError | unknown {
     name: error.name, message: error.message, stack: error.stack,
     cause: serializeError( ( error as Error & { cause?: unknown } ).cause )
   }, ...( error instanceof UnitraError ? {
-    code: error.code, header: error.header, data: error.data
+    code: error.code, summary: error.summary, data: error.data
   } : {} ) };
 };
