@@ -1,4 +1,7 @@
-import type { HookCache, HookCtx, HookDef, HookHandler, HookId, HookImplMap, HookIn, HookMap, HookOut, HookSpec } from '@unitra/types/hook';
+import type {
+  HookCache, HookCtx, HookDef, HookHandler, HookId, HookImplMap, HookIn,
+  HookMap, HookOut, HookPipeline, HookSpec
+} from '@unitra/types/hook';
 import Logging from '@unitra/utils/logging';
 
 export class HookEngine {
@@ -6,6 +9,24 @@ export class HookEngine {
 
   private readonly hooks: HookMap = new Map();
   private readonly cache: HookCache = new Map();
+
+  private getPipeline < K extends HookId > ( id: K ) : HookPipeline< K > {
+    const cached = this.cache.get( id ) as HookPipeline< K > | undefined;
+    if ( cached ) return cached;
+
+    const list = ( this.hooks.get( id ) ?? [] ) as HookDef< K >[];
+    const sorted = list.slice().sort( ( a, b ) => ( b.priority ?? 0 ) - ( a.priority ?? 0 ) );
+
+    const pipeline = ( ( ctx: HookCtx< K >, input?: HookIn< K > ) : HookOut< K > => {
+      let value: any = input;
+
+      for ( const h of sorted ) value = h.handler( ctx, value );
+      return value;
+    } ) as HookPipeline< K >;
+
+    this.cache.set( id, pipeline );
+    return pipeline;
+  }
 
   constructor () {}
 
