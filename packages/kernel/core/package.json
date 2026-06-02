@@ -10,7 +10,8 @@
   "exports": {
     ".": "./dist/index.js",
     "./hook": "./dist/kernel/hook/index.js",
-    "./plugin": "./dist/kernel/plugin/index.js"
+    "./plugin": "./dist/plugin/index.js",
+    "./service": "./dist/service/index.js"
   },
   "scripts": {
     "build": "tsc -b && tsc-alias",
