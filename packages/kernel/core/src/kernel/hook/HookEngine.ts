@@ -17,12 +17,7 @@ export class HookEngine {
     const list = ( this.hooks.get( id ) ?? [] ) as HookDef< K >[];
     const sorted = list.slice().sort( ( a, b ) => ( b.priority ?? 0 ) - ( a.priority ?? 0 ) );
 
-    const pipeline = ( ( ctx: HookCtx< K >, input?: HookIn< K > ) : HookOut< K > => {
-      let value: any = input;
-
-      for ( const h of sorted ) value = h.handler( ctx, value );
-      return value;
-    } ) as HookPipeline< K >;
+    const pipeline = ( ( ctx, value ) => sorted.reduce( ( v, h ) => h.handler( ctx, v ), value ) ) as HookPipeline< K >;
 
     this.cache.set( id, pipeline );
     return pipeline;
