@@ -1,7 +1,10 @@
+import type { ConstantMap } from '../def/constant';
+import type { PrefixMap } from '../def/prefix';
+import type { QuantityMap } from '../def/quantity';
+import type { UnitMap } from '../def/unit';
 import type { PluginResolutionError } from '../utils/error';
 import type { SemverRange, SemverVersion } from '../utils/semver';
 import type { HookImplMap } from './hook';
-import type { ConstantRegistry, PrefixRegistry, QuantityRegistry, UnitRegistry } from './registry';
 
 export type DependencyMap = Readonly< Record< string, SemverRange > >;
 
@@ -12,10 +15,10 @@ export type PluginMeta = {
 };
 
 export type PluginContributions = {
-  prefixes?: ReadonlyArray< PrefixRegistry >;
-  quantities?: ReadonlyArray< QuantityRegistry >;
-  units?: ReadonlyArray< UnitRegistry >;
-  constants?: ReadonlyArray< ConstantRegistry >;
+  prefixes?: ReadonlyArray< PrefixMap >;
+  quantities?: ReadonlyArray< QuantityMap >;
+  units?: ReadonlyArray< UnitMap >;
+  constants?: ReadonlyArray< ConstantMap >;
 };
 
 export type PluginDefinition = {

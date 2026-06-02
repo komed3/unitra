@@ -22,4 +22,6 @@ export type PrefixDef< R extends PrefixRef = PrefixRef > = {
 
 export type DerivedPrefixDef< R extends PrefixRef > = PrefixDef< R >;
 
+export type PrefixMap = Readonly< { [ R in PrefixRef ]: DerivedPrefixDef< R > } >;
+
 export type PrefixLike = PrefixRef | PrefixDef | string;

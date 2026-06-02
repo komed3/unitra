@@ -35,4 +35,6 @@ export type QuantityDef<
 
 export type DerivedQuantityDef< R extends QuantityRef > = QuantityDef< QuantityDim< R >, R >;
 
+export type QuantityMap = Readonly< { [ R in QuantityRef ]: DerivedQuantityDef< R > } >;
+
 export type QuantityLike = QuantityRef | QuantityDef | string;

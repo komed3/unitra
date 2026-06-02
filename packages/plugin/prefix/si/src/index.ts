@@ -1,4 +1,4 @@
-import { PrefixRegistry } from '@unitra/types/registry';
+import { PrefixMap } from '@unitra/types/prefix';
 
 import decaDef, { deca } from './def/pos/deca';
 import exaDef, { exa } from './def/pos/exa';
@@ -35,4 +35,4 @@ export default ( {
   [ micro ]: microDef,    [ nano ]: nanoDef,    [ pico ]: picoDef,
   [ femto ]: femtoDef,    [ atto ]: attoDef,    [ zepto ]: zeptoDef,
   [ yocto ]: yoctoDef,    [ ronto ]: rontoDef,  [ quecto ]: quectoDef
-} ) as const satisfies PrefixRegistry;
+} ) as const satisfies PrefixMap;

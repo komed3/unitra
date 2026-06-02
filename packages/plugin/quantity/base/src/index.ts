@@ -1,4 +1,4 @@
-import type { QuantityRegistry } from '@unitra/types/registry';
+import type { QuantityMap } from '@unitra/types/quantity';
 
 import amountOfSubstanceDef, { amountOfSubstance } from './def/amountOfSubstance';
 import electricCurrentDef, { electricCurrent } from './def/electricCurrent';
@@ -16,4 +16,4 @@ export default ( {
   [ mass ]: massDef,
   [ temperature ]: temperatureDef,
   [ time ]: timeDef
-} ) as const satisfies QuantityRegistry;
+} ) as const satisfies QuantityMap;

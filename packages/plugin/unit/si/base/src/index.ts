@@ -1,4 +1,4 @@
-import type { UnitRegistry } from '@unitra/types/registry';
+import type { UnitMap } from '@unitra/types/unit';
 
 import ampereDef, { ampere } from './def/ampere';
 import candelaDef, { candela } from './def/candela';
@@ -16,4 +16,4 @@ export default ( {
   [ meter ]: meterDef,
   [ mole ]: moleDef,
   [ second ]: secondDef
-} ) as const satisfies UnitRegistry;
+} ) as const satisfies UnitMap;

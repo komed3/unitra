@@ -111,4 +111,6 @@ export type UnitDef<
 
 export type DerivedUnitDef< R extends UnitRef > = UnitDef< UnitDim< R >, UnitKind< R >, R >;
 
+export type UnitMap = Readonly< { [ R in UnitRef ]: DerivedUnitDef< R > } >;
+
 export type UnitLike = UnitRef | UnitDef | string;

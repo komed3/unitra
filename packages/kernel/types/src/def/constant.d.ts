@@ -38,4 +38,6 @@ export type ConstantDef<
 
 export type DerivedConstantDef< R extends ConstantRef > = ConstantDef< ConstantDim< R >, R >;
 
+export type ConstantMap = Readonly< { [ R in ConstantRef ]: DerivedConstantDef< R > } >;
+
 export type ConstantLike = ConstantRef | ConstantDef | string;
