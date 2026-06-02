@@ -9,7 +9,8 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./runtime": "./dist/runtime/index.js"
+    "./hook": "./dist/kernel/hook/index.js",
+    "./plugin": "./dist/kernel/plugin/index.js"
   },
   "scripts": {
     "build": "tsc -b && tsc-alias",
