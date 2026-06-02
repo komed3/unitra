@@ -54,7 +54,9 @@ export class HookEngine {
     }
   }
 
-  public run < K extends HookId > ( id: K, ctx: HookCtx< K >, input?: HookIn< K > ) : HookOut< K > {
-    return undefined as HookOut< K >;
+  public run < K extends HookId > ( id: K, ctx: HookCtx< K >, input: HookIn< K > ) : HookOut< K > {
+    HookEngine.log.debug( `run ${ id }` );
+
+    return ( this.getPipeline( id ) )( ctx, input as any ) as HookOut< K >;
   }
 }
