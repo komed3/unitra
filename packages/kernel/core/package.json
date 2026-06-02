@@ -9,7 +9,6 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./hook": "./dist/kernel/hook/index.js",
     "./plugin": "./dist/plugin/index.js",
     "./service": "./dist/service/index.js"
   },
