@@ -1,3 +1,21 @@
+import type { ReferenceState } from './node';
+
+export interface HookRegistry {
+  'core.service.serialize': {
+    ctx: {
+      state: ReferenceState;
+    };
+    input: string;
+    output: string;
+  };
+}
+
+
+
+
+
+
+
 export type HookHandler< C extends {}, I = void, O = void > = ( ctx: C, input?: I ) => O;
 
 export type HookDefinition< C extends {}, I = void, O = void > = {
