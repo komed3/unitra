@@ -1,20 +1,37 @@
-import type {
-  HookCache, HookCtx, HookDef, HookHandler, HookId, HookImplMap, HookIn,
-  HookOut, HookPipeline, HookSpec, HookStorage
-} from '@unitra/types/hook';
+import type { HookCtx, HookDef, HookHandler, HookId, HookImplMap, HookIn, HookOut, HookPipeline, HookSpec } from '@unitra/types/hook';
 import Logging from '@unitra/utils/logging';
+
+class HookStorage extends Map {
+  public override set < K extends HookId > ( id: K, hooks: HookDef< K >[] ) : this {
+    return super.set( id, hooks );
+  }
+
+  public override get < K extends HookId > ( id: K ) : HookDef< K >[] | undefined {
+    return super.get( id );
+  }
+}
+
+class HookCache extends Map {
+  public override set < K extends HookId > ( id: K, fn: HookPipeline< K > ) : this {
+    return super.set( id, fn );
+  }
+
+  public override get < K extends HookId > ( id: K ) : HookPipeline< K > | undefined {
+    return super.get( id );
+  }
+}
 
 export class HookEngine {
   private static readonly log = Logging.createSource( 'hook' );
 
-  private readonly hooks: HookStorage = new Map();
-  private readonly cache: HookCache = new Map();
+  private readonly hooks = new HookStorage();
+  private readonly cache = new HookCache();
 
   private getPipeline < K extends HookId > ( id: K ) : HookPipeline< K > {
-    const cached = this.cache.get( id ) as HookPipeline< K > | undefined;
+    const cached = this.cache.get( id );
     if ( cached ) return cached;
 
-    const list = ( this.hooks.get( id ) ?? [] ) as HookDef< K >[];
+    const list = ( this.hooks.get( id ) ?? [] );
     const sorted = list.slice().sort( ( a, b ) => ( b.priority ?? 0 ) - ( a.priority ?? 0 ) );
 
     const pipeline = ( ( ctx, value ) => sorted.reduce( ( v, h ) => h.handler( ctx, v ), value ) ) as HookPipeline< K >;
