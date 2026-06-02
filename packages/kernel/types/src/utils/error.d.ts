@@ -1,5 +1,5 @@
 import type { UnitraErrorCode } from '@unitra/dict/error';
-import type { PluginResolveGraph } from './plugin';
+import type { PluginResolveGraph } from '../core/plugin';
 
 export type UnitraErrorOptions< T = unknown > = {
   data?: T;

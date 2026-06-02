@@ -1,7 +1,7 @@
-import type { PluginResolutionError } from './error';
+import type { PluginResolutionError } from '../utils/error';
+import type { SemverRange, SemverVersion } from '../utils/semver';
 import type { HookImplMap } from './hook';
 import type { ConstantRegistry, PrefixRegistry, QuantityRegistry, UnitRegistry } from './registry';
-import type { SemverRange, SemverVersion } from './semver';
 
 export type DependencyMap = Readonly< Record< string, SemverRange > >;
 

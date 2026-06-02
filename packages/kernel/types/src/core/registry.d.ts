@@ -1,7 +1,7 @@
-import type { ConstantRef, DerivedConstantDef } from './def/constant';
-import type { DerivedPrefixDef, PrefixRef } from './def/prefix';
-import type { DerivedQuantityDef, QuantityRef } from './def/quantity';
-import type { DerivedUnitDef, UnitRef } from './def/unit';
+import type { ConstantRef, DerivedConstantDef } from '../def/constant';
+import type { DerivedPrefixDef, PrefixRef } from '../def/prefix';
+import type { DerivedQuantityDef, QuantityRef } from '../def/quantity';
+import type { DerivedUnitDef, UnitRef } from '../def/unit';
 
 export type PrefixRegistry = Readonly< { [ R in PrefixRef ]: DerivedPrefixDef< R > } >;
 export type QuantityRegistry = Readonly< { [ R in QuantityRef ]: DerivedQuantityDef< R > } >;
