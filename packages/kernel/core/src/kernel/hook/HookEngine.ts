@@ -1,4 +1,4 @@
-import type { HookCache, HookCtx, HookHandler, HookId, HookImplMap, HookIn, HookMap, HookOut, HookSpec } from '@unitra/types/hook';
+import type { HookCache, HookCtx, HookDef, HookHandler, HookId, HookImplMap, HookIn, HookMap, HookOut, HookSpec } from '@unitra/types/hook';
 import Logging from '@unitra/utils/logging';
 
 export class HookEngine {
@@ -21,7 +21,17 @@ export class HookEngine {
     this.invalidate( id );
   }
 
-  public merge ( hooks: HookImplMap ) : void {}
+  public merge ( hooks: HookImplMap ) : void {
+    for ( const [ key, incoming ] of Object.entries( hooks ) as { [ K in HookId ]: [ K, HookDef< K >[] ] }[ HookId ][] ) {
+      if ( ! incoming?.length ) continue;
+
+      const existing = this.hooks.get( key );
+      if ( existing ) existing.push( ...incoming );
+      else this.hooks.set( key, [ ...incoming ] );
+
+      this.invalidate( key );
+    }
+  }
 
   public run < K extends HookId > ( id: K, ctx: HookCtx< K >, input?: HookIn< K > ) : HookOut< K > {
     return undefined as HookOut< K >;
