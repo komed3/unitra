@@ -10,23 +10,22 @@ export interface HookRegistry {
   };
 }
 
+export type HookId = keyof HookRegistry;
+export type HookSpec< K extends HookId > = HookRegistry[ K ];
 
+export type HookHandler< S extends HookSpec > =
+  S extends { input: infer I; output: infer O }
+    ? ( ctx: S[ 'ctx' ], input: I ) => O
+    : S extends { input: infer I }
+      ? ( ctx: S[ 'ctx' ], input: I ) => void
+      : S extends { output: infer O }
+        ? ( ctx: S[ 'ctx' ] ) => O
+        : ( ctx: S[ 'ctx' ] ) => void;
 
-
-
-
-
-export type HookHandler< C extends {}, I = void, O = void > = ( ctx: C, input?: I ) => O;
-
-export type HookDefinition< C extends {}, I = void, O = void > = {
-  handler: HookHandler< C, I, O >;
+export type HookDef< K extends HookId > = {
+  handler: HookHandler< HookSpec< K > >;
   priority?: number;
 };
 
-export type HookDefMap = {
-  readonly [ K in string ]?: object;
-};
-
-export type HookImplMap = {
-  readonly [ K in string ]?: ReadonlyArray< HookDefinition >;
-};
+export type HookDefMap = { readonly [ K in HookId ]?: HookDef< K > };
+export type HookImplMap = { readonly [ K in HookId ]?: ReadonlyArray< HookDef< K > > };
