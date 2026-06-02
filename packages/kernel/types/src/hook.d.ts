@@ -13,6 +13,10 @@ export interface HookRegistry {
 export type HookId = keyof HookRegistry;
 export type HookSpec< K extends HookId > = HookRegistry[ K ];
 
+export type HookCtx< K extends HookId > = HookSpec< K >[ 'ctx' ];
+export type HookIn< K extends HookId > = HookSpec< K > extends { input: infer I } ? I : void;
+export type HookOut< K extends HookId > = HookSpec< K > extends { output: infer O } ? O : void;
+
 export type HookHandler< S extends HookSpec > =
   S extends { input: infer I; output: infer O }
     ? ( ctx: S[ 'ctx' ], input: I ) => O
