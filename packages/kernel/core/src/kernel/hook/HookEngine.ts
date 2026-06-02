@@ -9,12 +9,16 @@ export class HookEngine {
 
   constructor () {}
 
+  public invalidate ( id: HookId ) : void {
+    this.cache.delete( id );
+  }
+
   public add < K extends HookId > ( id: K, handler: HookHandler< HookSpec< K > >, priority?: number ) : void {
     const list = this.hooks.get( id );
     if ( list ) list.push( { handler, priority } );
     else this.hooks.set( id, [ { handler, priority } ] );
 
-    this.cache.delete( id );
+    this.invalidate( id );
   }
 
   public merge ( hooks: HookImplMap ) : void {}
