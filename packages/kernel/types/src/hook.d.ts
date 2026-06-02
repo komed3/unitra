@@ -5,32 +5,32 @@ export interface HookRegistry {
     ctx: {
       state: ReferenceState;
     };
-    input: string;
-    output: string;
+    value: string;
   };
 }
 
 export type HookId = keyof HookRegistry;
 export type HookSpec< K extends HookId > = HookRegistry[ K ];
-
 export type HookCtx< K extends HookId > = HookSpec< K >[ 'ctx' ];
-export type HookIn< K extends HookId > = HookSpec< K > extends { input: infer I } ? I : void;
-export type HookOut< K extends HookId > = HookSpec< K > extends { output: infer O } ? O : void;
 
-export type HookHandler< S extends HookSpec > =
-  S extends { input: infer I; output: infer O }
-    ? ( ctx: S[ 'ctx' ], input: I ) => O
-    : S extends { input: infer I }
-      ? ( ctx: S[ 'ctx' ], input: I ) => void
-      : S extends { output: infer O }
-        ? ( ctx: S[ 'ctx' ] ) => O
-        : ( ctx: S[ 'ctx' ] ) => void;
+export type HookValue< K extends HookId > =
+  HookSpec< K > extends { value: infer V }
+    ? V
+    : void;
+
+export type HookHandler< K extends HookId > =
+  HookSpec< K > extends { value: infer V }
+    ? ( ctx: HookCtx< K >, value: V ) => V
+    : ( ctx: HookCtx< K > ) => void;
 
 export type HookDef< K extends HookId > = {
-  handler: HookHandler< HookSpec< K > >;
+  handler: HookHandler< K >;
   priority?: number;
 };
 
-export type HookPipeline< K extends HookId > = HookDef< K >[ 'handler' ];
-
 export type HookImplMap = { readonly [ K in HookId ]?: ReadonlyArray< HookDef< K > > };
+
+export type HookPipeline< K extends HookId > = (
+  ctx: HookCtx< K >,
+  value?: HookValue< K >
+) => HookValue< K > | undefined;
