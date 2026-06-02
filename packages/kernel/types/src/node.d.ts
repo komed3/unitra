@@ -1,6 +1,6 @@
-import type { ConstantRef } from './constant';
-import type { PrefixRef } from './prefix';
-import type { UnitRef } from './unit';
+import type { ConstantRef } from './def/constant';
+import type { PrefixRef } from './def/prefix';
+import type { UnitRef } from './def/unit';
 
 export type UnitNode = {
   readonly type: 'unit';

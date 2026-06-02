@@ -1,6 +1,6 @@
-import type { Deprecated, Meta } from './common';
-import type { Dimension } from './dim';
-import type { UnitStruct } from './unit';
+import type { Deprecated, Meta } from '../common';
+import type { Dimension } from '../dim';
+import type { UnitStruct } from '../unit';
 
 declare const constantBrand: unique symbol;
 

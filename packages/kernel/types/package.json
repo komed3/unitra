@@ -9,7 +9,7 @@
   ],
   "exports": {
     "./common": "./src/common.d.ts",
-    "./constant": "./src/constant.d.ts",
+    "./constant": "./src/def/constant.d.ts",
     "./dim": "./src/dim.d.ts",
     "./error": "./src/error.d.ts",
     "./hook": "./src/hook.d.ts",
@@ -17,11 +17,11 @@
     "./manifest": "./src/manifest.d.ts",
     "./node": "./src/node.d.ts",
     "./plugin": "./src/plugin.d.ts",
-    "./prefix": "./src/prefix.d.ts",
-    "./quantity": "./src/quantity.d.ts",
+    "./prefix": "./src/def/prefix.d.ts",
+    "./quantity": "./src/def/quantity.d.ts",
     "./registry": "./src/registry.d.ts",
     "./semver": "./src/semver.d.ts",
-    "./unit": "./src/unit.d.ts"
+    "./unit": "./src/def/unit.d.ts"
   },
   "scripts": {
     "lint": "tsc --noEmit"

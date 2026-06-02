@@ -1,6 +1,6 @@
 import type { Branch } from '@unitra/dict/quantity';
-import type { Deprecated, Meta } from './common';
-import type { Dimension } from './dim';
+import type { Deprecated, Meta } from '../common';
+import type { Dimension } from '../dim';
 
 declare const quantityBrand: unique symbol;
 

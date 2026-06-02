@@ -1,4 +1,4 @@
-import type { Deprecated, Meta } from './common';
+import type { Deprecated, Meta } from '../common';
 
 declare const prefixBrand: unique symbol;
 

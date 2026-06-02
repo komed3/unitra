@@ -1,7 +1,7 @@
 import type { SIType, System } from '@unitra/dict/common';
 import type { UnitStatus, UnitType } from '@unitra/dict/unit';
-import type { Deprecated, Meta } from './common';
-import type { Dimension } from './dim';
+import type { Deprecated, Meta } from '../common';
+import type { Dimension } from '../dim';
 import type { PrefixRef } from './prefix';
 import type { QuantityRef } from './quantity';
 
