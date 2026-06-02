@@ -18,4 +18,16 @@ export abstract class BaseRegistry< Ref extends string, Def > {
   public bulk ( input: Iterable< [ Ref, Def ] > ) : void {
     for ( const [ ref, def ] of input ) this.store.set( ref, def );
   }
+
+  public entries () : IterableIterator< [ Ref, Def ] > {
+    return this.store.entries();
+  }
+
+  public values () : IterableIterator< Def > {
+    return this.store.values();
+  }
+
+  public keys () : IterableIterator< Ref > {
+    return this.store.keys();
+  }
 }
