@@ -2,23 +2,13 @@ import type { HookCtx, HookDef, HookHandler, HookId, HookImplMap, HookIn, HookOu
 import Logging from '@unitra/utils/logging';
 
 class HookStorage extends Map {
-  public override set < K extends HookId > ( id: K, hooks: HookDef< K >[] ) : this {
-    return super.set( id, hooks );
-  }
-
-  public override get < K extends HookId > ( id: K ) : HookDef< K >[] | undefined {
-    return super.get( id );
-  }
+  public override set < K extends HookId > ( id: K, hooks: HookDef< K >[] ) : this { return super.set( id, hooks ) }
+  public override get < K extends HookId > ( id: K ) : HookDef< K >[] | undefined { return super.get( id ) }
 }
 
 class HookCache extends Map {
-  public override set < K extends HookId > ( id: K, fn: HookPipeline< K > ) : this {
-    return super.set( id, fn );
-  }
-
-  public override get < K extends HookId > ( id: K ) : HookPipeline< K > | undefined {
-    return super.get( id );
-  }
+  public override set < K extends HookId > ( id: K, fn: HookPipeline< K > ) : this { return super.set( id, fn ) }
+  public override get < K extends HookId > ( id: K ) : HookPipeline< K > | undefined { return super.get( id ) }
 }
 
 export class HookEngine {
