@@ -1,5 +1,5 @@
 import type { PluginResolutionError } from './error';
-import type { HookDefMap, HookImplMap } from './hook';
+import type { HookImplMap } from './hook';
 import type { ConstantRegistry, PrefixRegistry, QuantityRegistry, UnitRegistry } from './registry';
 import type { SemverRange, SemverVersion } from './semver';
 
@@ -26,10 +26,7 @@ export type PluginDefinition = {
   install?: ( ctx: any ) => void;
   contributions?: PluginContributions;
   modules?: any;
-  hooks?: {
-    define?: HookDefMap;
-    implement?: HookImplMap;
-  };
+  hooks?: HookImplMap;
   overrides?: any;
 };
 

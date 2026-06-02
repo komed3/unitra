@@ -27,5 +27,4 @@ export type HookDef< K extends HookId > = {
   priority?: number;
 };
 
-export type HookDefMap = { readonly [ K in HookId ]?: HookSpec< K > };
 export type HookImplMap = { readonly [ K in HookId ]?: ReadonlyArray< HookDef< K > > };
