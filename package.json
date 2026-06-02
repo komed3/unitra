@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "pnpm -r build",
-    "clean": "rimraf --glob \"**/dist\"",
+    "clean": "rimraf --glob \"**/dist\" && rimraf --glob \"**/tsconfig.tsbuildinfo\"",
     "lint": "pnpm -r lint"
   },
   "devDependencies": {
