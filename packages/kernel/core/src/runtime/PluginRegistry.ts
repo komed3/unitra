@@ -29,7 +29,7 @@ export class PluginRegistry {
       this.log.debug( `${ exists ? 'updated' : 'registered' } plugin "${ plugin.id }@${ plugin.version }"` );
     }
 
-    ( plugins && this.revId++ );
+    ( plugins.length && this.revId++ );
   }
 
   public static remove ( id: string, version?: SemverVersion ) : void {
