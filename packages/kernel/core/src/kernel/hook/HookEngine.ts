@@ -24,12 +24,8 @@ export class HookEngine {
     const list = ( this.hooks.get( id ) ?? [] );
     const sorted = list.slice().sort( ( a, b ) => ( b.priority ?? 0 ) - ( a.priority ?? 0 ) );
 
-    const pipeline = ( ( ctx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K > | undefined => {
-      let v = value;
-
-      for ( const h of sorted ) v = h.handler( ctx, v ) as HookValue< K > | undefined;
-      return v;
-    } );
+    const pipeline = ( ctx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K > | undefined =>
+      sorted.reduce( ( v, { handler } ) => handler( ctx, v ) as HookValue< K > | undefined, value );
 
     this.cache.set( id, pipeline );
     return pipeline;
