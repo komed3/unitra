@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "pnpm -r build",
+    "clean": "rimraf --glob \"**/dist\"",
     "lint": "pnpm -r lint"
   },
   "devDependencies": {
