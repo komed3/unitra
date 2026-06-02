@@ -4,7 +4,8 @@ import { serializeError } from './serializeError';
 
 export class ErrorFormatter {
   private static readonly DEFAULT_CONFIG: Required< ErrorFormatterConfig > = {
-    showCode: true, showData: true, showStack: true, showCauses: true, indent: '   '
+    showCode: true, showSummary: true, showData: true,
+    showStack: true, showCauses: true, indent: '   '
   };
 
   private readonly options: Required< ErrorFormatterConfig >;
@@ -39,8 +40,11 @@ export class ErrorFormatter {
   }
 
   public format () : string {
-    const { message, header, data, cause, stack } = this.serialized;
-    const lines: string[] = [ `${ this.formatHeader( this.serialized ) } :: ${ header ?? message }` ];
+    const { message, summary, data, cause, stack } = this.serialized;
+    const lines: string[] = [ `${ this.formatHeader( this.serialized ) } :: ${ message }` ];
+
+    if ( this.options.showSummary && summary )
+      lines.push( '', summary );
 
     if ( this.options.showCauses && cause && typeof cause === 'object' )
       lines.push( '', 'Caused by:', ...this.formatCauseTree( cause as SerializedError ) );
