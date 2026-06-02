@@ -30,4 +30,8 @@ export abstract class BaseRegistry< Ref extends string, Def > {
   public keys () : IterableIterator< Ref > {
     return this.store.keys();
   }
+
+  public filter ( predicate: ( def: Def ) => boolean ) : Def[] {
+    return [ ...this.store.values() ].filter( predicate );
+  }
 }
