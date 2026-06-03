@@ -16,9 +16,21 @@ export type RegistryDef< R extends AnyRef > =
   R extends ConstantRef ? DerivedConstantDef< R > :
   never;
 
+export interface IRegistry< Ref extends AnyRef > {
+  readonly size: number;
+  get: < R extends Ref > ( ref: R ) => RegistryDef< R > | undefined;
+  has: < R extends Ref > ( ref: R ) => boolean;
+  set: < R extends Ref > ( ref: R, def: RegistryDef< R > ) => void;
+  bulk: ( input: Iterable< [ Ref, RegistryDef< Ref > ] > ) => void;
+  entries: () => IterableIterator< [ Ref, RegistryDef< Ref > ] >;
+  values: () => IterableIterator< RegistryDef< Ref > >;
+  keys: () => IterableIterator< Ref >;
+  filter: ( predicate: ( def: RegistryDef< Ref > ) => boolean ) => RegistryDef< Ref >[];
+}
+
 export type RegistryContext = {
-  prefix: any;
-  quantity: any;
-  unit: any;
-  constant: any;
+  prefix: IRegistry< PrefixRef >;
+  quantity: IRegistry< QuantityRef >;
+  unit: IRegistry< UnitRef >;
+  constant: IRegistry< ConstantRef >;
 };
