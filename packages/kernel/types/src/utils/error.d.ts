@@ -38,6 +38,9 @@ export interface IUnitraError< C extends UnitraErrorCode = UnitraErrorCode, T = 
   log: () => void;
 }
 
+export type AssertDefError = IUnitraError< UnitraErrorCode.ASSERT_DEF_ERROR, {} >;
+export type AssertRefError = IUnitraError< UnitraErrorCode.ASSERT_REF_ERROR, {} >;
+
 export type HookRunnerError< K extends HookId > = IUnitraError< UnitraErrorCode.HOOK_RUNNER_ERROR, {
   id: K;
   ctx: HookCtx< K >;
