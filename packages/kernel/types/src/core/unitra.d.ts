@@ -1,6 +1,7 @@
 import type { ILogger } from '../utils/logging';
 import type { IHookEngine } from './hook';
 import type { RegistryAccessor } from './registry';
+import type { ServiceContext } from './service';
 
 export type CoreContext = {
   hook: IHookEngine;
@@ -10,5 +11,5 @@ export type CoreContext = {
 export type UnitraContext = {
   core: CoreContext;
   registry: RegistryAccessor;
-  service: {};
+  service: ServiceContext;
 };

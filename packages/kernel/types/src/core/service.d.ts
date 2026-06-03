@@ -6,3 +6,7 @@ export interface IAssertService {
   assertRef: < K extends RegistryKey, R extends AnyRef = RefOf< K > > ( key: K, value: unknown ) => asserts value is R;
   assertDef: < K extends RegistryKey, D = DefOf< K > > ( key: K, value: unknown ) => asserts value is D;
 }
+
+export type ServiceContext = {
+  assert: IAssertService;
+};
