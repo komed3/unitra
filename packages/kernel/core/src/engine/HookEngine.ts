@@ -1,4 +1,4 @@
-import type { HookCtx, HookDef, HookHandler, HookId, HookImplMap, HookPipeline, HookValue } from '@unitra/types/hook';
+import type { HookCtx, HookDef, HookHandler, HookId, HookImplMap, HookPipeline, HookValue, IHookEngine } from '@unitra/types/hook';
 import { HookRunnerError } from '@unitra/utils/error';
 import Logging from '@unitra/utils/logging';
 
@@ -12,7 +12,7 @@ class HookCache extends Map {
   public override get < K extends HookId > ( id: K ) : HookPipeline< K > | undefined { return super.get( id ) }
 }
 
-export class HookEngine {
+export class HookEngine implements IHookEngine {
   private static readonly log = Logging.createSource( 'hook' );
 
   private readonly hooks = new HookStorage();
