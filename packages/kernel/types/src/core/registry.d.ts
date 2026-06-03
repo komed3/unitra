@@ -29,5 +29,8 @@ export interface IRegistry< Ref extends AnyRef > {
 }
 
 export interface IRegistryService {
-
+  prefix: IRegistry< PrefixRef >;
+  quantity: IRegistry< QuantityRef >;
+  unit: IRegistry< UnitRef >;
+  constant: IRegistry< ConstantRef >;
 }
