@@ -45,11 +45,8 @@ export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
 }
 
 export const registryFactory = ( override?: Partial< RegistryContext > ) : RegistryContext => ( {
-  ...{
-    prefix: new Registry< PrefixRef >(),
-    quantity: new Registry< QuantityRef >(),
-    unit: new Registry< UnitRef >(),
-    constant: new Registry< ConstantRef >()
-  },
-  ...override
+  prefix: override?.prefix ?? new Registry< PrefixRef >(),
+  quantity: override?.quantity ?? new Registry< QuantityRef >(),
+  unit: override?.unit ?? new Registry< UnitRef >(),
+  constant: override?.constant ?? new Registry< ConstantRef >()
 } );
