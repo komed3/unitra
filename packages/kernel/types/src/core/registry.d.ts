@@ -34,3 +34,5 @@ export interface IRegistryService {
   unit: IRegistry< UnitRef >;
   constant: IRegistry< ConstantRef >;
 }
+
+export type RegistryKey = keyof IRegistryService;
