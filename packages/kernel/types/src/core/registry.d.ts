@@ -38,3 +38,12 @@ export type RegistryMap = {
 export type RegistryKey = keyof RegistryMap;
 
 export type RegistryAccessor = < K extends RegistryKey > ( key: K ) => RegistryMap[ K ];
+
+export type RefMap = {
+  prefix: PrefixRef;
+  quantity: QuantityRef;
+  unit: UnitRef;
+  constant: ConstantRef;
+};
+
+export type RefOf< K extends RegistryKey > = RefMap[ K ];
