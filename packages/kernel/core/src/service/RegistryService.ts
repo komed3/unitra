@@ -4,7 +4,7 @@ import type { QuantityRef } from '@unitra/types/quantity';
 import type { AnyRef, IRegistry, IRegistryService, RegistryDef } from '@unitra/types/registry';
 import type { UnitRef } from '@unitra/types/unit';
 
-export abstract class BaseRegistry< Ref extends AnyRef > implements IRegistry< Ref > {
+export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
   protected readonly store = new Map< Ref, RegistryDef< Ref > >();
 
   public get size () : number {
@@ -44,14 +44,9 @@ export abstract class BaseRegistry< Ref extends AnyRef > implements IRegistry< R
   }
 }
 
-export class PrefixRegistry extends BaseRegistry< PrefixRef > {}
-export class QuantityRegistry extends BaseRegistry< QuantityRef > {}
-export class UnitRegistry extends BaseRegistry< UnitRef > {}
-export class ConstantRegistry extends BaseRegistry< ConstantRef > {}
-
 export const createRegistryService = () : IRegistryService => ( {
-  prefix: new PrefixRegistry(),
-  quantity: new QuantityRegistry(),
-  unit: new UnitRegistry(),
-  constant: new ConstantRegistry()
+  prefix: new Registry< PrefixRef >(),
+  quantity: new Registry< QuantityRef >(),
+  unit: new Registry< UnitRef >(),
+  constant: new Registry< ConstantRef >()
 } );
