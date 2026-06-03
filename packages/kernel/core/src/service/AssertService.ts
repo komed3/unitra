@@ -4,6 +4,8 @@ import type { QuantityDef, QuantityRef } from '@unitra/types/quantity';
 import type { AnyRef, IRegistry } from '@unitra/types/registry';
 import type { IAssert, IAssertService, ServicesContext } from '@unitra/types/service';
 import type { UnitDef, UnitRef } from '@unitra/types/unit';
+import { AssertDefError, AssertRefError } from '@unitra/utils/error';
+import { safeJsonStringify } from '@unitra/utils/helper';
 
 export abstract class Assert< Ref extends AnyRef, Def extends { id: Ref } > implements IAssert< Ref, Def > {
   protected abstract get registry () : IRegistry< Ref >;
@@ -20,11 +22,17 @@ export abstract class Assert< Ref extends AnyRef, Def extends { id: Ref } > impl
   }
 
   public assertRef ( value: unknown ) : asserts value is Ref {
-    if ( ! this.isRef( value ) ) throw Error();
+    if ( ! this.isRef( value ) ) throw new AssertRefError(
+      `expected a reference, but got ${ safeJsonStringify( value ) }`,
+      { data: { value } }
+    );
   }
 
   public assertDef ( value: unknown ) : asserts value is Def {
-    if ( ! this.isDef( value ) ) throw Error();
+    if ( ! this.isDef( value ) ) throw new AssertDefError(
+      `expected a definition object, but got ${ safeJsonStringify( value ) }`,
+      { data: { value } }
+    );
   }
 }
 
