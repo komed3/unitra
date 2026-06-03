@@ -1,6 +1,6 @@
 import type { AnyRef, DefOf, IRegistry, RefOf, RegistryKey } from '@unitra/types/registry';
 import type { UnitraContext } from '@unitra/types/unitra';
-import { AssertRefError } from '@unitra/utils/error';
+import { AssertDefError, AssertRefError } from '@unitra/utils/error';
 import { safeJsonStringify } from '@unitra/utils/helper';
 
 export class AssertService {
@@ -19,5 +19,12 @@ export class AssertService {
 
   public isDef < K extends RegistryKey, D = DefOf< K > > ( key: K, value: unknown ) : value is D {
     return typeof value === 'object' && value !== null && 'id' in value && this.isRef( key, value.id );
+  }
+
+  public assertDef < K extends RegistryKey, D = DefOf< K > > ( key: K, value: unknown ) : asserts value is D {
+    if ( ! this.isDef( key, value ) ) throw new AssertDefError(
+      `expected a ${ key } definition, but got ${ safeJsonStringify( value ) }`,
+      { data: { key, value } }
+    );
   }
 }
