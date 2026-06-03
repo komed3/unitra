@@ -30,4 +30,8 @@ export abstract class BaseRegistry< Ref extends AnyRef > {
   public keys () : IterableIterator< Ref > {
     return this.store.keys();
   }
+
+  public filter ( predicate: ( def: RegistryDef< Ref > ) => boolean ) : RegistryDef< Ref >[] {
+    return [ ...this.store.values() ].filter( predicate );
+  }
 }
