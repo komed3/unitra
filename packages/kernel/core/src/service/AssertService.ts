@@ -6,6 +6,14 @@ import type { UnitDef, UnitRef } from '@unitra/types/unit';
 
 export abstract class Assert< Ref, Def > implements IAssert< Ref, Def > {
   constructor ( private readonly ctx: ServicesContext ) {}
+
+  public isRef ( value: unknown ) : value is Ref {}
+
+  public isDef ( value: unknown ) : value is Def {}
+
+  public assertRef ( value: unknown ) : asserts value is Ref {}
+
+  public assertDef ( value: unknown ) : asserts value is Def {}
 }
 
 export class AssertPrefix extends Assert< PrefixRef, PrefixDef > {}
