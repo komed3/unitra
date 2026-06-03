@@ -1,7 +1,7 @@
 import type { ConstantRef } from '@unitra/types/constant';
 import type { PrefixRef } from '@unitra/types/prefix';
 import type { QuantityRef } from '@unitra/types/quantity';
-import type { AnyRef, IRegistry, RegistryDef } from '@unitra/types/registry';
+import type { AnyRef, IRegistry, RegistryContext, RegistryDef } from '@unitra/types/registry';
 import type { UnitRef } from '@unitra/types/unit';
 
 export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
@@ -44,9 +44,12 @@ export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
   }
 }
 
-export const registryFactory = () => ( {
-  prefix: () => new Registry< PrefixRef >(),
-  quantity: () => new Registry< QuantityRef >(),
-  unit: () => new Registry< UnitRef >(),
-  constant: () => new Registry< ConstantRef >()
+export const registryFactory = ( override?: Partial< RegistryContext > ) : RegistryContext => ( {
+  ...{
+    prefix: new Registry< PrefixRef >(),
+    quantity: new Registry< QuantityRef >(),
+    unit: new Registry< UnitRef >(),
+    constant: new Registry< ConstantRef >()
+  },
+  ...override
 } );
