@@ -33,3 +33,11 @@ export type HookImplMap = { readonly [ K in HookId ]?: ReadonlyArray< HookDef< K
 export type HookPipeline< K extends HookId > = (
   ctx: HookCtx< K >, value?: HookValue< K >
 ) => HookValue< K > | undefined;
+
+export interface IHookEngine {
+  invalidate: ( id: HookId ) => void;
+  add: < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) => void;
+  merge: ( hooks: HookImplMap ) => void;
+  run: < K extends HookId > ( id: K, ctx: HookCtx< K > ) => void;
+  run: < K extends HookId > ( id: K, ctx: HookCtx< K >, value: HookValue< K > ) => HookValue< K >;
+}
