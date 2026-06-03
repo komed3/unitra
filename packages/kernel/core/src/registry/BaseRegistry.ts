@@ -14,4 +14,8 @@ export abstract class BaseRegistry< Ref extends AnyRef > {
   public set < R extends Ref > ( ref: R, def: RegistryDef< R > ) : void {
     this.store.set( ref, def );
   }
+
+  public bulk ( input: Iterable< [ Ref, RegistryDef< Ref > ] > ) : void {
+    for ( const [ ref, def ] of input ) this.store.set( ref, def );
+  }
 }
