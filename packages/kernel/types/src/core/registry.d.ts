@@ -28,9 +28,13 @@ export interface IRegistry< Ref extends AnyRef > {
   filter: ( predicate: ( def: RegistryDef< Ref > ) => boolean ) => RegistryDef< Ref >[];
 }
 
-export type RegistryContext = {
+export type RegistryMap = {
   prefix: IRegistry< PrefixRef >;
   quantity: IRegistry< QuantityRef >;
   unit: IRegistry< UnitRef >;
   constant: IRegistry< ConstantRef >;
 };
+
+export type RegistryKey = keyof RegistryMap;
+
+export type RegistryAccessor = < K extends RegistryKey > ( key: K ) => RegistryMap[ K ];
