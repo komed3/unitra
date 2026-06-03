@@ -41,7 +41,7 @@ export interface IUnitraError< C extends UnitraErrorCode = UnitraErrorCode, T = 
 export type HookRunnerError< K extends HookId > = IUnitraError< UnitraErrorCode.HOOK_RUNNER_ERROR, {
   id: K;
   ctx: HookCtx< K >;
-  value: HookValue< K > | undefined;
+  value?: HookValue< K >;
 } >;
 
 export type PluginResolutionError = IUnitraError< UnitraErrorCode.PLUGIN_RESOLUTION_ERROR, {
