@@ -15,3 +15,10 @@ export type RegistryDef< R extends AnyRef > =
   R extends UnitRef ? DerivedUnitDef< R > :
   R extends ConstantRef ? DerivedConstantDef< R > :
   never;
+
+export type RegistryContext = {
+  prefix: any;
+  quantity: any;
+  unit: any;
+  constant: any;
+};
