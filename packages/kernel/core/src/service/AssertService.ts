@@ -19,9 +19,13 @@ export abstract class Assert< Ref extends AnyRef, Def extends { id: Ref } > impl
       this.isRef( ( value as Def ).id );
   }
 
-  public assertRef ( value: unknown ) : asserts value is Ref {}
+  public assertRef ( value: unknown ) : asserts value is Ref {
+    if ( ! this.isRef( value ) ) throw Error();
+  }
 
-  public assertDef ( value: unknown ) : asserts value is Def {}
+  public assertDef ( value: unknown ) : asserts value is Def {
+    if ( ! this.isDef( value ) ) throw Error();
+  }
 }
 
 export class AssertPrefix extends Assert< PrefixRef, PrefixDef > {
