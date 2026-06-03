@@ -1,4 +1,4 @@
-import type { AnyRef, IRegistry, RefOf, RegistryKey } from '@unitra/types/registry';
+import type { AnyRef, DefOf, IRegistry, RefOf, RegistryKey } from '@unitra/types/registry';
 import type { UnitraContext } from '@unitra/types/unitra';
 import { AssertRefError } from '@unitra/utils/error';
 import { safeJsonStringify } from '@unitra/utils/helper';
@@ -15,5 +15,9 @@ export class AssertService {
       `expected a ${ key } reference, but got ${ safeJsonStringify( value ) }`,
       { data: { key, value } }
     );
+  }
+
+  public isDef < K extends RegistryKey, D = DefOf< K > > ( key: K, value: unknown ) : value is D {
+    return typeof value === 'object' && value !== null && 'id' in value && this.isRef( key, value.id );
   }
 }

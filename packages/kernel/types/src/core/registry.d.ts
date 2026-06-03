@@ -46,4 +46,12 @@ export type RefMap = {
   constant: ConstantRef;
 };
 
+export type DefMap = {
+  prefix: DerivedPrefixDef< PrefixRef >;
+  quantity: DerivedQuantityDef< QuantityRef >;
+  unit: DerivedUnitDef< UnitRef >;
+  constant: DerivedConstantDef< ConstantRef >;
+};
+
 export type RefOf< K extends RegistryKey > = RefMap[ K ];
+export type DefOf< K extends RegistryKey > = DefMap[ K ];
