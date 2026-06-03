@@ -1,6 +1,7 @@
 import type { UnitraErrorCode } from '@unitra/dict/error';
 import type { HookCtx, HookId, HookValue } from '../core/hook';
 import type { PluginResolveGraph } from '../core/plugin';
+import type { RegistryKey } from '../core/registry';
 
 export type UnitraErrorOptions< T = unknown > = {
   data?: T;
@@ -39,10 +40,12 @@ export interface IUnitraError< C extends UnitraErrorCode = UnitraErrorCode, T = 
 }
 
 export type AssertDefError = IUnitraError< UnitraErrorCode.ASSERT_DEF_ERROR, {
+  key: RegistryKey,
   value: unknown;
 } >;
 
 export type AssertRefError = IUnitraError< UnitraErrorCode.ASSERT_REF_ERROR, {
+  key: RegistryKey,
   value: unknown;
 } >;
 
