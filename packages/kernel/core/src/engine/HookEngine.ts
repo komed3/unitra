@@ -1,4 +1,5 @@
 import type { HookCtx, HookDef, HookHandler, HookId, HookImplMap, HookPipeline, HookValue } from '@unitra/types/hook';
+import { HookRunnerError } from '@unitra/utils/error';
 import Logging from '@unitra/utils/logging';
 
 class HookStorage extends Map {
@@ -63,6 +64,10 @@ export class HookEngine {
 
   public run < K extends HookId > ( id: K, ctx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K > | void {
     HookEngine.log.debug( `run "${ id }"` );
-    return this.getPipeline( id )( ctx, value );
+
+    try { return this.getPipeline( id )( ctx, value ) }
+    catch ( err ) { throw new HookRunnerError< K >( `failed to run hook for "${ id }"`, {
+      data: { id, ctx, value }, cause: err
+    } ) }
   }
 }

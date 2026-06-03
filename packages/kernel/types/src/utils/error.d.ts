@@ -1,4 +1,5 @@
 import type { UnitraErrorCode } from '@unitra/dict/error';
+import type { HookCtx, HookId, HookValue } from '../core/hook';
 import type { PluginResolveGraph } from '../core/plugin';
 
 export type UnitraErrorOptions< T = unknown > = {
@@ -37,7 +38,11 @@ export interface IUnitraError< C extends UnitraErrorCode = UnitraErrorCode, T = 
   log: () => void;
 }
 
-export type HookRunnerError = IUnitraError< UnitraErrorCode.HOOK_RUNNER_ERROR, {} >;
+export type HookRunnerError< K extends HookId > = IUnitraError< UnitraErrorCode.HOOK_RUNNER_ERROR, {
+  id: K;
+  ctx: HookCtx< K >;
+  value: HookValue< K > | undefined;
+} >;
 
 export type PluginResolutionError = IUnitraError< UnitraErrorCode.PLUGIN_RESOLUTION_ERROR, {
   graph: PluginResolveGraph;
