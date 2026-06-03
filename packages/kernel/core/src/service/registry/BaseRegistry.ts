@@ -1,7 +1,11 @@
-import type { AnyRef, RegistryDef } from '@unitra/types/registry';
+import type { AnyRef, IRegistry, RegistryDef } from '@unitra/types/registry';
 
-export abstract class BaseRegistry< Ref extends AnyRef > {
+export abstract class BaseRegistry< Ref extends AnyRef > implements IRegistry< Ref > {
   protected readonly store = new Map< Ref, RegistryDef< Ref > >();
+
+  public get size () : number {
+    return this.store.size;
+  }
 
   public get < R extends Ref > ( ref: R ) : RegistryDef< R > | undefined {
     return this.store.get( ref ) as RegistryDef< R > | undefined;

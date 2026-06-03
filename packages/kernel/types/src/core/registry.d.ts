@@ -16,7 +16,7 @@ export type RegistryDef< R extends AnyRef > =
   R extends ConstantRef ? DerivedConstantDef< R > :
   never;
 
-export interface IRegistry< R extends AnyRef > {
+export interface IRegistry< Ref extends AnyRef > {
   readonly size: number;
   get: < R extends Ref > ( ref: R ) => RegistryDef< R > | undefined;
   has: < R extends Ref > ( ref: R ) => boolean;
@@ -26,4 +26,8 @@ export interface IRegistry< R extends AnyRef > {
   values: () => IterableIterator< RegistryDef< Ref > >;
   keys: () => IterableIterator< Ref >;
   filter: ( predicate: ( def: RegistryDef< Ref > ) => boolean ) => RegistryDef< Ref >[];
+}
+
+export interface IRegistryService {
+
 }
