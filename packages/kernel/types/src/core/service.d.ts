@@ -3,9 +3,9 @@ import type { PrefixDef, PrefixRef } from '../def/prefix';
 import type { QuantityDef, QuantityRef } from '../def/quantity';
 import type { UnitDef, UnitRef } from '../def/unit';
 import type { IHookEngine } from './hook';
-import type { IRegistryService } from './registry';
+import type { AnyRef, IRegistryService } from './registry';
 
-export interface IAssert< Ref, Def > {
+export interface IAssert< Ref extends AnyRef, Def extends { id: Ref } > {
   isRef: ( value: unknown ) => value is Ref;
   isDef: ( value: unknown ) => value is Def;
   assertRef: ( value: unknown ) => asserts value is Ref;
