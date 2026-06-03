@@ -37,6 +37,8 @@ export interface IUnitraError< C extends UnitraErrorCode = UnitraErrorCode, T = 
   log: () => void;
 }
 
+export type HookRunnerError = IUnitraError< UnitraErrorCode.HOOK_RUNNER_ERROR, {} >;
+
 export type PluginResolutionError = IUnitraError< UnitraErrorCode.PLUGIN_RESOLUTION_ERROR, {
   graph: PluginResolveGraph;
   missing: ReadonlyArray< string >;

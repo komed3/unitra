@@ -5,4 +5,5 @@ export * from './ErrorFormatter';
 export * from './errorUtils';
 export * from './serializeError';
 
+export * from './errors/HookRunnerError';
 export * from './errors/PluginResolutionError';
