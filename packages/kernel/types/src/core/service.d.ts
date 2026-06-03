@@ -2,6 +2,7 @@ import type { ConstantDef, ConstantRef } from '../def/constant';
 import type { PrefixDef, PrefixRef } from '../def/prefix';
 import type { QuantityDef, QuantityRef } from '../def/quantity';
 import type { UnitDef, UnitRef } from '../def/unit';
+import type { ILogger } from '../utils/logging';
 import type { IHookEngine } from './hook';
 import type { AnyRef, IRegistryService } from './registry';
 
@@ -22,6 +23,7 @@ export interface IAssertService {
 export type ServicesContext = {
   core: {
     hook: IHookEngine;
+    log: ILogger;
   };
   services: {
     registry: IRegistryService;
