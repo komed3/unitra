@@ -1,6 +1,10 @@
-import { AnyRef, RegistryDef } from '@unitra/types/registry';
+import type { ConstantRef } from '@unitra/types/constant';
+import type { PrefixRef } from '@unitra/types/prefix';
+import type { QuantityRef } from '@unitra/types/quantity';
+import type { AnyRef, IRegistry, RegistryDef } from '@unitra/types/registry';
+import type { UnitRef } from '@unitra/types/unit';
 
-export class Registry< Ref extends AnyRef > {
+export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
   protected readonly store = new Map< Ref, RegistryDef< Ref > >();
 
   public get size () : number {
@@ -39,3 +43,10 @@ export class Registry< Ref extends AnyRef > {
     return [ ...this.store.values() ].filter( predicate );
   }
 }
+
+export const registryFactory = () => ( {
+  prefix: () => new Registry< PrefixRef >(),
+  quantity: () => new Registry< QuantityRef >(),
+  unit: () => new Registry< UnitRef >(),
+  constant: () => new Registry< ConstantRef >()
+} );
