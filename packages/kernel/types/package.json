@@ -21,6 +21,7 @@
     "./quantity": "./src/def/quantity.d.ts",
     "./registry": "./src/core/registry.d.ts",
     "./semver": "./src/utils/semver.d.ts",
+    "./service": "./src/core/service.d.ts",
     "./unit": "./src/def/unit.d.ts"
   },
   "scripts": {
