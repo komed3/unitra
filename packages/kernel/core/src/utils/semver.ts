@@ -31,7 +31,7 @@ export class Semver {
     if ( parts.length !== 3 )
       throw new SemverError(
         `invalid semantic version "${ version }"`,
-        { data: { version, semver, tag, parts } }
+        { context: { version, semver, tag, parts } }
       );
 
     const [ major, minor, patch ] = parts.map( Number );
@@ -39,7 +39,7 @@ export class Semver {
     if ( Number.isNaN( major ) || Number.isNaN( minor ) || Number.isNaN( patch ) )
       throw new SemverError(
         `invalid semantic version "${ version }"`,
-        { data: { version, semver, tag, parts } }
+        { context: { version, semver, tag, parts } }
       );
 
     return [ major, minor, patch, tag ];
