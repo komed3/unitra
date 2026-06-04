@@ -1,4 +1,5 @@
 import type { PrefixRef } from '../def/prefix';
+import type { ReferenceState } from './node';
 
 export type UnitModifier = {
   exp?: number;
@@ -18,3 +19,7 @@ export interface IUnitFactory {
   toJSON: () => string;
   serialize: () => string;
 }
+
+export type FactoryService = {
+  unit: ( state?: ReferenceState ) => IUnitFactory;
+};

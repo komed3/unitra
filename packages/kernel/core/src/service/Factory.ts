@@ -1,5 +1,5 @@
 import type { ConstantLike } from '@unitra/types/constant';
-import type { ConstantModifier, IUnitFactory, UnitModifier } from '@unitra/types/factory';
+import type { ConstantModifier, FactoryService, IUnitFactory, UnitModifier } from '@unitra/types/factory';
 import type { ReferenceState } from '@unitra/types/node';
 import type { UnitLike } from '@unitra/types/unit';
 import type { UnitraContext } from '@unitra/types/unitra';
@@ -51,6 +51,6 @@ export class UnitFactory implements IUnitFactory {
   }
 }
 
-export const createFactoryService = ( ctx: UnitraContext ) => ( {
+export const createFactoryService = ( ctx: UnitraContext ) : FactoryService => ( {
   unit: ( state?: ReferenceState ) => new UnitFactory( ctx, state )
 } );
