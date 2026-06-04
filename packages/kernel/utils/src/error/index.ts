@@ -5,7 +5,7 @@ export * from './ErrorFormatter';
 export * from './errorUtils';
 export * from './serializeError';
 
-export * from './errors/AssertDefError';
-export * from './errors/AssertRefError';
-export * from './errors/HookRunnerError';
+export * from './errors/AssertError';
+export * from './errors/HookRunError';
 export * from './errors/PluginResolutionError';
+export * from './errors/ResolveError';
