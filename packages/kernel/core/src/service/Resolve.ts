@@ -1,6 +1,7 @@
 import type { DefOf, IRegistry, LikeOf, RefOf, RegistryKey } from '@unitra/types/registry';
 import type { IResolve } from '@unitra/types/service';
 import type { UnitraContext } from '@unitra/types/unitra';
+import { ResolveError } from '@unitra/utils/error';
 
 export class Resolve implements IResolve {
   constructor ( private readonly ctx: UnitraContext ) {}
@@ -19,5 +20,25 @@ export class Resolve implements IResolve {
     ).get( value ) as D;
 
     return undefined;
+  }
+
+  public toRef < K extends RegistryKey, R = RefOf< K > > ( key: K, value: LikeOf< K > ) : R {
+    const res = this.tryToRef( key, value );
+    if ( ! res ) throw new ResolveError< K >(
+      `cannot resolve reference for ${ key }`,
+      { data: { key, value } }
+    );
+
+    return res as R;
+  }
+
+  public toDef < K extends RegistryKey, D = DefOf< K > > ( key: K, value: LikeOf< K > ) : D {
+    const res = this.tryToDef( key, value );
+    if ( ! res ) throw new ResolveError< K >(
+      `cannot resolve definition object for ${key}`,
+      { data: { key, value } }
+    );
+
+    return res as D;
   }
 }
