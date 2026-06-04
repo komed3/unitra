@@ -39,4 +39,16 @@ export class PluginRegistry {
 
     ( updated && this.revId++ );
   }
+
+  public static remove ( id: string, version?: SemverVersion ) : void {
+    const versions = this.registry.get( id );
+    if ( ! versions ) return;
+
+    const ok = version
+      ? ( versions.delete( version ) && versions.size === 0 && this.registry.delete( id ) )
+      : ( this.registry.delete( id ) );
+
+    this.log.debug( `deregistered plugin "${ id }": ${ ok ? 'success' : 'failed' }` );
+    ( ok && this.revId++ );
+  }
 }
