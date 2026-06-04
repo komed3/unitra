@@ -38,6 +38,5 @@ export interface IHookEngine {
   invalidate: ( id: HookId ) => void;
   add: < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) => void;
   merge: ( hooks: HookImplMap ) => void;
-  run: < K extends HookId > ( id: K, ctx: HookCtx< K > ) => void;
   run: < K extends HookId > ( id: K, ctx: HookCtx< K >, value: HookValue< K > ) => HookValue< K >;
 }
