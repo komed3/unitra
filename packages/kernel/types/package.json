@@ -12,6 +12,7 @@
     "./constant": "./src/def/constant.d.ts",
     "./dim": "./src/dim.d.ts",
     "./error": "./src/utils/error.d.ts",
+    "./factory": "./src/core/factory.d.ts",
     "./hook": "./src/core/hook.d.ts",
     "./logging": "./src/utils/logging.d.ts",
     "./manifest": "./src/core/manifest.d.ts",
