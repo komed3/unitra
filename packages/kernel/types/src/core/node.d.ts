@@ -30,3 +30,18 @@ export type Nodes = ReadonlyArray< Node >;
 export type ReferenceState = {
   nodes: Nodes;
 };
+
+export type NodeMap = {
+  unit: UnitNode;
+  constant: ConstantNode;
+  factor: FactorNode;
+};
+
+export type SerializedNode = {
+  order: number;
+  value: string;
+};
+
+export type SerializerMap = {
+  [ K in keyof NodeMap ]: ( node: NodeMap[ K ] ) => SerializedNode;
+};
