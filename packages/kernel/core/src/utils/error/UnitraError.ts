@@ -1,4 +1,5 @@
-import type { IUnitraError, SerializedError, UnitraErrorOptions } from '@unitra/types/utils/error';
+import type { ErrorFormatterConfig, IUnitraError, SerializedError, UnitraErrorOptions } from '@unitra/types/utils/error';
+import { formatError } from './ErrorFormatter';
 import { serializeError } from './serializeError';
 
 export class UnitraError< T extends IUnitraError = IUnitraError > extends Error implements IUnitraError {
@@ -25,6 +26,14 @@ export class UnitraError< T extends IUnitraError = IUnitraError > extends Error 
 
   public serialize () : SerializedError {
     return serializeError( this );
+  }
+
+  public format ( options?: ErrorFormatterConfig ) : string {
+    return formatError( this, options );
+  }
+
+  public override toString () : string {
+    return this.format();
   }
 
   public static from ( error: unknown, options: UnitraErrorOptions ) : UnitraError {
