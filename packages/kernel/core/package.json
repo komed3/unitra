@@ -9,7 +9,8 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./plugin": "./dist/plugin/index.js"
+    "./plugin": "./dist/plugin/index.js",
+    "./utils": "./dist/utils/index.js"
   },
   "scripts": {
     "build": "tsc -b && tsc-alias",
