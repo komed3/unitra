@@ -1,10 +1,10 @@
 import type { AnyRef, DefOf, RefOf, RegistryKey } from './registry';
 
 export interface IAssert {
-  isRef: < K extends RegistryKey, R extends AnyRef = RefOf< K > > ( key: K, value: unknown ) => value is R;
-  isDef: < K extends RegistryKey, D = DefOf< K > > ( key: K, value: unknown ) => value is D;
-  assertRef: < K extends RegistryKey, R extends AnyRef = RefOf< K > > ( key: K, value: unknown ) => asserts value is R;
-  assertDef: < K extends RegistryKey, D = DefOf< K > > ( key: K, value: unknown ) => asserts value is D;
+  isRef: < K extends RegistryKey > ( key: K, value: unknown ) => value is RefOf< K >;
+  isDef: < K extends RegistryKey > ( key: K, value: unknown ) => value is DefOf< K >;
+  assertRef: < K extends RegistryKey > ( key: K, value: unknown ) => asserts value is RefOf< K >;
+  assertDef: < K extends RegistryKey > ( key: K, value: unknown ) => asserts value is DefOf< K >;
 }
 
 export interface IResolve {}
