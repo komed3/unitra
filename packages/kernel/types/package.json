@@ -1,0 +1,22 @@
+{
+  "name": "@unitra/types",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    "./common": "./src/common.d.ts",
+    "./core/*": "./src/core/*.d.ts",
+    "./def/*": "./src/def/*.d.ts",
+    "./dim": "./src/dim.d.ts"
+  },
+  "scripts": {
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@unitra/dict": "workspace:*"
+  }
+}
