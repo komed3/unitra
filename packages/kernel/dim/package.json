@@ -1,0 +1,19 @@
+{
+  "name": "@unitra/dim",
+  "version": "0.0.1",
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    "./base": "./dist/base.js",
+    "./derived": "./dist/derived.js",
+    "./scalar": "./dist/scalar.js"
+  },
+  "scripts": {
+    "build": "tsc -b && tsc-alias",
+    "lint": "tsc --noEmit"
+  }
+}
