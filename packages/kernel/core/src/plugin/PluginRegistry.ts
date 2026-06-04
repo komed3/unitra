@@ -1,4 +1,4 @@
-import type { PluginDefinition } from '@unitra/types/core/plugin';
+import type { PluginCatalog, PluginDefinition, PluginList } from '@unitra/types/core/plugin';
 import type { SemverVersion } from '@unitra/types/utils/semver';
 import { Logging } from '../utils/logging';
 
@@ -68,5 +68,24 @@ export class PluginRegistry {
 
   public static all () : ReadonlyArray< PluginDefinition > {
     return [ ...this.registry.values() ].flatMap( versions => [ ...versions.values() ] );
+  }
+
+  public static list () : PluginList {
+    return Object.fromEntries( [ ...this.registry.entries() ].map(
+      ( [ id, versions ] ) => [ id, [ ...versions.keys() ] ] )
+    );
+  }
+
+  public static catalog () : PluginCatalog {
+    const catalog: PluginCatalog = new Map();
+
+    for ( const plugin of this.all() ) {
+      const list = catalog.get( plugin.id ) ?? [];
+
+      list.push( plugin );
+      catalog.set( plugin.id, list );
+    }
+
+    return catalog;
   }
 }

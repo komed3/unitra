@@ -26,3 +26,6 @@ export type PluginDefinition = {
   dependencies?: DependencyMap;
   contributions?: PluginContributions;
 };
+
+export type PluginList = Readonly< Record< string, SemverVersion[] > >;
+export type PluginCatalog = Readonly< Map< string, PluginDefinition[] > >;
