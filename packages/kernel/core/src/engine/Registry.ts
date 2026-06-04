@@ -1,8 +1,9 @@
 import type { ConstantRef } from '@unitra/types/constant';
 import type { PrefixRef } from '@unitra/types/prefix';
 import type { QuantityRef } from '@unitra/types/quantity';
-import type { AnyRef, IRegistry, RegistryAccessor, RegistryDef, RegistryInstanceMap, RegistryKey } from '@unitra/types/registry';
+import type { AnyRef, IRegistry, RefOf, RegistryAccessor, RegistryDef, RegistryInstanceMap, RegistryKey } from '@unitra/types/registry';
 import type { UnitRef } from '@unitra/types/unit';
+import type { UnitraContext } from '@unitra/types/unitra';
 
 export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
   protected readonly store = new Map< Ref, RegistryDef< Ref > >();
@@ -58,3 +59,6 @@ export const createRegistryAccessor = ( override?: Partial< RegistryInstanceMap 
     return ( override?.[ key ] ?? cache[ key ] ?? ( cache[ key ] = factories[ key ]() ) );
   };
 };
+
+export const getTypedRegistry = < K extends RegistryKey > ( ctx: UnitraContext, key: K ) =>
+  ctx.registry( key ) as unknown as IRegistry< RefOf< K > >;

@@ -1,14 +1,15 @@
-import type { AnyRef, DefOf, IRegistry, RefOf, RegistryKey } from '@unitra/types/registry';
+import type { AnyRef, DefOf, RefOf, RegistryKey } from '@unitra/types/registry';
 import type { IAssert } from '@unitra/types/service';
 import type { UnitraContext } from '@unitra/types/unitra';
 import { AssertError } from '@unitra/utils/error';
 import { safeJsonStringify } from '@unitra/utils/helper';
+import { getTypedRegistry } from '../engine/Registry';
 
 export class Assert implements IAssert {
   constructor ( private readonly ctx: UnitraContext ) {}
 
   public isRef < K extends RegistryKey, R extends AnyRef = RefOf< K > > ( key: K, value: unknown ) : value is R {
-    return typeof value === 'string' && ( this.ctx.registry( key ) as unknown as IRegistry< R > ).has( value as R );
+    return typeof value === 'string' && getTypedRegistry( this.ctx, key ).has( value as R );
   }
 
   public isDef < K extends RegistryKey, D = DefOf< K > > ( key: K, value: unknown ) : value is D {

@@ -1,7 +1,8 @@
-import type { DefOf, IRegistry, LikeOf, RefOf, RegistryKey } from '@unitra/types/registry';
+import type { DefOf, LikeOf, RefOf, RegistryKey } from '@unitra/types/registry';
 import type { IResolve } from '@unitra/types/service';
 import type { UnitraContext } from '@unitra/types/unitra';
 import { ResolveError } from '@unitra/utils/error';
+import { getTypedRegistry } from '../engine/Registry';
 
 export class Resolve implements IResolve {
   constructor ( private readonly ctx: UnitraContext ) {}
@@ -15,9 +16,7 @@ export class Resolve implements IResolve {
 
   public tryToDef < K extends RegistryKey > ( key: K, value: LikeOf< K > ): DefOf< K > | undefined {
     if ( this.ctx.service.assert.isDef( key, value ) ) return value;
-    if ( this.ctx.service.assert.isRef( key, value ) ) return (
-      this.ctx.registry( key ) as unknown as IRegistry< RefOf< K > >
-    ).get( value );
+    if ( this.ctx.service.assert.isRef( key, value ) ) return getTypedRegistry( this.ctx, key ).get( value );
 
     return undefined;
   }
@@ -37,7 +36,7 @@ export class Resolve implements IResolve {
     const res = this.tryToDef( key, value );
 
     if ( ! res ) throw new ResolveError< K >(
-      `cannot resolve definition object for ${key}`,
+      `cannot resolve definition object for ${ key }`,
       { data: { key, value } }
     );
 
