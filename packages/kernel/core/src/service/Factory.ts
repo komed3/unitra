@@ -50,3 +50,7 @@ export class UnitFactory implements IUnitFactory {
     return this.ctx.service.serialize.fromReferenceState( this.state );
   }
 }
+
+export const createFactoryService = ( ctx: UnitraContext ) => ( {
+  unit: ( state?: ReferenceState ) => new UnitFactory( ctx, state )
+} );
