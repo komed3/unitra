@@ -14,11 +14,10 @@ export class Logging {
   private static write ( level: LogLevel, source: string, message: string, data?: unknown ) : void {
     if ( level < this._level ) return;
 
-    const now = Date.now();
-    const entry: LogEntry = {
+    const now = Date.now(), entry = {
       level, source, message, data, timestamp: now,
       isoTimestamp: new Date( now ).toISOString()
-    };
+    } as const satisfies LogEntry;
 
     for ( const handler of this.handlers ) handler.write( entry );
   }

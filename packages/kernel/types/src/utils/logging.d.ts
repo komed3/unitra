@@ -1,13 +1,13 @@
 import type { LogLevel } from '@unitra/dict/utils';
 
-export type LogEntry = {
+export type LogEntry = Readonly< {
   level: LogLevel;
   source: string;
   message: string;
   timestamp: number;
   isoTimestamp: string;
   data?: unknown;
-};
+} >;
 
 export interface ILogFormatter< T extends object = {} > {
   readonly config: Readonly< T >;
