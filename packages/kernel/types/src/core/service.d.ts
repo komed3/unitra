@@ -1,4 +1,4 @@
-import type { AnyRef, DefOf, RefOf, RegistryKey } from './registry';
+import type { DefOf, LikeOf, RefOf, RegistryKey } from './registry';
 
 export interface IAssert {
   isRef: < K extends RegistryKey > ( key: K, value: unknown ) => value is RefOf< K >;
@@ -7,7 +7,13 @@ export interface IAssert {
   assertDef: < K extends RegistryKey > ( key: K, value: unknown ) => asserts value is DefOf< K >;
 }
 
-export interface IResolve {}
+export interface IResolve {
+  tryToRef: < K extends RegistryKey > ( key: K, value: LikeOf< K > ) => RefOf< K > | undefined;
+  tryToDef: < K extends RegistryKey > ( key: K, value: LikeOf< K > ) => DefOf< K > | undefined;
+  toRef: < K extends RegistryKey > ( key: K, value: LikeOf< K > ) => RefOf< K >;
+  toDef: < K extends RegistryKey > ( key: K, value: LikeOf< K > ) => DefOf< K >;
+}
+
 
 export type ServiceContext = {
   assert: IAssert;

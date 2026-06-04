@@ -7,14 +7,14 @@ import { getTypedRegistry } from '../engine/Registry';
 export class Resolve implements IResolve {
   constructor ( private readonly ctx: UnitraContext ) {}
 
-  public tryToRef < K extends RegistryKey > ( key: K, value: LikeOf< K > ): RefOf< K > | undefined {
+  public tryToRef < K extends RegistryKey > ( key: K, value: LikeOf< K > ) : RefOf< K > | undefined {
     if ( this.ctx.service.assert.isRef( key, value ) ) return value;
     if ( this.ctx.service.assert.isDef( key, value ) ) return value.id;
 
     return undefined;
   }
 
-  public tryToDef < K extends RegistryKey > ( key: K, value: LikeOf< K > ): DefOf< K > | undefined {
+  public tryToDef < K extends RegistryKey > ( key: K, value: LikeOf< K > ) : DefOf< K > | undefined {
     if ( this.ctx.service.assert.isDef( key, value ) ) return value;
     if ( this.ctx.service.assert.isRef( key, value ) ) return getTypedRegistry( this.ctx, key ).get( value );
 
