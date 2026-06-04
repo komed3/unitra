@@ -13,7 +13,7 @@ export function serializeError ( error: unknown ) : SerializedError | unknown {
       cause: serializeError( ( error as Error & { cause?: unknown } ).cause )
     },
     ...( error instanceof UnitraError ? {
-      code: error.code, summary: error.summary, data: error.data
+      code: error.code, summary: error.summary, context: error.context
     } : {} )
   };
 };
