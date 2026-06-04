@@ -4,7 +4,6 @@ import { safeJsonStringify } from '../../json';
 import { LogFormatter } from './LogFormatter';
 
 export type TextLogFormatterConfig = {
-  format?: string;
   showData?: boolean;
 };
 
