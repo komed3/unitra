@@ -1,4 +1,5 @@
-import type { IUnitFactory, UnitFactoryModifier } from '@unitra/types/factory';
+import type { ConstantLike } from '@unitra/types/constant';
+import type { ConstantModifier, IUnitFactory, UnitModifier } from '@unitra/types/factory';
 import type { ReferenceState } from '@unitra/types/node';
 import type { UnitLike } from '@unitra/types/unit';
 import type { UnitraContext } from '@unitra/types/unitra';
@@ -9,7 +10,7 @@ export class UnitFactory implements IUnitFactory {
     private readonly state: ReferenceState = { nodes: [] }
   ) {}
 
-  public mul ( value: UnitLike, mod: UnitFactoryModifier ) : UnitFactory {
+  public mul ( value: UnitLike, mod: UnitModifier ) : UnitFactory {
     const unit = this.ctx.service.resolve.toRef( 'unit', value );
     const prefix = mod.prefix && this.ctx.service.resolve.toRef( 'prefix', mod.prefix );
 
@@ -18,7 +19,21 @@ export class UnitFactory implements IUnitFactory {
     } ] } );
   }
 
-  public div ( unit: UnitLike, mod: UnitFactoryModifier ) : UnitFactory {
+  public div ( unit: UnitLike, mod: UnitModifier ) : UnitFactory {
     return this.mul( unit, { ...mod, ...{ exp: -( mod.exp ?? 1 ) } } );
+  }
+
+  public constant ( value: ConstantLike, mod: ConstantModifier ) : UnitFactory {
+    const constant = this.ctx.service.resolve.toRef( 'constant', value );
+
+    return new UnitFactory( this.ctx, { nodes: [ ...this.state.nodes, {
+      type: 'constant', constant, exp: mod.exp ?? 1
+    } ] } );
+  }
+
+  public factor ( value: number ) : UnitFactory {
+    return new UnitFactory( this.ctx, { nodes: [ ...this.state.nodes, {
+      type: 'factor', value
+    } ] } );
   }
 }
