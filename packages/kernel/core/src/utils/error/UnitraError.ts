@@ -1,11 +1,12 @@
+import type { ErrorCode } from '@unitra/dict/utils';
 import type { ErrorFormatterConfig, IUnitraError, SerializedError, UnitraErrorOptions } from '@unitra/types/utils/error';
 import { Logging } from '../logging';
 import { formatError } from './ErrorFormatter';
 import { serializeError } from './serializeError';
 
-export class UnitraError< T extends IUnitraError = IUnitraError > extends Error implements IUnitraError {
-  public readonly code?: T[ 'code' ];
-  public readonly data?: T[ 'data' ];
+export class UnitraError< C extends ErrorCode = ErrorCode, T extends unknown = {} > extends Error implements IUnitraError< C, T > {
+  public readonly code?: C;
+  public readonly data?: T;
 
   public override readonly cause?: unknown;
 
@@ -17,7 +18,7 @@ export class UnitraError< T extends IUnitraError = IUnitraError > extends Error 
     return this.constructor.name;
   }
 
-  constructor ( message: string, options: UnitraErrorOptions< T[ 'data' ] > ) {
+  constructor ( message: string, options: UnitraErrorOptions< T > ) {
     super( message, { cause: options.cause } );
 
     this.name = this.constructor.name;
