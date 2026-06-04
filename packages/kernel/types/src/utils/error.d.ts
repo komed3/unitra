@@ -18,10 +18,15 @@ export interface ErrorCtxMap {
   }
 }
 
-export type UnitraErrorOptions< T extends unknown = {} > = {
-  context?: T;
-  cause?: unknown;
-};
+export type ErrorContext< C extends ErrorCode > =
+  C extends keyof ErrorCtxMap
+    ? ErrorCtxMap[ C ]
+    : never;
+
+export type UnitraErrorOptions< C extends ErrorCode > =
+  [ ErrorContext< C > ] extends [ never ]
+    ? { cause?: unknown }
+    : { context: ErrorContext< C >, cause?: unknown };
 
 export type SerializedError = {
   name: string;
@@ -33,18 +38,9 @@ export type SerializedError = {
   cause?: SerializedError;
 };
 
-export type ErrorFormatterConfig = {
-  showCode?: boolean;
-  showSummary?: boolean;
-  showContext?: boolean;
-  showStack?: boolean;
-  showCauses?: boolean;
-  indent?: string;
-};
-
 export interface IUnitraError< C extends ErrorCode = ErrorCode > extends Error {
   readonly code?: C;
-  readonly context: C extends keyof ErrorCtxMap ? ErrorCtxMap[ C ]: never;
+  readonly context?: ErrorContext< C >;
   readonly cause?: unknown;
   readonly type: string;
   readonly summary: string | undefined;
@@ -53,3 +49,12 @@ export interface IUnitraError< C extends ErrorCode = ErrorCode > extends Error {
   format: ( options?: ErrorFormatterConfig ) => string;
   log: () => void;
 }
+
+export type ErrorFormatterConfig = {
+  showCode?: boolean;
+  showSummary?: boolean;
+  showContext?: boolean;
+  showStack?: boolean;
+  showCauses?: boolean;
+  indent?: string;
+};
