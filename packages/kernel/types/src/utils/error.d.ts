@@ -1,9 +1,9 @@
 import type { ErrorCode } from '@unitra/dict/utils';
 
-export type UnitraErrorOptions< T extends unknown = never > =
-  [ T ] extends [ never ]
-    ? { cause?: unknown }
-    : { data: T, cause?: unknown };
+export type UnitraErrorOptions< T extends unknown = {} > = {
+  data?: T;
+  cause?: unknown;
+};
 
 export type SerializedError = {
   name: string;
@@ -24,7 +24,7 @@ export type ErrorFormatterConfig = {
   indent?: string;
 };
 
-export interface IUnitraError< C extends ErrorCode = ErrorCode, T extends unknown = never > extends Error {
+export interface IUnitraError< C extends ErrorCode = ErrorCode, T extends unknown = {} > extends Error {
   readonly code?: C;
   readonly data?: T;
   readonly cause?: unknown;

@@ -10,12 +10,32 @@ export class UnitraError< T extends IUnitraError = IUnitraError > extends Error 
     return undefined;
   }
 
+  public get type () : string {
+    return this.constructor.name;
+  }
+
   constructor ( message: string, options: UnitraErrorOptions< T[ 'data' ] > ) {
     super( message, { cause: options.cause } );
 
     this.name = this.constructor.name;
+    this.data = options.data;
     this.cause = options.cause;
+  }
 
-    if ( 'data' in options ) this.data = options.data;
+  public static from ( error: unknown, options: UnitraErrorOptions ) : UnitraError {
+    if ( error instanceof UnitraError ) return error;
+
+    if ( error instanceof Error ) {
+      const res = new UnitraError( error.message, { ...options, cause: error } );
+      res.stack = error.stack;
+
+      return res;
+    }
+
+    return new UnitraError( String( error ), options );
+  }
+
+  public static is ( value: unknown ) : value is UnitraError {
+    return value instanceof UnitraError;
   }
 }
