@@ -9,3 +9,4 @@ export * from './errors/AssertError';
 export * from './errors/HookRunError';
 export * from './errors/PluginResolutionError';
 export * from './errors/ResolveError';
+export * from './errors/SemverError';

@@ -1,4 +1,5 @@
 import type { ParsedSemverRange, ParsedSemverVersion, SemverOperator, SemverRange, SemverVersion } from '@unitra/types/semver';
+import { SemverError } from '../error';
 
 export class Semver {
   private static readonly OPMATCH = /^(\^|~|>=|<=|>|<|=)/;
@@ -27,13 +28,15 @@ export class Semver {
     const [ semver, tag ] = version.split( '-', 2 );
     const parts = semver.split( '.' );
 
-    if ( parts.length !== 3 )
-      throw new Error( `Invalid semantic version "${ version }".` );
+    if ( parts.length !== 3 ) throw new SemverError(
+      `invalid semantic version "${ version }"`, { data: { version, semver, tag, parts } }
+    );
 
     const [ major, minor, patch ] = parts.map( Number );
 
-    if ( Number.isNaN( major ) || Number.isNaN( minor ) || Number.isNaN( patch ) )
-      throw new Error( `Invalid semantic version "${ version }".` );
+    if ( Number.isNaN( major ) || Number.isNaN( minor ) || Number.isNaN( patch ) ) throw new SemverError(
+      `invalid semantic version "${ version }"`, { data: { version, semver, tag, parts } }
+    );
 
     return [ major, minor, patch, tag ];
   }
@@ -64,12 +67,9 @@ export class Semver {
     const cmp = this.compare( version, range.version );
 
     switch ( range.operator ) {
-      case '~':
-        return this.satisfiesTilde( version, range.version, cmp );
-      case '^':
-        return this.satisfiesCaret( version, range.version, cmp );
-      default:
-        return this.OPERATORS[ range.operator ]( cmp );
+      case '~': return this.satisfiesTilde( version, range.version, cmp );
+      case '^': return this.satisfiesCaret( version, range.version, cmp );
+      default: return this.OPERATORS[ range.operator ]( cmp );
     }
   }
 }

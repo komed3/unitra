@@ -2,6 +2,7 @@ import type { UnitraErrorCode } from '@unitra/dict/error';
 import type { HookCtx, HookId, HookValue } from '../core/hook';
 import type { PluginResolveGraph } from '../core/plugin';
 import type { LikeOf, RegistryKey } from '../core/registry';
+import type { SemverVersion } from './semver';
 
 export type UnitraErrorOptions< T = unknown > = {
   data?: T;
@@ -61,4 +62,11 @@ export type PluginResolutionError = IUnitraError< UnitraErrorCode.PLUGIN_RESOLUT
 export type ResolveError< K extends RegistryKey > = IUnitraError< UnitraErrorCode.RESOLVE_ERROR, {
   key: RegistryKey;
   value: LikeOf< K >;
+} >;
+
+export type SemverError = IUnitraError< UnitraErrorCode.SEMVER_ERROR, {
+  version: SemverVersion;
+  semver: string;
+  tag: string;
+  parts: string[];
 } >;
