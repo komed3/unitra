@@ -17,4 +17,8 @@ export class UnitFactory implements IUnitFactory {
       type: 'unit', unit, exp: mod.exp ?? 1, prefix
     } ] } );
   }
+
+  public div ( unit: UnitLike, mod: UnitFactoryModifier ) : UnitFactory {
+    return this.mul( unit, { ...mod, ...{ exp: -( mod.exp ?? 1 ) } } );
+  }
 }
