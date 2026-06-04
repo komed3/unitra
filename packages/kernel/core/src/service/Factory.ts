@@ -3,6 +3,7 @@ import type { ConstantModifier, IUnitFactory, UnitModifier } from '@unitra/types
 import type { ReferenceState } from '@unitra/types/node';
 import type { UnitLike } from '@unitra/types/unit';
 import type { UnitraContext } from '@unitra/types/unitra';
+import { safeJsonStringify } from '@unitra/utils/helper';
 
 export class UnitFactory implements IUnitFactory {
   constructor (
@@ -35,5 +36,13 @@ export class UnitFactory implements IUnitFactory {
     return new UnitFactory( this.ctx, { nodes: [ ...this.state.nodes, {
       type: 'factor', value
     } ] } );
+  }
+
+  public toObj () : ReferenceState {
+    return this.state;
+  }
+
+  public toJSON () : string {
+    return safeJsonStringify( this.state );
   }
 }
