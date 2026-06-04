@@ -10,7 +10,8 @@
   "exports": {
     "./common": "./dist/common.js",
     "./quantity": "./dist/quantity.js",
-    "./unit": "./dist/unit.js"
+    "./unit": "./dist/unit.js",
+    "./utils": "./dist/utils.js"
   },
   "scripts": {
     "build": "tsc -b && tsc-alias",
