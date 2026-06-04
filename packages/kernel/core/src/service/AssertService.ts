@@ -1,10 +1,10 @@
 import type { AnyRef, DefOf, IRegistry, RefOf, RegistryKey } from '@unitra/types/registry';
-import type { IAssertService } from '@unitra/types/service';
+import type { IAssert } from '@unitra/types/service';
 import type { UnitraContext } from '@unitra/types/unitra';
 import { AssertDefError, AssertRefError } from '@unitra/utils/error';
 import { safeJsonStringify } from '@unitra/utils/helper';
 
-export class AssertService implements IAssertService {
+export class Assert implements IAssert {
   constructor ( private readonly ctx: UnitraContext ) {}
 
   public isRef < K extends RegistryKey, R extends AnyRef = RefOf< K > > ( key: K, value: unknown ) : value is R {
