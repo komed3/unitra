@@ -1,7 +1,7 @@
 import type { UnitraErrorCode } from '@unitra/dict/error';
 import type { HookCtx, HookId, HookValue } from '../core/hook';
 import type { PluginResolveGraph } from '../core/plugin';
-import type { RegistryKey } from '../core/registry';
+import type { LikeOf, RegistryKey } from '../core/registry';
 
 export type UnitraErrorOptions< T = unknown > = {
   data?: T;
@@ -39,17 +39,12 @@ export interface IUnitraError< C extends UnitraErrorCode = UnitraErrorCode, T = 
   log: () => void;
 }
 
-export type AssertDefError = IUnitraError< UnitraErrorCode.ASSERT_DEF_ERROR, {
-  key: RegistryKey,
+export type AssertError = IUnitraError< UnitraErrorCode.ASSERT_ERROR, {
+  key: RegistryKey;
   value: unknown;
 } >;
 
-export type AssertRefError = IUnitraError< UnitraErrorCode.ASSERT_REF_ERROR, {
-  key: RegistryKey,
-  value: unknown;
-} >;
-
-export type HookRunnerError< K extends HookId > = IUnitraError< UnitraErrorCode.HOOK_RUNNER_ERROR, {
+export type HookRunError< K extends HookId > = IUnitraError< UnitraErrorCode.HOOK_RUN_ERROR, {
   id: K;
   ctx: HookCtx< K >;
   value?: HookValue< K >;
@@ -61,4 +56,9 @@ export type PluginResolutionError = IUnitraError< UnitraErrorCode.PLUGIN_RESOLUT
   conflicts: ReadonlyArray< string >;
   cycles: ReadonlyArray< string >;
   errCount: number;
+} >;
+
+export type ResolveError< K extends RegistryKey > = IUnitraError< UnitraErrorCode.RESOLVE_ERROR, {
+  key: RegistryKey;
+  value: LikeOf< K >;
 } >;
