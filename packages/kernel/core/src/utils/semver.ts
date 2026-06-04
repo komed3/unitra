@@ -1,4 +1,4 @@
-import type { ParsedSemverVersion, SemverVersion } from '@unitra/types/utils/semver';
+import type { ParsedSemverRange, ParsedSemverVersion, SemverOperator, SemverRange, SemverVersion } from '@unitra/types/utils/semver';
 import { SemverError } from './error';
 
 export class Semver {
@@ -43,5 +43,19 @@ export class Semver {
       );
 
     return [ major, minor, patch, tag ];
+  }
+
+  public static parseRange ( range: SemverRange ) : ParsedSemverRange {
+    const match = range.match( this.OPMATCH );
+    const operator = ( match?.[ 1 ] ?? '=' ) as SemverOperator;
+    const version = ( operator === '=' ? range : range.slice( operator.length ) ) as SemverVersion;
+
+    return { operator, version: this.parse( version ) };
+  }
+
+  public static compare ( a: ParsedSemverVersion, b: ParsedSemverVersion ) : number {
+    if ( a[ 0 ] !== b[ 0 ] ) return a[ 0 ] - b[ 0 ];
+    if ( a[ 1 ] !== b[ 1 ] ) return a[ 1 ] - b[ 1 ];
+    return a[ 2 ] - b[ 2 ];
   }
 }
