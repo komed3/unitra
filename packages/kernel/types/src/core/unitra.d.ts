@@ -10,6 +10,8 @@ export type CoreContext = {
 };
 
 export type UnitraContext = {
+  readonly V: 1;
+
   core: CoreContext;
   factory: FactoryService;
   registry: RegistryAccessor;
