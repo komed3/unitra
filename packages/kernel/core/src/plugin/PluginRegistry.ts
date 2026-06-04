@@ -19,4 +19,24 @@ export class PluginRegistry {
     this.registry.clear();
     this.revId++;
   }
+
+  public static add ( ...plugins: PluginDefinition[] ) : void {
+    let updated = false;
+
+    for ( const plugin of plugins ) {
+      const versions = this.registry.get( plugin.id ) ?? new Map< SemverVersion, PluginDefinition >();
+      const exists = versions.get( plugin.version );
+
+      if ( plugin === exists ) {
+        this.log.debug( `skip "${ plugin.id }@${ plugin.version }" plugin: already registered` );
+        continue;
+      }
+
+      this.registry.set( plugin.id, versions.set( plugin.version, plugin ) );
+      this.log.debug( `${ exists ? 'updated' : 'registered' } plugin "${ plugin.id }@${ plugin.version }"` );
+      updated = true;
+    }
+
+    ( updated && this.revId++ );
+  }
 }
