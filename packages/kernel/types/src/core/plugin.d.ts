@@ -1,7 +1,9 @@
+import type { ErrorCode } from '@unitra/dict/utils';
 import type { ConstantMap } from '../def/constant';
 import type { PrefixMap } from '../def/prefix';
 import type { QuantityMap } from '../def/quantity';
 import type { UnitMap } from '../def/unit';
+import type { IUnitraError } from '../utils/error';
 import type { SemverRange, SemverVersion } from '../utils/semver';
 
 export type DependencyMap = Readonly< Record< string, SemverRange > >;
@@ -29,3 +31,11 @@ export type PluginDefinition = {
 
 export type PluginList = Readonly< Record< string, SemverVersion[] > >;
 export type PluginCatalog = Readonly< Map< string, PluginDefinition[] > >;
+
+export type PluginResolveGraph = Readonly< Map< string, Set< string > > >;
+
+export type PluginResolveResult = {
+  plugins: ReadonlyArray< PluginDefinition >;
+  graph: PluginResolveGraph;
+  error?: IUnitraError< ErrorCode.PLUGIN_ERROR >;
+};
