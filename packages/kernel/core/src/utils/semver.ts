@@ -58,4 +58,25 @@ export class Semver {
     if ( a[ 1 ] !== b[ 1 ] ) return a[ 1 ] - b[ 1 ];
     return a[ 2 ] - b[ 2 ];
   }
+
+  public static compareVersions ( a: SemverVersion, b: SemverVersion ) : number {
+    return this.compare( this.parse( a ), this.parse( b ) );
+  }
+
+  public static satisfies ( version: SemverVersion, range: SemverRange ) : boolean {
+    return this.satisfiesParsed( this.parse( version ), this.parseRange( range ) );
+  }
+
+  public static satisfiesParsed ( version: ParsedSemverVersion, range: ParsedSemverRange ) : boolean {
+    const cmp = this.compare( version, range.version );
+
+    switch ( range.operator ) {
+      case '~':
+        return this.satisfiesTilde( version, range.version, cmp );
+      case '^':
+        return this.satisfiesCaret( version, range.version, cmp );
+      default:
+        return this.OPERATORS[ range.operator ]( cmp );
+    }
+  }
 }
