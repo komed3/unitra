@@ -1,7 +1,7 @@
-import type { ConstantRef, DerivedConstantDef } from '../def/constant';
-import type { DerivedPrefixDef, PrefixRef } from '../def/prefix';
-import type { DerivedQuantityDef, QuantityRef } from '../def/quantity';
-import type { DerivedUnitDef, UnitRef } from '../def/unit';
+import type { ConstantLike, ConstantRef, DerivedConstantDef } from '../def/constant';
+import type { DerivedPrefixDef, PrefixLike, PrefixRef } from '../def/prefix';
+import type { DerivedQuantityDef, QuantityLike, QuantityRef } from '../def/quantity';
+import type { DerivedUnitDef, UnitLike, UnitRef } from '../def/unit';
 
 export type AnyRef =
   | PrefixRef
@@ -53,5 +53,13 @@ export type DefMap = {
   constant: DerivedConstantDef< ConstantRef >;
 };
 
+export type LikeMap = {
+  prefix: PrefixLike;
+  quantity: QuantityLike;
+  unit: UnitLike;
+  constant: ConstantLike;
+};
+
 export type RefOf< K extends RegistryKey > = RefMap[ K ];
 export type DefOf< K extends RegistryKey > = DefMap[ K ];
+export type LikeOf< K extends RegistryKey > = LikeMap[ K ];
