@@ -1,7 +1,25 @@
 import type { ErrorCode } from '@unitra/dict/utils';
+import type { PluginResolveGraph } from '../core/plugin';
+import type { SemverVersion } from './semver';
+
+export interface ErrorCtxMap {
+  [ ErrorCode.PLUGIN_ERROR ]: {
+    graph: PluginResolveGraph;
+    missing: ReadonlyArray< string >;
+    conflicts: ReadonlyArray< string >;
+    cycles: ReadonlyArray< string >;
+    errCount: number;
+  };
+  [ ErrorCode.SEMVER_ERROR ]: {
+    version: SemverVersion;
+    semver: string;
+    tag: string;
+    parts: string[];
+  }
+}
 
 export type UnitraErrorOptions< T extends unknown = {} > = {
-  data?: T;
+  context?: T;
   cause?: unknown;
 };
 
@@ -11,22 +29,22 @@ export type SerializedError = {
   message: string;
   summary?: string;
   stack?: string;
-  data?: unknown;
+  context?: unknown;
   cause?: SerializedError;
 };
 
 export type ErrorFormatterConfig = {
   showCode?: boolean;
   showSummary?: boolean;
-  showData?: boolean;
+  showContext?: boolean;
   showStack?: boolean;
   showCauses?: boolean;
   indent?: string;
 };
 
-export interface IUnitraError< C extends ErrorCode = ErrorCode, T extends unknown = {} > extends Error {
+export interface IUnitraError< C extends ErrorCode = ErrorCode > extends Error {
   readonly code?: C;
-  readonly data?: T;
+  readonly context: C extends keyof ErrorCtxMap ? ErrorCtxMap[ C ]: never;
   readonly cause?: unknown;
   readonly type: string;
   readonly summary: string | undefined;
