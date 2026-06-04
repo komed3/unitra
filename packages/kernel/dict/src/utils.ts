@@ -5,3 +5,11 @@ export enum LogLevel {
   ERROR = 3,
   NONE = 4
 }
+
+export enum ErrorCode {
+  ASSERT_ERROR = 'ASSERT_ERROR',
+  HOOK_ERROR = 'HOOK_ERROR',
+  PLUGIN_ERROR = 'PLUGIN_ERROR',
+  RESOLVE_ERROR = 'RESOLVE_ERROR',
+  SEMVER_ERROR = 'SEMVER_ERROR'
+}
