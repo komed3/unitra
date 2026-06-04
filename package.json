@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run clean && npm run tsc && npm run format",
     "tsc": "pnpm -r build",
-    "format": "prettier --ignore-path \"\" --write \"./packages/**/dist/**/*.@(js|d.ts)\"",
+    "format": "prettier --ignore-path \"\" --write \"./packages/**/dist/**/*.@(js|d.ts)\" --log-level warn",
     "clean": "rimraf --glob \"**/dist\" && rimraf --glob \"**/tsconfig.tsbuildinfo\"",
     "lint": "pnpm -r lint"
   },
