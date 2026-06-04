@@ -14,8 +14,10 @@ export interface IResolve {
   toDef: < K extends RegistryKey > ( key: K, value: LikeOf< K > ) => DefOf< K >;
 }
 
+export interface ISerialize {}
 
 export type ServiceContext = {
   assert: IAssert;
   resolve: IResolve;
+  serialize: ISerialize;
 };
