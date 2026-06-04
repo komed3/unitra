@@ -67,7 +67,7 @@ export class PluginResolver {
   }
 
   private static detectConflicts ( catalog: PluginCatalog, req: Requirements ) : string[] {
-    const conflict: string[] = [];
+    const conflicts: string[] = [];
 
     for ( const [ id, list ] of req ) {
       const versions = catalog.get( id );
@@ -78,12 +78,44 @@ export class PluginResolver {
       for ( const r of list )
         if ( ! available.some( v => Semver.satisfies( v, r.range ) ) )
           this.pushError(
-            conflict,
+            conflicts,
             `${ r.plugin.id } → conflict ${ id }@${ r.range }`,
             'version mismatch'
           );
     }
 
-    return conflict;
+    return conflicts;
+  }
+
+  private static detectCycles ( graph: PluginResolveGraph ) : string[] {
+    const visited = new Set< string >(), stack = new Set< string >();
+    const path: string[] = [], cycles: string[] = [];
+
+    const dfs = ( node: string ) => {
+      if ( stack.has( node ) ) {
+        const i = path.indexOf( node );
+        this.pushError(
+          cycles,
+          path.slice( i ).concat( node ).join( ' → ' ),
+          'cycle detected'
+        );
+
+        return;
+      }
+
+      if ( visited.has( node ) ) return;
+
+      visited.add( node );
+      stack.add( node );
+      path.push( node );
+
+      for ( const n of graph.get( node ) ?? [] ) dfs( n );
+
+      stack.delete( node );
+      path.pop();
+    };
+
+    for ( const n of graph.keys() ) dfs( n );
+    return cycles;
   }
 }
