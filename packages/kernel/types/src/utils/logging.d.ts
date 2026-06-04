@@ -9,12 +9,12 @@ export type LogEntry = {
   data?: unknown;
 };
 
-export interface ILogFormatter< T extends object > {
+export interface ILogFormatter< T extends object = {} > {
   readonly config: Readonly< T >;
   format: ( entry: LogEntry ) => string;
 }
 
-export interface ILogHandler< T extends object > {
+export interface ILogHandler< T extends object = {} > {
   readonly config: Readonly< T >;
   write: ( entry: LogEntry ) => void;
 }

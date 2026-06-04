@@ -1,6 +1,6 @@
 export const safeJsonStringify = ( value: unknown, space?: string | number ) : string => {
   try {
-    const seen = new WeakSet < object > ();
+    const seen = new WeakSet< object >();
 
     return JSON.stringify( value, ( _key: string, value: unknown ) => {
       if ( value instanceof Map ) return Object.fromEntries( value );
