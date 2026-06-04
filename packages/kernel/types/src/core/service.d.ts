@@ -1,3 +1,5 @@
+import type { CompoundStruct, UnitStruct } from '../def/unit';
+import type { ReferenceState } from './node';
 import type { DefOf, LikeOf, RefOf, RegistryKey } from './registry';
 
 export interface IAssert {
@@ -14,7 +16,10 @@ export interface IResolve {
   toDef: < K extends RegistryKey > ( key: K, value: LikeOf< K > ) => DefOf< K >;
 }
 
-export interface ISerialize {}
+export interface ISerialize {
+  fromReference: ( state: ReferenceState ) => string;
+  fromUnitStruct: ( struct: UnitStruct | CompoundStruct ) => string;
+}
 
 export type ServiceContext = {
   assert: IAssert;
