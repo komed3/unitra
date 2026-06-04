@@ -1,5 +1,4 @@
 import type { CompoundStruct, UnitStruct } from '../def/unit';
-import type { FactoryService } from './factory';
 import type { ReferenceState } from './node';
 import type { DefOf, LikeOf, RefOf, RegistryKey } from './registry';
 
@@ -24,7 +23,6 @@ export interface ISerialize {
 
 export type ServiceContext = {
   assert: IAssert;
-  factory: FactoryService;
   resolve: IResolve;
   serialize: ISerialize;
 };
