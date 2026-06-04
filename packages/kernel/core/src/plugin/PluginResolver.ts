@@ -179,3 +179,5 @@ export class PluginResolver {
     return result;
   }
 }
+
+export const resolvePlugins = () => PluginResolver.resolve();
