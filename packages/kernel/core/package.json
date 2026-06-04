@@ -8,9 +8,7 @@
     "LICENSE"
   ],
   "exports": {
-    ".": "./dist/index.js",
-    "./plugin": "./dist/plugin/index.js",
-    "./service": "./dist/service/index.js"
+    ".": "./dist/index.js"
   },
   "scripts": {
     "build": "tsc -b && tsc-alias",
@@ -19,7 +17,6 @@
   "dependencies": {
     "@unitra/dict": "workspace:*",
     "@unitra/dim": "workspace:*",
-    "@unitra/types": "workspace:*",
-    "@unitra/utils": "workspace:*"
+    "@unitra/types": "workspace:*"
   }
 }
