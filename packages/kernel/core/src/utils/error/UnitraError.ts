@@ -1,4 +1,5 @@
 import type { ErrorFormatterConfig, IUnitraError, SerializedError, UnitraErrorOptions } from '@unitra/types/utils/error';
+import { Logging } from '../logging';
 import { formatError } from './ErrorFormatter';
 import { serializeError } from './serializeError';
 
@@ -26,6 +27,10 @@ export class UnitraError< T extends IUnitraError = IUnitraError > extends Error 
 
   public serialize () : SerializedError {
     return serializeError( this );
+  }
+
+  public log () : void {
+    Logging.error( this.code ?? this.name, this.message, this.data );
   }
 
   public format ( options?: ErrorFormatterConfig ) : string {
