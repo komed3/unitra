@@ -49,4 +49,19 @@ export class PluginResolver {
 
     return req;
   }
+
+  private static detectMissing ( catalog: PluginCatalog, req: Requirements ) : string[] {
+    const missing: string[] = [];
+
+    for ( const [ id, list ] of req )
+      if ( ! catalog.has( id ) )
+        for ( const r of list )
+          this.pushError(
+            missing,
+            `${ r.plugin.id } → missing ${ id }@${ r.range }`,
+            'not installed'
+          );
+
+    return missing;
+  }
 }
