@@ -6,39 +6,39 @@ import { ResolveError } from '@unitra/utils/error';
 export class Resolve implements IResolve {
   constructor ( private readonly ctx: UnitraContext ) {}
 
-  public tryToRef < K extends RegistryKey, R = RefOf< K > > ( key: K, value: LikeOf< K > ): R | undefined {
-    if ( this.ctx.service.assert.isRef( key, value ) ) return value as R;
-    if ( this.ctx.service.assert.isDef( key, value ) ) return value.id as R;
+  public tryToRef < K extends RegistryKey > ( key: K, value: LikeOf< K > ): RefOf< K > | undefined {
+    if ( this.ctx.service.assert.isRef( key, value ) ) return value;
+    if ( this.ctx.service.assert.isDef( key, value ) ) return value.id;
 
     return undefined;
   }
 
-  public tryToDef < K extends RegistryKey, D = DefOf< K > > ( key: K, value: LikeOf< K > ): D | undefined {
-    if ( this.ctx.service.assert.isDef( key, value ) ) return value as D;
+  public tryToDef < K extends RegistryKey > ( key: K, value: LikeOf< K > ): DefOf< K > | undefined {
+    if ( this.ctx.service.assert.isDef( key, value ) ) return value;
     if ( this.ctx.service.assert.isRef( key, value ) ) return (
       this.ctx.registry( key ) as unknown as IRegistry< RefOf< K > >
-    ).get( value ) as D;
+    ).get( value );
 
     return undefined;
   }
 
-  public toRef < K extends RegistryKey, R = RefOf< K > > ( key: K, value: LikeOf< K > ) : R {
+  public toRef < K extends RegistryKey > ( key: K, value: LikeOf< K > ) : RefOf< K > {
     const res = this.tryToRef( key, value );
     if ( ! res ) throw new ResolveError< K >(
       `cannot resolve reference for ${ key }`,
       { data: { key, value } }
     );
 
-    return res as R;
+    return res;
   }
 
-  public toDef < K extends RegistryKey, D = DefOf< K > > ( key: K, value: LikeOf< K > ) : D {
+  public toDef < K extends RegistryKey > ( key: K, value: LikeOf< K > ) : DefOf< K > {
     const res = this.tryToDef( key, value );
     if ( ! res ) throw new ResolveError< K >(
       `cannot resolve definition object for ${key}`,
       { data: { key, value } }
     );
 
-    return res as D;
+    return res;
   }
 }
