@@ -5,7 +5,7 @@ import type { CompoundStruct, UnitStruct } from '@unitra/types/unit';
 export class Serialize implements ISerialize {
   constructor () {}
 
-  public fromUnitReference ( state: ReferenceState ) : string {
+  public fromReferenceState ( state: ReferenceState ) : string {
     return state.nodes
       .map( ( node ) => {
         switch ( node.type ) {
@@ -20,7 +20,7 @@ export class Serialize implements ISerialize {
   }
 
   public fromUnitStruct ( struct: UnitStruct | CompoundStruct) : string {
-    return this.fromUnitReference( { nodes: struct.map(
+    return this.fromReferenceState( { nodes: struct.map(
       ( node ) => 'factor' in node ? {
         type: 'factor',
         value: node.factor
