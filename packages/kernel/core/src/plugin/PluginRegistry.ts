@@ -51,4 +51,22 @@ export class PluginRegistry {
     this.log.debug( `deregistered plugin "${ id }": ${ ok ? 'success' : 'failed' }` );
     ( ok && this.revId++ );
   }
+
+  public static has ( id: string, version?: SemverVersion ) : boolean {
+    const versions = this.registry.get( id );
+    return versions ? version ? versions.has( version ) : true : false;
+  }
+
+  public static get ( id: string, version?: SemverVersion ) : ReadonlyArray< PluginDefinition > {
+    const plugin = this.registry.get( id );
+    if ( ! plugin ) return [];
+
+    return version
+      ? plugin.get( version ) ? [ plugin.get( version )! ] : []
+      : [ ...plugin.values() ];
+  }
+
+  public static all () : ReadonlyArray< PluginDefinition > {
+    return [ ...this.registry.values() ].flatMap( versions => [ ...versions.values() ] );
+  }
 }
