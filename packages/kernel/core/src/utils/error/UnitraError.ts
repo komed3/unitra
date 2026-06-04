@@ -1,4 +1,5 @@
-import type { IUnitraError, UnitraErrorOptions } from '@unitra/types/utils/error';
+import type { IUnitraError, SerializedError, UnitraErrorOptions } from '@unitra/types/utils/error';
+import { serializeError } from './serializeError';
 
 export class UnitraError< T extends IUnitraError = IUnitraError > extends Error implements IUnitraError {
   public readonly code?: T[ 'code' ];
@@ -20,6 +21,10 @@ export class UnitraError< T extends IUnitraError = IUnitraError > extends Error 
     this.name = this.constructor.name;
     this.data = options.data;
     this.cause = options.cause;
+  }
+
+  public serialize () : SerializedError {
+    return serializeError( this );
   }
 
   public static from ( error: unknown, options: UnitraErrorOptions ) : UnitraError {
