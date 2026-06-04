@@ -45,4 +45,8 @@ export class UnitFactory implements IUnitFactory {
   public toJSON () : string {
     return safeJsonStringify( this.state );
   }
+
+  public serialize () : string {
+    return this.ctx.service.serialize.fromReferenceState( this.state );
+  }
 }
