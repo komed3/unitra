@@ -1,7 +1,9 @@
 import type { PluginCatalog, PluginDefinition, PluginResolveGraph, PluginResolveResult } from '@unitra/types/core/plugin';
 import type { SemverRange } from '@unitra/types/utils/semver';
+import { PluginError } from '../utils/error';
 import { Logging } from '../utils/logging';
 import { Semver } from '../utils/semver';
+import { PluginRegistry } from './PluginRegistry';
 
 type Requirements = Map< string, Array< {
   plugin: PluginDefinition;
@@ -132,6 +134,48 @@ export class PluginResolver {
     };
 
     for ( const n of graph.keys() ) visit( n );
+    return result;
+  }
+
+  public static resolve () : PluginResolveResult {
+    const revision = PluginRegistry.revision;
+
+    if ( this.cache && this.cacheRevision === revision ) {
+      this.log.debug( 'cache hit' );
+      return this.cache;
+    }
+
+    this.log.debug( 'resolving plugin catalog ...' );
+
+    const catalog = PluginRegistry.catalog();
+    const graph = this.buildGraph( catalog );
+    const requirements = this.buildRequirements( catalog );
+
+    this.log.debug( 'check for dependency inconsistencies ...' );
+
+    const missing = this.detectMissing( catalog, requirements );
+    const conflicts = this.detectConflicts( catalog, requirements );
+    const cycles = this.detectCycles( graph );
+    const errCount = missing.length + conflicts.length + cycles.length;
+
+    if ( errCount ) {
+      this.log.debug( 'resolution failed', { errors: errCount } );
+
+      return {
+        plugins: [], graph, error: new PluginError(
+          `resolution failed due to errors (${ errCount })`, {
+          context: { graph, missing, conflicts, cycles, errCount }
+        } )
+      };
+    }
+
+    const plugins = this.topologicalSort( graph, catalog );
+    const result = { graph, plugins };
+
+    this.cache = result;
+    this.cacheRevision = revision;
+
+    this.log.debug( 'successfully resolved', { plugins: plugins.length } );
     return result;
   }
 }
