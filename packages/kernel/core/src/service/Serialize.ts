@@ -1,12 +1,13 @@
 import type { ReferenceState } from '@unitra/types/node';
 import type { ISerialize } from '@unitra/types/service';
 import type { CompoundStruct, UnitStruct } from '@unitra/types/unit';
+import type { UnitraContext } from '@unitra/types/unitra';
 
 export class Serialize implements ISerialize {
-  constructor () {}
+  constructor ( private readonly ctx: UnitraContext ) {}
 
   public fromReferenceState ( state: ReferenceState ) : string {
-    return state.nodes
+    return this.ctx.core.hook.run( 'core.service.serialize', { state }, state.nodes
       .map( ( node ) => {
         switch ( node.type ) {
           case 'factor': return { order: 0, value: `#${ node.value }` };
@@ -16,10 +17,11 @@ export class Serialize implements ISerialize {
       } )
       .sort( ( a, b ) => a.order - b.order || a.value.localeCompare( b.value ) )
       .map( ( node ) => node.value )
-      .join( '*' );
+      .join( '*' )
+    );
   }
 
-  public fromUnitStruct ( struct: UnitStruct | CompoundStruct) : string {
+  public fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string {
     return this.fromReferenceState( { nodes: struct.map(
       ( node ) => 'factor' in node ? {
         type: 'factor', value: node.factor
