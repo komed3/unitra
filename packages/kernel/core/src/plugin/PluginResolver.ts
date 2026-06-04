@@ -1,6 +1,7 @@
 import type { PluginCatalog, PluginDefinition, PluginResolveGraph, PluginResolveResult } from '@unitra/types/core/plugin';
 import type { SemverRange } from '@unitra/types/utils/semver';
 import { Logging } from '../utils/logging';
+import { Semver } from '../utils/semver';
 
 type Requirements = Map< string, Array< {
   plugin: PluginDefinition;
@@ -63,5 +64,26 @@ export class PluginResolver {
           );
 
     return missing;
+  }
+
+  private static detectConflicts ( catalog: PluginCatalog, req: Requirements ) : string[] {
+    const conflict: string[] = [];
+
+    for ( const [ id, list ] of req ) {
+      const versions = catalog.get( id );
+      if ( ! versions ) continue;
+
+      const available = versions.map( v => v.version );
+
+      for ( const r of list )
+        if ( ! available.some( v => Semver.satisfies( v, r.range ) ) )
+          this.pushError(
+            conflict,
+            `${ r.plugin.id } → conflict ${ id }@${ r.range }`,
+            'version mismatch'
+          );
+    }
+
+    return conflict;
   }
 }
