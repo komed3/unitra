@@ -23,7 +23,7 @@ export type ErrorContext< C extends ErrorCode > =
     ? ErrorCtxMap[ C ]
     : never;
 
-export type UnitraErrorOptions< C extends ErrorCode > =
+export type UnitraErrorOptions< C extends ErrorCode = ErrorCode > =
   [ ErrorContext< C > ] extends [ never ]
     ? { cause?: unknown }
     : { context: ErrorContext< C >, cause?: unknown };

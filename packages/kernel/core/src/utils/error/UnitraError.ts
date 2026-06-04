@@ -1,14 +1,13 @@
 import type { ErrorCode } from '@unitra/dict/utils';
-import type { ErrorFormatterConfig, IUnitraError, SerializedError, UnitraErrorOptions } from '@unitra/types/utils/error';
+import type { ErrorContext, ErrorFormatterConfig, IUnitraError, SerializedError, UnitraErrorOptions } from '@unitra/types/utils/error';
 import { Logging } from '../logging';
 import { formatError } from './ErrorFormatter';
 import { serializeError } from './serializeError';
 
-export class UnitraError< C extends ErrorCode = ErrorCode, T extends unknown = {} > extends Error implements IUnitraError< C, T > {
-  public readonly code?: C;
-  public readonly data?: T;
-
+export class UnitraError< C extends ErrorCode = ErrorCode > extends Error implements IUnitraError< C > {
   public override readonly cause?: unknown;
+  public readonly code?: C;
+  public readonly context?: ErrorContext< C >;
 
   public get summary () : string | undefined {
     return undefined;
@@ -18,12 +17,11 @@ export class UnitraError< C extends ErrorCode = ErrorCode, T extends unknown = {
     return this.constructor.name;
   }
 
-  constructor ( message: string, options: UnitraErrorOptions< T > ) {
+  constructor ( message: string, options: UnitraErrorOptions< C > ) {
     super( message, { cause: options.cause } );
-
     this.name = this.constructor.name;
-    this.data = options.data;
-    this.cause = options.cause;
+
+    if ( 'context' in options ) this.context = options.context;
   }
 
   public serialize () : SerializedError {
@@ -31,7 +29,7 @@ export class UnitraError< C extends ErrorCode = ErrorCode, T extends unknown = {
   }
 
   public log () : void {
-    Logging.error( this.code ?? this.name, this.message, this.data );
+    Logging.error( this.code ?? this.name, this.message, this.context );
   }
 
   public format ( options?: ErrorFormatterConfig ) : string {
