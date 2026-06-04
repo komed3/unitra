@@ -28,38 +28,40 @@ export interface IRegistry< Ref extends AnyRef > {
   filter: ( predicate: ( def: RegistryDef< Ref > ) => boolean ) => RegistryDef< Ref >[];
 }
 
-export type RegistryMap = {
+export type RegistryInstanceMap = {
   prefix: IRegistry< PrefixRef >;
   quantity: IRegistry< QuantityRef >;
   unit: IRegistry< UnitRef >;
   constant: IRegistry< ConstantRef >;
 };
 
-export type RegistryKey = keyof RegistryMap;
+export type RegistryKey = keyof RegistryInstanceMap;
 
-export type RegistryAccessor = < K extends RegistryKey > ( key: K ) => RegistryMap[ K ];
+export type RegistryAccessor = < K extends RegistryKey > ( key: K ) => RegistryInstanceMap[ K ];
 
-export type RefMap = {
-  prefix: PrefixRef;
-  quantity: QuantityRef;
-  unit: UnitRef;
-  constant: ConstantRef;
+export type RegistryMap = {
+  prefix: {
+    ref: PrefixRef;
+    def: DerivedPrefixDef< PrefixRef >;
+    like: PrefixLike;
+  };
+  quantity: {
+    ref: QuantityRef;
+    def: DerivedQuantityDef< QuantityRef >;
+    like: QuantityLike;
+  };
+  unit: {
+    ref: UnitRef;
+    def: DerivedUnitDef< UnitRef >;
+    like: UnitLike;
+  };
+  constant: {
+    ref: ConstantRef;
+    def: DerivedConstantDef< ConstantRef >;
+    like: ConstantLike;
+  };
 };
 
-export type DefMap = {
-  prefix: DerivedPrefixDef< PrefixRef >;
-  quantity: DerivedQuantityDef< QuantityRef >;
-  unit: DerivedUnitDef< UnitRef >;
-  constant: DerivedConstantDef< ConstantRef >;
-};
-
-export type LikeMap = {
-  prefix: PrefixLike;
-  quantity: QuantityLike;
-  unit: UnitLike;
-  constant: ConstantLike;
-};
-
-export type RefOf< K extends RegistryKey > = RefMap[ K ];
-export type DefOf< K extends RegistryKey > = DefMap[ K ];
-export type LikeOf< K extends RegistryKey > = LikeMap[ K ];
+export type RefOf< K extends RegistryKey > = RegistryMap[ K ][ 'ref' ];
+export type DefOf< K extends RegistryKey > = RegistryMap[ K ][ 'def' ];
+export type LikeOf< K extends RegistryKey > = RegistryMap[ K ][ 'like' ];

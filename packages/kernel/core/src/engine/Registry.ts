@@ -1,7 +1,7 @@
 import type { ConstantRef } from '@unitra/types/constant';
 import type { PrefixRef } from '@unitra/types/prefix';
 import type { QuantityRef } from '@unitra/types/quantity';
-import type { AnyRef, IRegistry, RegistryAccessor, RegistryDef, RegistryKey, RegistryMap } from '@unitra/types/registry';
+import type { AnyRef, IRegistry, RegistryAccessor, RegistryDef, RegistryInstanceMap, RegistryKey } from '@unitra/types/registry';
 import type { UnitRef } from '@unitra/types/unit';
 
 export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
@@ -44,17 +44,17 @@ export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
   }
 }
 
-export const createRegistryAccessor = ( override?: Partial< RegistryMap > ) : RegistryAccessor => {
-  const cache: Partial< RegistryMap > = {};
+export const createRegistryAccessor = ( override?: Partial< RegistryInstanceMap > ) : RegistryAccessor => {
+  const cache: Partial< RegistryInstanceMap > = {};
 
-  const factories: { [ K in RegistryKey ]: () => RegistryMap[ K ] } = {
+  const factories: { [ K in RegistryKey ]: () => RegistryInstanceMap[ K ] } = {
     unit: () => new Registry< UnitRef >(),
     prefix: () => new Registry< PrefixRef >(),
     quantity: () => new Registry< QuantityRef >(),
     constant: () => new Registry< ConstantRef >()
   };
 
-  return function get < K extends RegistryKey > ( key: K ) : RegistryMap[ K ] {
+  return function get < K extends RegistryKey > ( key: K ) : RegistryInstanceMap[ K ] {
     return ( override?.[ key ] ?? cache[ key ] ?? ( cache[ key ] = factories[ key ]() ) );
   };
 };
