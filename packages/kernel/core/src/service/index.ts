@@ -2,6 +2,7 @@ import type { ServiceAccessor, ServiceContainer, ServiceFactoryMap, ServiceInsta
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { Assert } from './Assert';
 import { Resolve } from './Resolve';
+import { Serialize } from './Serialize';
 
 export { Assert, Resolve };
 
@@ -13,7 +14,8 @@ export const createServiceAccessor = (
 
   const defaults: ServiceFactoryMap = {
     assert: ( ctx ) => new Assert( ctx ),
-    resolve: ( ctx ) => new Resolve( ctx )
+    resolve: ( ctx ) => new Resolve( ctx ),
+    serialize: ( ctx ) => new Serialize( ctx )
   };
 
   const get = < K extends keyof ServiceInstanceMap > ( key: K ) : ServiceInstanceMap[ K ] =>
@@ -21,6 +23,7 @@ export const createServiceAccessor = (
 
   return () : ServiceContainer => ( {
     assert: () => get( 'assert' ),
-    resolve: () => get( 'resolve' )
+    resolve: () => get( 'resolve' ),
+    serialize: () => get( 'serialize' )
   } );
 };

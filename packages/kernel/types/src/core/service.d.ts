@@ -1,3 +1,5 @@
+import type { CompoundStruct, UnitStruct } from '../def/unit';
+import type { ReferenceState } from './node';
 import type { DefOf, InputOf, RefOf, RegistryKey } from './registry';
 import type { UnitraContext } from './unitra';
 
@@ -15,9 +17,15 @@ export interface IResolve {
   toDef: < K extends RegistryKey > ( key: K, value: InputOf< K > ) => DefOf< K >;
 }
 
+export interface ISerialize {
+  fromReferenceState: ( state: ReferenceState ) => string;
+  fromUnitStruct: ( struct: UnitStruct | CompoundStruct ) => string;
+}
+
 export type ServiceInstanceMap = {
   assert: IAssert;
   resolve: IResolve;
+  serialize: ISerialize;
 };
 
 export type ServiceFactoryMap = {
