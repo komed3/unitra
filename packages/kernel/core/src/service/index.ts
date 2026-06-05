@@ -10,13 +10,17 @@ export const createServiceAccessor = (
   factories?: Partial< ServiceFactoryMap >
 ) : ServiceAccessor => {
   const cache: Partial< ServiceInstanceMap > = {};
+
   const defaults: ServiceFactoryMap = {
     assert: ( ctx ) => new Assert( ctx ),
     resolve: ( ctx ) => new Resolve( ctx )
   };
 
+  const get = < K extends keyof ServiceInstanceMap > ( key: K ) : ServiceInstanceMap[ K ] =>
+    cache[ key ] ??= ( factories?.[ key ] ?? defaults[ key ] )( ctx );
+
   return () : ServiceContainer => ( {
-    assert: () => cache.assert ??= ( factories?.assert ?? defaults.assert )( ctx ),
-    resolve: () => cache.resolve ??= ( factories?.resolve ?? defaults.resolve )( ctx )
+    assert: () => get( 'assert' ),
+    resolve: () => get( 'resolve' )
   } );
 };
