@@ -1,5 +1,6 @@
 import type { NodeMap, SerializedNode, SerializerMap } from '@unitra/types/core/node';
 import type { UnitraContext } from '@unitra/types/core/unitra';
+import type { CompoundStruct, UnitStruct } from '@unitra/types/def/unit';
 
 export class Serialize {
   private static readonly map: SerializerMap = {
@@ -13,4 +14,15 @@ export class Serialize {
   }
 
   constructor ( private readonly ctx: UnitraContext ) {}
+
+  public fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string {
+    return this.fromReferenceState( { nodes: struct.map(
+      ( node ) => 'factor' in node
+        ? { type: 'factor', value: node.factor }
+        : {
+          type: 'unit', unit: node.unit, exp: node.exp,
+          prefix: 'prefix' in node ? node.prefix : undefined
+        }
+    ) } );
+  }
 }
