@@ -1,4 +1,7 @@
-import type { AnyRef, IRegistry, RefOf, RegistryAccessor, RegistryDef, RegistryInstanceMap, RegistryKey } from '@unitra/types/core/registry';
+import type {
+  AnyRef, IRegistry, RefOf, RegistryAccessor, RegistryDef,
+  RegistryFactoryMap, RegistryInstanceMap, RegistryKey
+} from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ConstantRef } from '@unitra/types/def/constant';
 import type { PrefixRef } from '@unitra/types/def/prefix';
@@ -7,6 +10,8 @@ import type { UnitRef } from '@unitra/types/def/unit';
 
 export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
   protected readonly store = new Map< Ref, RegistryDef< Ref > >();
+
+  constructor ( private readonly ctx: UnitraContext ) {}
 
   public get size () : number {
     return this.store.size;
@@ -45,18 +50,21 @@ export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
   }
 }
 
-export const createRegistryAccessor = ( override?: Partial< RegistryInstanceMap > ) : RegistryAccessor => {
+export const createRegistryAccessor = (
+  ctx: UnitraContext,
+  factories?: Partial< RegistryFactoryMap >
+) : RegistryAccessor => {
   const cache: Partial< RegistryInstanceMap > = {};
 
-  const factories: { [ K in RegistryKey ]: () => RegistryInstanceMap[ K ] } = {
-    unit: () => new Registry< UnitRef >(),
-    prefix: () => new Registry< PrefixRef >(),
-    quantity: () => new Registry< QuantityRef >(),
-    constant: () => new Registry< ConstantRef >()
+  const defaults: RegistryFactoryMap = {
+    prefix: ( ctx ) => new Registry< PrefixRef >( ctx ),
+    quantity: ( ctx ) => new Registry< QuantityRef >( ctx ),
+    unit: ( ctx ) => new Registry< UnitRef >( ctx ),
+    constant: ( ctx ) => new Registry< ConstantRef >( ctx )
   };
 
-  return function get < K extends RegistryKey > ( key: K ) : RegistryInstanceMap[ K ] {
-    return cache[ key ] ??= override?.[ key ] ?? factories[ key ]();
+  return function get< K extends RegistryKey > ( key: K ) : RegistryInstanceMap[ K ] {
+    return cache[ key ] ??= ( factories?.[ key ] ?? defaults[ key ] )( ctx );
   };
 };
 
