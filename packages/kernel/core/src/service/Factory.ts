@@ -3,6 +3,7 @@ import type { ConstantModifier, UnitModifier } from '@unitra/types/core/service'
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ConstantInput } from '@unitra/types/def/constant';
 import type { UnitInput } from '@unitra/types/def/unit';
+import { safeJsonStringify } from '../utils';
 
 export class UnitFactory {
   constructor (
@@ -33,5 +34,17 @@ export class UnitFactory {
 
   public factor ( value: number ) : UnitFactory {
     return this.next( [ { type: 'factor', value } ] );
+  }
+
+  public toObj () : ReferenceState {
+    return this.state;
+  }
+
+  public toJSON () : string {
+    return safeJsonStringify( this.state );
+  }
+
+  public serialize () : string {
+    return this.ctx.service().serialize().fromReferenceState( this.state );
   }
 }
