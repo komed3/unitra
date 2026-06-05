@@ -1,9 +1,9 @@
 import type { ErrorCode } from '@unitra/dict/utils';
 import type { PluginResolveGraph } from '../core/plugin';
-import type { RegistryKey } from '../core/registry';
+import type { LikeOf, RegistryKey } from '../core/registry';
 import type { SemverVersion } from './semver';
 
-export interface ErrorCtxMap {
+export interface ErrorCtxMap< T = unknown > {
   [ ErrorCode.ASSERT_ERROR ]: {
     key: RegistryKey;
     value: unknown;
@@ -15,6 +15,10 @@ export interface ErrorCtxMap {
     cycles: ReadonlyArray< string >;
     errCount: number;
   };
+  [ ErrorCode.RESOLVE_ERROR ]: {
+    key: K;
+    value: LikeOf< K >;
+  };
   [ ErrorCode.SEMVER_ERROR ]: {
     version: SemverVersion;
     semver: string;
@@ -23,15 +27,15 @@ export interface ErrorCtxMap {
   };
 }
 
-export type ErrorContext< C extends ErrorCode > =
+export type ErrorContext< C extends ErrorCode, T = unknown > =
   C extends keyof ErrorCtxMap
-    ? ErrorCtxMap[ C ]
+    ? ErrorCtxMap< T >[ C ]
     : never;
 
-export type UnitraErrorOptions< C extends ErrorCode = ErrorCode > =
-  [ ErrorContext< C > ] extends [ never ]
+export type UnitraErrorOptions< C extends ErrorCode = ErrorCode, T = unknown > =
+  [ ErrorContext< C, T > ] extends [ never ]
     ? { cause?: unknown }
-    : { context: ErrorContext< C >, cause?: unknown };
+    : { context: ErrorContext< C, T >, cause?: unknown };
 
 export type SerializedError = {
   name: string;
@@ -43,9 +47,12 @@ export type SerializedError = {
   cause?: SerializedError;
 };
 
-export interface IUnitraError< C extends ErrorCode = ErrorCode > extends Error {
+export interface IUnitraError<
+  C extends ErrorCode = ErrorCode,
+  T = unknown
+> extends Error {
   readonly code?: C;
-  readonly context?: ErrorContext< C >;
+  readonly context?: ErrorContext< C, T >;
   readonly cause?: unknown;
   readonly type: string;
   readonly summary: string | undefined;

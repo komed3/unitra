@@ -4,10 +4,13 @@ import { Logging } from '../logging';
 import { formatError } from './ErrorFormatter';
 import { serializeError } from './serializeError';
 
-export class UnitraError< C extends ErrorCode = ErrorCode > extends Error implements IUnitraError< C > {
+export class UnitraError<
+  C extends ErrorCode = ErrorCode,
+  T = unknown
+> extends Error implements IUnitraError< C, T > {
   public override readonly cause?: unknown;
   public readonly code?: C;
-  public readonly context?: ErrorContext< C >;
+  public readonly context?: ErrorContext< C, T >;
 
   public get summary () : string | undefined {
     return undefined;
@@ -17,7 +20,7 @@ export class UnitraError< C extends ErrorCode = ErrorCode > extends Error implem
     return this.constructor.name;
   }
 
-  constructor ( message: string, options: UnitraErrorOptions< C > ) {
+  constructor ( message: string, options: UnitraErrorOptions< C, T > ) {
     super( message, { cause: options.cause } );
     this.name = this.constructor.name;
 
