@@ -1,11 +1,11 @@
 import type { ErrorCode } from '@unitra/dict/utils';
 import type { PluginResolveGraph } from '../core/plugin';
-import type { LikeOf, RegistryKey } from '../core/registry';
+import type { LikeOf } from '../core/registry';
 import type { SemverVersion } from './semver';
 
 export interface ErrorCtxMap< T = unknown > {
   [ ErrorCode.ASSERT_ERROR ]: {
-    key: RegistryKey;
+    key: T;
     value: unknown;
   };
   [ ErrorCode.PLUGIN_ERROR ]: {
@@ -16,8 +16,8 @@ export interface ErrorCtxMap< T = unknown > {
     errCount: number;
   };
   [ ErrorCode.RESOLVE_ERROR ]: {
-    key: K;
-    value: LikeOf< K >;
+    key: T;
+    value: LikeOf< T >;
   };
   [ ErrorCode.SEMVER_ERROR ]: {
     version: SemverVersion;

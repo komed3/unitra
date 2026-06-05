@@ -17,7 +17,7 @@ export class Assert implements IAssert {
 
   public assertRef < K extends RegistryKey > ( key: K, value: unknown ) : asserts value is RefOf< K > {
     if ( ! this.isRef( key, value ) )
-      throw new AssertError(
+      throw new AssertError< K >(
         `expected a ${ key } reference, but got ${ safeJsonStringify( value ) }`,
         { context: { key, value } }
       );
@@ -25,7 +25,7 @@ export class Assert implements IAssert {
 
   public assertDef < K extends RegistryKey > ( key: K, value: unknown ) : asserts value is DefOf< K > {
     if ( ! this.isDef( key, value ) )
-      throw new AssertError(
+      throw new AssertError< K >(
         `expected a ${ key } definition, but got ${ safeJsonStringify( value ) }`,
         { context: { key, value } }
       );
