@@ -1,4 +1,7 @@
-import type { HookCtx, HookDef, HookHandler, HookId, HookOut, HookPipeline, HookValue } from '@unitra/types/core/hook';
+import type {
+  HookCtx, HookDef, HookEntry, HookHandler, HookId, HookImplMap,
+  HookOut, HookPipeline, HookValue
+} from '@unitra/types/core/hook';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { HookError, Logging } from '../utils';
 
@@ -35,7 +38,7 @@ export class Hook {
       ( a, b ) => ( b.priority ?? 0 ) - ( a.priority ?? 0 )
     );
 
-    const pipeline: HookPipeline< K > = ( hookCtx: HookCtx< K >, value?: HookValue< K > ) =>
+    const pipeline = ( hookCtx: HookCtx< K >, value?: HookValue< K > ) : HookOut< K > =>
       list.reduce( ( v, { handler } ) => handler( this.ctx, hookCtx, v ) as HookOut< K >, value );
 
     this.cache.set( id, pipeline );
@@ -50,13 +53,22 @@ export class Hook {
   }
 
   public add < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) : void {
-    Hook.log.debug( `add hook handler for "${ id }" with priority ${ priority ?? 0 }` );
-
     const list = this.hooks.get( id ) || [];
     list.push( { handler, priority } );
     this.hooks.set( id, list );
 
     this.invalidate( id );
+  }
+
+  public merge ( hooks: HookImplMap ) : void {
+    for ( const [ id, incoming ] of Object.entries( hooks ) as HookEntry ) {
+      if ( ! incoming || incoming.length === 0 ) continue;
+
+      const existing = this.hooks.get( id ) ?? [];
+      this.hooks.set( id, [ ...existing, ...incoming ] );
+
+      this.invalidate( id );
+    }
   }
 
   public run < K extends HookId > ( id: K, hookCtx: HookCtx< K > ) : void;

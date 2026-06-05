@@ -5,10 +5,6 @@ export interface HookRegistry {
     ctx: {};
     value: string;
   };
-  'test': {
-    ctx: {};
-    value: string;
-  };
 }
 
 export type HookId = keyof HookRegistry;
@@ -35,6 +31,8 @@ export type HookDef< K extends HookId > = {
 export type HookImplMap = {
   readonly [ K in HookId ]?: ReadonlyArray< HookDef< K > >;
 };
+
+export type HookEntry = Array< [ HookId, ReadonlyArray< HookDef< HookId > > ] >;
 
 export interface IHook {
   invalidate: ( id: HookId ) => void;
