@@ -1,7 +1,7 @@
-import type { ConstantRef, DerivedConstantDef } from '../def/constant';
-import type { DerivedPrefixDef, PrefixRef } from '../def/prefix';
-import type { DerivedQuantityDef, QuantityRef } from '../def/quantity';
-import type { DerivedUnitDef, UnitRef } from '../def/unit';
+import type { ConstantInput, ConstantLike, ConstantRef, DerivedConstantDef } from '../def/constant';
+import type { DerivedPrefixDef, PrefixInput, PrefixLike, PrefixRef } from '../def/prefix';
+import type { DerivedQuantityDef, QuantityInput, QuantityLike, QuantityRef } from '../def/quantity';
+import type { DerivedUnitDef, UnitInput, UnitLike, UnitRef } from '../def/unit';
 
 export type AnyRef =
   | PrefixRef
@@ -37,3 +37,35 @@ export type RegistryInstanceMap = {
 
 export type RegistryKey = keyof RegistryInstanceMap;
 export type RegistryAccessor = < K extends RegistryKey > ( key: K ) => RegistryInstanceMap[ K ];
+
+export type RegistryMap = {
+  prefix: {
+    ref: PrefixRef;
+    def: DerivedPrefixDef< PrefixRef >;
+    like: PrefixLike;
+    input: PrefixInput;
+  };
+  quantity: {
+    ref: QuantityRef;
+    def: DerivedQuantityDef< QuantityRef >;
+    like: QuantityLike;
+    input: QuantityInput;
+  };
+  unit: {
+    ref: UnitRef;
+    def: DerivedUnitDef< UnitRef >;
+    like: UnitLike;
+    input: UnitInput;
+  };
+  constant: {
+    ref: ConstantRef;
+    def: DerivedConstantDef< ConstantRef >;
+    like: ConstantLike;
+    input: ConstantInput;
+  };
+};
+
+export type RefOf< K extends RegistryKey > = RegistryMap[ K ][ 'ref' ];
+export type DefOf< K extends RegistryKey > = RegistryMap[ K ][ 'def' ];
+export type LikeOf< K extends RegistryKey > = RegistryMap[ K ][ 'like' ];
+export type InputOf< K extends RegistryKey > = RegistryMap[ K ][ 'input' ];
