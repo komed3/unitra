@@ -6,3 +6,9 @@ export interface IAssert {
   assertRef: < K extends RegistryKey > ( key: K, value: unknown ) => asserts value is RefOf< K >;
   assertDef: < K extends RegistryKey > ( key: K, value: unknown ) => asserts value is DefOf< K >;
 }
+
+export type ServiceInstanceMap = {
+  assert: () => IAssert;
+};
+
+export type ServiceAccessor = () => ServiceAccessorMap;
