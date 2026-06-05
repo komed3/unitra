@@ -18,4 +18,16 @@ export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
   public bulk ( input: Iterable< [ Ref, RegistryDef< Ref > ] > ) : void {
     for ( const [ ref, def ] of input ) this.store.set( ref, def );
   }
+
+  public entries () : IterableIterator< [ Ref, RegistryDef< Ref > ] > {
+    return this.store.entries();
+  }
+
+  public values () : IterableIterator< RegistryDef< Ref > > {
+    return this.store.values();
+  }
+
+  public keys () : IterableIterator< Ref > {
+    return this.store.keys();
+  }
 }
