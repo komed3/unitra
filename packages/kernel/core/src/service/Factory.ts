@@ -21,13 +21,17 @@ export class UnitFactory {
     return this.next( [ { type: 'unit', unit, exp: mod?.exp ?? 1, prefix } ] );
   }
 
-  public div ( unit: UnitInput, mod: UnitModifier ) : UnitFactory {
-    return this.mul( unit, { ...mod, ...{ exp: -( mod.exp ?? 1 ) } } );
+  public div ( unit: UnitInput, mod?: UnitModifier ) : UnitFactory {
+    return this.mul( unit, { ...mod, ...{ exp: -( mod?.exp ?? 1 ) } } );
   }
 
-  public constant ( value: ConstantInput, mod: ConstantModifier ) : UnitFactory {
+  public constant ( value: ConstantInput, mod?: ConstantModifier ) : UnitFactory {
     const constant = this.ctx.service().resolve().toRef( 'constant', value );
 
-    return this.next( [ { type: 'constant', constant, exp: mod.exp ?? 1 } ] );
+    return this.next( [ { type: 'constant', constant, exp: mod?.exp ?? 1 } ] );
+  }
+
+  public factor ( value: number ) : UnitFactory {
+    return this.next( [ { type: 'factor', value } ] );
   }
 }
