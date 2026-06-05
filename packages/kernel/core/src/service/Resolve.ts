@@ -25,7 +25,7 @@ export class Resolve implements IResolve {
   public toRef < K extends RegistryKey > ( key: K, value: InputOf< K > ) : RefOf< K > {
     const res = this.tryToRef( key, value );
 
-    if ( ! res ) throw new ResolveError< K >(
+    if ( ! res ) throw new ResolveError(
       `cannot resolve reference for ${ key }`,
       { context: { key, value } }
     );
@@ -36,7 +36,7 @@ export class Resolve implements IResolve {
   public toDef < K extends RegistryKey > ( key: K, value: InputOf< K > ) : DefOf< K > {
     const res = this.tryToDef( key, value );
 
-    if ( ! res ) throw new ResolveError< K >(
+    if ( ! res ) throw new ResolveError(
       `cannot resolve definition object for ${ key }`,
       { context: { key, value } }
     );

@@ -1,11 +1,11 @@
 import type { ErrorCode } from '@unitra/dict/utils';
 import type { PluginResolveGraph } from '../core/plugin';
-import type { InputOf } from '../core/registry';
+import type { InputOf, RegistryKey } from '../core/registry';
 import type { SemverVersion } from './semver';
 
-export interface ErrorCtxMap< T = unknown > {
+export interface ErrorCtxMap {
   [ ErrorCode.ASSERT_ERROR ]: {
-    key: T;
+    key: RegistryKey;
     value: unknown;
   };
   [ ErrorCode.PLUGIN_ERROR ]: {
@@ -16,8 +16,8 @@ export interface ErrorCtxMap< T = unknown > {
     errCount: number;
   };
   [ ErrorCode.RESOLVE_ERROR ]: {
-    key: T;
-    value: InputOf< T >;
+    key: RegistryKey;
+    value: InputOf< RegistryKey >;
   };
   [ ErrorCode.SEMVER_ERROR ]: {
     version: SemverVersion;
@@ -27,15 +27,15 @@ export interface ErrorCtxMap< T = unknown > {
   };
 }
 
-export type ErrorContext< C extends ErrorCode, T = unknown > =
+export type ErrorContext< C extends ErrorCode > =
   C extends keyof ErrorCtxMap
-    ? ErrorCtxMap< T >[ C ]
+    ? ErrorCtxMap[ C ]
     : never;
 
-export type UnitraErrorOptions< C extends ErrorCode = ErrorCode, T = unknown > =
-  [ ErrorContext< C, T > ] extends [ never ]
+export type UnitraErrorOptions< C extends ErrorCode = ErrorCode > =
+  [ ErrorContext< C > ] extends [ never ]
     ? { cause?: unknown }
-    : { context: ErrorContext< C, T >, cause?: unknown };
+    : { context: ErrorContext< C >, cause?: unknown };
 
 export type SerializedError = {
   name: string;
@@ -47,21 +47,6 @@ export type SerializedError = {
   cause?: SerializedError;
 };
 
-export interface IUnitraError<
-  C extends ErrorCode = ErrorCode,
-  T = unknown
-> extends Error {
-  readonly code?: C;
-  readonly context?: ErrorContext< C, T >;
-  readonly cause?: unknown;
-  readonly type: string;
-  readonly summary: string | undefined;
-  toString: () => string;
-  serialize: () => SerializedError;
-  format: ( options?: ErrorFormatterConfig ) => string;
-  log: () => void;
-}
-
 export type ErrorFormatterConfig = {
   showCode?: boolean;
   showSummary?: boolean;
@@ -70,3 +55,15 @@ export type ErrorFormatterConfig = {
   showCauses?: boolean;
   indent?: string;
 };
+
+export interface IUnitraError< C extends ErrorCode = ErrorCode > extends Error {
+  readonly code?: C;
+  readonly context?: ErrorContext< C >;
+  readonly cause?: unknown;
+  readonly type: string;
+  readonly summary: string | undefined;
+  toString: () => string;
+  serialize: () => SerializedError;
+  format: ( options?: ErrorFormatterConfig ) => string;
+  log: () => void;
+}
