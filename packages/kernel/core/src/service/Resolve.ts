@@ -1,6 +1,7 @@
 import type { DefOf, InputOf, RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { getTypedRegistry } from '../engine/Registry';
+import { ResolveError } from '../utils';
 
 export class Resolve {
   constructor ( private readonly ctx: UnitraContext ) {}
@@ -18,5 +19,27 @@ export class Resolve {
       return getTypedRegistry( this.ctx, key ).get( value );
 
     return undefined;
+  }
+
+  public toRef < K extends RegistryKey > ( key: K, value: InputOf< K > ) : RefOf< K > {
+    const res = this.tryToRef( key, value );
+
+    if ( ! res ) throw new ResolveError< K >(
+      `cannot resolve reference for ${ key }`,
+      { context: { key, value } }
+    );
+
+    return res;
+  }
+
+  public toDef < K extends RegistryKey > ( key: K, value: InputOf< K > ) : DefOf< K > {
+    const res = this.tryToDef( key, value );
+
+    if ( ! res ) throw new ResolveError< K >(
+      `cannot resolve definition object for ${ key }`,
+      { context: { key, value } }
+    );
+
+    return res;
   }
 }

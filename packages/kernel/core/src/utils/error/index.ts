@@ -6,4 +6,5 @@ export * from './serializeError';
 
 export * from './errors/AssertError';
 export * from './errors/PluginError';
+export * from './errors/ResolveError';
 export * from './errors/SemverError';
