@@ -27,6 +27,8 @@ export class Hook {
   private readonly hooks = new HookStorage();
   private readonly cache = new HookCache();
 
+  constructor ( private readonly ctx: UnitraContext ) {}
+
   private getPipeline < K extends HookId > ( id: K ) : HookPipeline< K > {
     const cached = this.cache.get( id );
     if ( cached ) return cached;
@@ -41,8 +43,6 @@ export class Hook {
     this.cache.set( id, pipeline );
     return pipeline;
   }
-
-  constructor ( private readonly ctx: UnitraContext ) {}
 
   public invalidate ( id: HookId ) : void {
     if ( this.cache.delete( id ) )

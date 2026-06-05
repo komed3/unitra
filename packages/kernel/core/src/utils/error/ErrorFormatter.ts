@@ -11,6 +11,15 @@ export class ErrorFormatter {
   private readonly options: Required< ErrorFormatterConfig >;
   private readonly serialized: SerializedError;
 
+  constructor ( error: unknown, options?: ErrorFormatterConfig ) {
+    this.options = { ...ErrorFormatter.DEFAULT_CONFIG, ...options };
+
+    const data = serializeError( error );
+    this.serialized = typeof data !== 'object' || data === null
+      ? { name: 'UnknownError', message: String( error ) }
+      : data as SerializedError;
+  }
+
   private formatHeader ( data: SerializedError ) : string {
     return this.options.showCode && data.code !== undefined
       ? `${ data.name } [${ data.code }]`
@@ -30,15 +39,6 @@ export class ErrorFormatter {
       ) );
 
     return lines;
-  }
-
-  constructor ( error: unknown, options?: ErrorFormatterConfig ) {
-    this.options = { ...ErrorFormatter.DEFAULT_CONFIG, ...options };
-
-    const data = serializeError( error );
-    this.serialized = typeof data !== 'object' || data === null
-      ? { name: 'UnknownError', message: String( error ) }
-      : data as SerializedError;
   }
 
   public format () : string {
