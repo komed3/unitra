@@ -19,7 +19,7 @@ export type RegistryDef< R extends AnyRef > =
 export interface IRegistry< Ref extends AnyRef > {
   readonly size: number;
   get: < R extends Ref > ( ref: R ) => RegistryDef< R > | undefined;
-  has: < R extends Ref > ( ref: R ) => boolean;
+  has: ( ref: Ref ) => boolean;
   set: < R extends Ref > ( ref: R, def: RegistryDef< R > ) => void;
   bulk: ( input: Iterable< [ Ref, RegistryDef< Ref > ] > ) => void;
   entries: () => IterableIterator< [ Ref, RegistryDef< Ref > ] >;
