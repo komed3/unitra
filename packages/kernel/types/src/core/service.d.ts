@@ -1,3 +1,4 @@
+import type { PrefixLike } from '../def/prefix';
 import type { CompoundStruct, UnitStruct } from '../def/unit';
 import type { ReferenceState } from './node';
 import type { DefOf, InputOf, RefOf, RegistryKey } from './registry';
@@ -24,7 +25,7 @@ export interface ISerialize {
 
 export type UnitModifier = {
   exp?: number;
-  prefix?: PrefixRef;
+  prefix?: PrefixLike;
 };
 
 export type ConstantModifier = {
