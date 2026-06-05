@@ -19,4 +19,8 @@ export class UnitFactory {
 
     return this.next( [ { type: 'unit', unit, exp: mod?.exp ?? 1, prefix } ] );
   }
+
+  public div ( unit: UnitLike, mod: UnitModifier ) : UnitFactory {
+    return this.mul( unit, { ...mod, ...{ exp: -( mod.exp ?? 1 ) } } );
+  }
 }
