@@ -1,4 +1,3 @@
-import type { PrefixLike } from '../def/prefix';
 import type { CompoundStruct, UnitStruct } from '../def/unit';
 import type { ReferenceState } from './node';
 import type { DefOf, InputOf, RefOf, RegistryKey } from './registry';
@@ -22,15 +21,6 @@ export interface ISerialize {
   fromReferenceState: ( state: ReferenceState ) => string;
   fromUnitStruct: ( struct: UnitStruct | CompoundStruct ) => string;
 }
-
-export type UnitModifier = {
-  exp?: number;
-  prefix?: PrefixLike;
-};
-
-export type ConstantModifier = {
-  exp?: number;
-};
 
 export type ServiceInstanceMap = {
   assert: IAssert;

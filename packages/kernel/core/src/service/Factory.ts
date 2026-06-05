@@ -1,11 +1,11 @@
+import type { ConstantModifier, IUnitFactory, UnitModifier } from '@unitra/types/core/factory';
 import type { Node, ReferenceState } from '@unitra/types/core/node';
-import type { ConstantModifier, UnitModifier } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ConstantInput } from '@unitra/types/def/constant';
 import type { UnitInput } from '@unitra/types/def/unit';
 import { safeJsonStringify } from '../utils';
 
-export class UnitFactory {
+export class UnitFactory implements IUnitFactory {
   constructor (
     private readonly ctx: UnitraContext,
     private readonly state: ReferenceState = { nodes: [] }
