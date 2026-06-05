@@ -20,3 +20,9 @@ export type HookHandler< K extends HookId > =
   HookSpec< K > extends { value: infer V }
     ? ( ctx: UnitraContext, hookCtx: HookCtx< K >, value: V ) => V
     : ( ctx: UnitraContext, hookCtx: HookCtx< K > ) => void;
+
+export type HookPipeline< K extends HookId > = (
+  ctx: UnitraContext,
+  hookCtx: HookCtx< K >,
+  value?: HookValue< K >
+) => HookValue< K >;
