@@ -1,4 +1,4 @@
-import type { DefOf, RefOf, RegistryKey } from './registry';
+import type { DefOf, InputOf, RefOf, RegistryKey } from './registry';
 import type { UnitraContext } from './unitra';
 
 export interface IAssert {
@@ -8,8 +8,16 @@ export interface IAssert {
   assertDef: < K extends RegistryKey > ( key: K, value: unknown ) => asserts value is DefOf< K >;
 }
 
+export interface IResolve {
+  tryToRef: < K extends RegistryKey > ( key: K, value: InputOf< K > ) => RefOf< K > | undefined;
+  tryToDef: < K extends RegistryKey > ( key: K, value: InputOf< K > ) => DefOf< K > | undefined;
+  toRef: < K extends RegistryKey > ( key: K, value: InputOf< K > ) => RefOf< K >;
+  toDef: < K extends RegistryKey > ( key: K, value: InputOf< K > ) => DefOf< K >;
+}
+
 export type ServiceInstanceMap = {
   assert: IAssert;
+  resolve: IResolve;
 };
 
 export type ServiceFactoryMap = {

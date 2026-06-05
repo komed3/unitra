@@ -1,9 +1,10 @@
 import type { DefOf, InputOf, RefOf, RegistryKey } from '@unitra/types/core/registry';
+import type { IResolve } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { getTypedRegistry } from '../engine/Registry';
 import { ResolveError } from '../utils';
 
-export class Resolve {
+export class Resolve implements IResolve {
   constructor ( private readonly ctx: UnitraContext ) {}
 
   public tryToRef < K extends RegistryKey > ( key: K, value: InputOf< K > ) : RefOf< K > | undefined {
