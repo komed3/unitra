@@ -3,7 +3,7 @@ import type { PluginResolveGraph } from '../core/plugin';
 import type { InputOf, RegistryKey } from '../core/registry';
 import type { SemverVersion } from './semver';
 
-export interface ErrorCtxMap {
+export interface ErrorRegistry {
   [ ErrorCode.ASSERT_ERROR ]: {
     key: RegistryKey;
     value: unknown;
@@ -28,8 +28,8 @@ export interface ErrorCtxMap {
 }
 
 export type ErrorContext< C extends ErrorCode > =
-  C extends keyof ErrorCtxMap
-    ? ErrorCtxMap[ C ]
+  C extends keyof ErrorRegistry
+    ? ErrorRegistry[ C ]
     : never;
 
 export type UnitraErrorOptions< C extends ErrorCode = ErrorCode > =
