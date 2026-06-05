@@ -29,9 +29,18 @@ export class Hook {
 
   constructor ( private readonly ctx: UnitraContext ) {}
 
+  public invalidate ( id: HookId ) : void {
+    if ( this.cache.delete( id ) )
+      Hook.log.debug( `invalidate cached pipeline for "${ id }"` );
+  }
+
   public add < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) : void {
+    Hook.log.debug( `add hook handler for "${ id }" with priority ${ priority ?? 0 }` );
+
     const list = this.hooks.get( id ) || [];
     list.push( { handler, priority } );
     this.hooks.set( id, list );
+
+    this.invalidate( id );
   }
 }
