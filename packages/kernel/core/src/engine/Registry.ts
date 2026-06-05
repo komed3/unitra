@@ -1,4 +1,5 @@
-import type { AnyRef, IRegistry, RegistryAccessor, RegistryDef, RegistryInstanceMap, RegistryKey } from '@unitra/types/core/registry';
+import type { AnyRef, IRegistry, RefOf, RegistryAccessor, RegistryDef, RegistryInstanceMap, RegistryKey } from '@unitra/types/core/registry';
+import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ConstantRef } from '@unitra/types/def/constant';
 import type { PrefixRef } from '@unitra/types/def/prefix';
 import type { QuantityRef } from '@unitra/types/def/quantity';
@@ -58,3 +59,6 @@ export const createRegistryAccessor = ( override?: Partial< RegistryInstanceMap 
     return cache[ key ] ??= override?.[ key ] ?? factories[ key ]();
   };
 };
+
+export const getTypedRegistry = < K extends RegistryKey > ( ctx: UnitraContext, key: K ) =>
+  ctx.registry( key ) as unknown as IRegistry< RefOf< K > >;
