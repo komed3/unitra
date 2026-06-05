@@ -1,8 +1,13 @@
 import type { ErrorCode } from '@unitra/dict/utils';
 import type { PluginResolveGraph } from '../core/plugin';
+import type { RegistryKey } from '../core/registry';
 import type { SemverVersion } from './semver';
 
 export interface ErrorCtxMap {
+  [ ErrorCode.ASSERT_ERROR ]: {
+    key: RegistryKey;
+    value: unknown;
+  };
   [ ErrorCode.PLUGIN_ERROR ]: {
     graph: PluginResolveGraph;
     missing: ReadonlyArray< string >;
@@ -15,7 +20,7 @@ export interface ErrorCtxMap {
     semver: string;
     tag: string;
     parts: string[];
-  }
+  };
 }
 
 export type ErrorContext< C extends ErrorCode > =
