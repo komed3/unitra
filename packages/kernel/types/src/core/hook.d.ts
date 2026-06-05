@@ -35,3 +35,10 @@ export type HookDef< K extends HookId > = {
 export type HookImplMap = {
   readonly [ K in HookId ]?: ReadonlyArray< HookDef< K > >;
 };
+
+export interface IHook {
+  invalidate: ( id: HookId ) => void;
+  add: < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) => void;
+  merge: ( hooks: HookImplMap ) => void;
+  run: < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value: HookValue< K > ) => HookValue< K >;
+}
