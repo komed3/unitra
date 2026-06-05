@@ -2,6 +2,11 @@ import type { ReferenceState } from './node';
 import type { UnitraContext } from './unitra';
 
 export interface HookRegistry {
+  'core.factory.unit.next': {
+    ctx: {
+      state: ReferenceState;
+    };
+  };
   'core.service.serialize': {
     value: string;
     ctx: {
@@ -40,5 +45,5 @@ export interface IHook {
   invalidate: ( id: HookId ) => void;
   add: < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) => void;
   merge: ( hooks: HookImplMap ) => void;
-  run: < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value: HookValue< K > ) => HookValue< K >;
+  run: < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value?: HookValue< K > ) => HookValue< K >;
 }

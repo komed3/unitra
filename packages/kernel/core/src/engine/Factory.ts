@@ -12,7 +12,10 @@ export class UnitFactory implements IUnitFactory {
   ) {}
 
   private next ( nodes: Node[] = [] ) : UnitFactory {
-    return new UnitFactory( this.ctx, { nodes: [ ...this.state.nodes, ...nodes ] } );
+    const state = { nodes: [ ...this.state.nodes, ...nodes ] };
+    this.ctx.core().hook().run( 'core.factory.unit.next', { state } );
+
+    return new UnitFactory( this.ctx, state );
   }
 
   public mul ( value: UnitInput, mod?: UnitModifier ) : UnitFactory {
