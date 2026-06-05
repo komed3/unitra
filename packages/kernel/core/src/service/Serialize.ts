@@ -1,4 +1,4 @@
-import type { NodeMap, SerializedNode, SerializerMap } from '@unitra/types/core/node';
+import type { NodeMap, ReferenceState, SerializedNode, SerializerMap } from '@unitra/types/core/node';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { CompoundStruct, UnitStruct } from '@unitra/types/def/unit';
 
@@ -14,6 +14,16 @@ export class Serialize {
   }
 
   constructor ( private readonly ctx: UnitraContext ) {}
+
+  public fromReferenceState ( state: ReferenceState ) : string {
+    return `$${ this.ctx.VERSION }::${
+      state.nodes
+        .map( ( node ) => Serialize.serializeNode( node.type, node ) )
+        .sort( ( a, b ) => a.order - b.order || a.value.localeCompare( b.value ) )
+        .map( ( n ) => n.value )
+        .join( '*' )
+    }`;
+  }
 
   public fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string {
     return this.fromReferenceState( { nodes: struct.map(
