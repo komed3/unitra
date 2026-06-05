@@ -27,6 +27,24 @@ export class Hook {
   private readonly hooks = new HookStorage();
   private readonly cache = new HookCache();
 
+  private getPipeline < K extends HookId > ( id: K ) : HookPipeline< K > {
+    const cached = this.cache.get( id );
+    if ( cached ) return cached;
+
+    const list = [ ...( this.hooks.get( id ) ?? [] ) ].sort(
+      ( a, b ) => ( b.priority ?? 0 ) - ( a.priority ?? 0 )
+    );
+
+    const pipeline = ( hookCtx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K > | undefined =>
+      list.reduce(
+        ( v, { handler } ) => handler( this.ctx, hookCtx, v ) as HookValue< K > | undefined,
+        value
+      );
+
+    this.cache.set( id, pipeline );
+    return pipeline;
+  }
+
   constructor ( private readonly ctx: UnitraContext ) {}
 
   public invalidate ( id: HookId ) : void {
@@ -48,6 +66,6 @@ export class Hook {
   public run < K extends HookId > ( id: K, ctx: HookCtx< K >, value: HookValue< K > ) : HookValue< K >;
 
   public run < K extends HookId > ( id: K, ctx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K > | void {
-    //
+    Hook.log.debug( `run "${ id }"` );
   }
 }
