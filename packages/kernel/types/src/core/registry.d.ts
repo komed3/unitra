@@ -27,3 +27,13 @@ export interface IRegistry< Ref extends AnyRef > {
   keys: () => IterableIterator< Ref >;
   filter: ( predicate: ( def: RegistryDef< Ref > ) => boolean ) => RegistryDef< Ref >[];
 }
+
+export type RegistryInstanceMap = {
+  prefix: IRegistry< PrefixRef >;
+  quantity: IRegistry< QuantityRef >;
+  unit: IRegistry< UnitRef >;
+  constant: IRegistry< ConstantRef >;
+};
+
+export type RegistryKey = keyof RegistryInstanceMap;
+export type RegistryAccessor = < K extends RegistryKey > ( key: K ) => RegistryInstanceMap[ K ];
