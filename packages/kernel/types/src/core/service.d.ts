@@ -22,6 +22,15 @@ export interface ISerialize {
   fromUnitStruct: ( struct: UnitStruct | CompoundStruct ) => string;
 }
 
+export type UnitModifier = {
+  exp?: number;
+  prefix?: PrefixRef;
+};
+
+export type ConstantModifier = {
+  exp?: number;
+};
+
 export type ServiceInstanceMap = {
   assert: IAssert;
   resolve: IResolve;
