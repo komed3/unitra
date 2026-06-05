@@ -1,4 +1,4 @@
-import { HookDef, HookHandler, HookId, HookPipeline } from '@unitra/types/core/hook';
+import type { HookCtx, HookDef, HookHandler, HookId, HookPipeline, HookValue } from '@unitra/types/core/hook';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { Logging } from '../utils';
 
@@ -42,5 +42,12 @@ export class Hook {
     this.hooks.set( id, list );
 
     this.invalidate( id );
+  }
+
+  public run < K extends HookId > ( id: K, ctx: HookCtx< K > ) : void;
+  public run < K extends HookId > ( id: K, ctx: HookCtx< K >, value: HookValue< K > ) : HookValue< K >;
+
+  public run < K extends HookId > ( id: K, ctx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K > | void {
+    //
   }
 }
