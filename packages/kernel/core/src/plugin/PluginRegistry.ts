@@ -1,6 +1,6 @@
 import type { PluginCatalog, PluginDefinition, PluginList } from '@unitra/types/core/plugin';
 import type { SemverVersion } from '@unitra/types/utils/semver';
-import { Logging } from '../utils/logging';
+import { Logging } from '../utils';
 
 export class PluginRegistry {
   private static readonly log = Logging.createSource( 'plugin-registry' );
