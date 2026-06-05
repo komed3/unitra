@@ -1,6 +1,6 @@
 import type { ErrorCode } from '@unitra/dict/utils';
 import type { PluginResolveGraph } from '../core/plugin';
-import type { LikeOf } from '../core/registry';
+import type { InputOf } from '../core/registry';
 import type { SemverVersion } from './semver';
 
 export interface ErrorCtxMap< T = unknown > {
@@ -17,7 +17,7 @@ export interface ErrorCtxMap< T = unknown > {
   };
   [ ErrorCode.RESOLVE_ERROR ]: {
     key: T;
-    value: LikeOf< T >;
+    value: InputOf< T >;
   };
   [ ErrorCode.SEMVER_ERROR ]: {
     version: SemverVersion;
