@@ -16,13 +16,18 @@ export class Serialize {
   constructor ( private readonly ctx: UnitraContext ) {}
 
   public fromReferenceState ( state: ReferenceState ) : string {
-    return `$${ this.ctx.VERSION }::${
+    const body = `$${ this.ctx.VERSION }::${
       state.nodes
         .map( ( node ) => Serialize.serializeNode( node.type, node ) )
         .sort( ( a, b ) => a.order - b.order || a.value.localeCompare( b.value ) )
         .map( ( n ) => n.value )
         .join( '*' )
     }`;
+
+    return this.ctx.core().hook().run(
+      'core.service.serialize',
+      { state }, body
+    );
   }
 
   public fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string {
