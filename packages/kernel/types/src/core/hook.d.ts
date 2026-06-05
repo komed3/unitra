@@ -26,3 +26,12 @@ export type HookPipeline< K extends HookId > = (
   hookCtx: HookCtx< K >,
   value?: HookValue< K >
 ) => HookValue< K >;
+
+export type HookDef< K extends HookId > = {
+  handler: HookHandler< K >;
+  priority?: number;
+};
+
+export type HookImplMap = {
+  readonly [ K in HookId ]?: ReadonlyArray< HookDef< K > >;
+};
