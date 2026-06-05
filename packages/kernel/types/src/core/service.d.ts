@@ -1,4 +1,5 @@
 import type { DefOf, RefOf, RegistryKey } from './registry';
+import type { UnitraContext } from './unitra';
 
 export interface IAssert {
   isRef: < K extends RegistryKey > ( key: K, value: unknown ) => value is RefOf< K >;
@@ -8,7 +9,15 @@ export interface IAssert {
 }
 
 export type ServiceInstanceMap = {
-  assert: () => IAssert;
+  assert: IAssert;
 };
 
-export type ServiceAccessor = () => ServiceAccessorMap;
+export type ServiceFactoryMap = {
+  [ K in keyof ServiceInstanceMap ]: ( ctx: UnitraContext ) => ServiceInstanceMap[ K ];
+};
+
+export type ServiceContainer = {
+  [ K in keyof ServiceInstanceMap ]: () => ServiceInstanceMap[ K ];
+};
+
+export type ServiceAccessor = () => ServiceContainer;
