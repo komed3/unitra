@@ -1,7 +1,4 @@
-import type {
-  HookCtx, HookDef, HookEntry, HookHandler, HookId, HookImplMap,
-  HookOut, HookPipeline, HookValue
-} from '@unitra/types/core/hook';
+import type { HookCtx, HookDef, HookEntry, HookHandler, HookId, HookImplMap, HookPipeline, HookValue } from '@unitra/types/core/hook';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { HookError, Logging } from '../utils';
 
@@ -38,8 +35,8 @@ export class Hook {
       ( a, b ) => ( b.priority ?? 0 ) - ( a.priority ?? 0 )
     );
 
-    const pipeline = ( hookCtx: HookCtx< K >, value?: HookValue< K > ) : HookOut< K > =>
-      list.reduce( ( v, { handler } ) => handler( this.ctx, hookCtx, v ) as HookOut< K >, value );
+    const pipeline = ( hookCtx: HookCtx< K >, value?: HookValue< K > ) =>
+      list.reduce( ( v, { handler } ) => handler( this.ctx, hookCtx, v ) as HookValue< K >, value );
 
     this.cache.set( id, pipeline );
     return pipeline;
@@ -74,10 +71,10 @@ export class Hook {
   public run < K extends HookId > ( id: K, hookCtx: HookCtx< K > ) : void;
   public run < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value: HookValue< K > ) : HookValue< K >;
 
-  public run < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value?: HookValue< K > ) : HookOut< K > {
+  public run < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K > {
     Hook.log.debug( `run "${ id }"` );
 
-    try { return this.getPipeline( id )( hookCtx, value ) }
+    try { return this.getPipeline( id )( hookCtx, value ) as HookValue< K > }
     catch ( err ) { throw new HookError( `failed to run hook for "${ id }"`, {
       context: { id, hookCtx, value }, cause: err
     } ) }

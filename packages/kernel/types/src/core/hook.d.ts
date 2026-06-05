@@ -1,17 +1,19 @@
+import type { ReferenceState } from './node';
 import type { UnitraContext } from './unitra';
 
 export interface HookRegistry {
   'core.service.serialize': {
-    ctx: {};
     value: string;
+    ctx: {
+      state: ReferenceState;
+    };
   };
 }
 
 export type HookId = keyof HookRegistry;
 export type HookSpec< K extends HookId > = HookRegistry[ K ];
-export type HookCtx< K extends HookId > = HookSpec< K >[ 'ctx' ];
 export type HookValue< K extends HookId > = HookSpec< K > extends { value: infer V } ? V : void;
-export type HookOut< K extends HookId > = HookValue< K > | undefined;
+export type HookCtx< K extends HookId > = HookSpec< K >[ 'ctx' ];
 
 export type HookHandler< K extends HookId > =
   HookSpec< K > extends { value: infer V }
@@ -21,7 +23,7 @@ export type HookHandler< K extends HookId > =
 export type HookPipeline< K extends HookId > = (
   hookCtx: HookCtx< K >,
   value?: HookValue< K >
-) => HookOut< K >;
+) => HookValue< K > | undefined;
 
 export type HookDef< K extends HookId > = {
   handler: HookHandler< K >;
@@ -38,5 +40,5 @@ export interface IHook {
   invalidate: ( id: HookId ) => void;
   add: < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) => void;
   merge: ( hooks: HookImplMap ) => void;
-  run: < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value: HookValue< K > ) => HookOut< K >;
+  run: < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value: HookValue< K > ) => HookValue< K >;
 }
