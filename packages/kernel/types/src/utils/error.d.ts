@@ -1,4 +1,5 @@
 import type { ErrorCode } from '@unitra/dict/utils';
+import type { HookId } from '../core/hook';
 import type { PluginResolveGraph } from '../core/plugin';
 import type { InputOf, RegistryKey } from '../core/registry';
 import type { SemverVersion } from './semver';
@@ -7,6 +8,11 @@ export interface ErrorRegistry {
   [ ErrorCode.ASSERT_ERROR ]: {
     key: RegistryKey;
     value: unknown;
+  };
+  [ ErrorCode.HOOK_ERROR ]: {
+    id: HookId;
+    hookCtx: unknown;
+    value?: unknown;
   };
   [ ErrorCode.PLUGIN_ERROR ]: {
     graph: PluginResolveGraph;
