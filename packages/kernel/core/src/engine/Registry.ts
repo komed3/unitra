@@ -23,11 +23,15 @@ export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
     return this.store.entries();
   }
 
+  public keys () : IterableIterator< Ref > {
+    return this.store.keys();
+  }
+
   public values () : IterableIterator< RegistryDef< Ref > > {
     return this.store.values();
   }
 
-  public keys () : IterableIterator< Ref > {
-    return this.store.keys();
+  public filter ( predicate: ( def: RegistryDef< Ref > ) => boolean ) : RegistryDef< Ref >[] {
+    return [ ...this.store.values() ].filter( predicate );
   }
 }
