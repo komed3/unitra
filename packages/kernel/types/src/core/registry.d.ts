@@ -38,6 +38,10 @@ export type RegistryInstanceMap = {
 export type RegistryKey = keyof RegistryInstanceMap;
 export type RegistryAccessor = < K extends RegistryKey > ( key: K ) => RegistryInstanceMap[ K ];
 
+export type RegistryFactoryMap = {
+  [ K in RegistryKey ]: ( ctx: UnitraContext ) => RegistryInstanceMap[ K ];
+};
+
 export type RegistryMap = {
   prefix: {
     ref: PrefixRef;
