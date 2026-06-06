@@ -16,6 +16,10 @@ export type PluginMeta = {
   name: string;
   description?: string;
   tags?: ReadonlyArray< string >;
+  license?: string;
+  author?: string;
+  repo?: string;
+  homepage?: string;
 };
 
 export type PluginContributions = {
