@@ -119,6 +119,25 @@ export class PluginResolver {
     return cycles;
   }
 
+  private static detectOverrideConflicts ( catalog: PluginCatalog ) : Record< string, string[] > {
+    const index = new Map< string, Set< string > >();
+
+    const add = ( id: string, ns: string, key: string ) =>
+      index.set( `${ns}.${key}`, ( index.get( `${ns}.${key}` ) ?? new Set() ).add( id ) );
+
+    for ( const list of catalog.values() )
+      for ( const { id, overrides } of list )
+        for ( const [ ns, map ] of Object.entries( overrides ?? {} ) )
+          for ( const k of Object.keys( map ?? {} ) )
+            add( id, ns, k );
+
+    const out: Record< string, string[] > = {};
+    for ( const [ k, v ] of index )
+      if ( v.size > 1 ) out[ k ] = [ ...v ];
+
+    return out;
+  }
+
   private static topologicalSort ( graph: PluginResolveGraph, catalog: PluginCatalog ) : PluginDefinition[] {
     const visited = new Set< string >();
     const result: PluginDefinition[] = [];
