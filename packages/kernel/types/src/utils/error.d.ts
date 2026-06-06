@@ -19,6 +19,7 @@ export interface ErrorRegistry {
     missing: ReadonlyArray< string >;
     conflicts: ReadonlyArray< string >;
     cycles: ReadonlyArray< string >;
+    overrides: Record< string, string[] >;
     errCount: number;
   };
   [ ErrorCode.RESOLVE_ERROR ]: {

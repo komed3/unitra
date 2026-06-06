@@ -173,16 +173,22 @@ export class PluginResolver {
     const missing = this.detectMissing( catalog, requirements );
     const conflicts = this.detectConflicts( catalog, requirements );
     const cycles = this.detectCycles( graph );
-    const errCount = missing.length + conflicts.length + cycles.length;
+    const overrides = this.detectOverrideConflicts( catalog );
+
+    const errCount = missing.length + conflicts.length +
+      cycles.length + Object.keys( overrides ).length;
 
     if ( errCount ) {
       this.log.debug( 'resolution failed', { errors: errCount } );
 
       return {
         plugins: [], graph, error: new PluginError(
-          `resolution failed due to errors (${ errCount })`, {
-          context: { graph, missing, conflicts, cycles, errCount }
-        } )
+          `resolution failed due to errors (${ errCount })`,
+          { context: {
+            graph, missing, conflicts, cycles,
+            overrides, errCount
+          } }
+        )
       };
     }
 
