@@ -8,11 +8,23 @@ export class PluginResolveError extends UnitraError< ErrorCode.PLUGIN_RESOLVE_ER
     const parts: string[] = [];
 
     if ( this.context ) {
-      const { missing, conflicts, cycles } = this.context;
+      const { missing, conflicts, cycles, overrides } = this.context;
 
-      if ( missing.length ) parts.push( `Missing dependencies:\n└─ ${ missing.join( '\n└─ ' ) }` );
-      if ( conflicts.length ) parts.push( `Version conflicts:\n└─ ${ conflicts.join( '\n└─ ' ) }` );
-      if ( cycles.length ) parts.push( `Dependency cycles:\n└─ ${ cycles.join( '\n└─ ' ) }` );
+      if ( missing.length )
+        parts.push( `Missing dependencies:\n└─ ${ missing.join( '\n└─ ' ) }` );
+
+      if ( conflicts.length )
+        parts.push( `Version conflicts:\n└─ ${ conflicts.join( '\n└─ ' ) }` );
+
+      if ( cycles.length )
+        parts.push( `Dependency cycles:\n└─ ${ cycles.join( '\n└─ ' ) }` );
+
+      if ( overrides && Object.keys( overrides ).length )
+        parts.push( `Override conflicts:\n${
+          Object.entries( overrides ).map( ( [ key, plugins ] ) =>
+            `- ${ key }\n${ plugins.map( p => `  └─ ${ p }` ).join( '\n' ) }`
+          ).join( '\n' )
+        }` );
     }
 
     return parts.join( '\n\n' );
