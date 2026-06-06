@@ -14,7 +14,7 @@ export interface ErrorRegistry {
     hookCtx: unknown;
     value?: unknown;
   };
-  [ ErrorCode.PLUGIN_ERROR ]: {
+  [ ErrorCode.PLUGIN_RESOLVE_ERROR ]: {
     graph: PluginResolveGraph;
     missing: ReadonlyArray< string >;
     conflicts: ReadonlyArray< string >;

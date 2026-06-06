@@ -1,6 +1,6 @@
 import type { PluginCatalog, PluginDefinition, PluginResolveGraph, PluginResolveResult } from '@unitra/types/core/plugin';
 import type { SemverRange } from '@unitra/types/utils/semver';
-import { Logging, PluginError, Semver } from '../utils';
+import { Logging, PluginResolveError, Semver } from '../utils';
 import { PluginRegistry } from './PluginRegistry';
 
 type Requirements = Map< string, Array< {
@@ -182,7 +182,7 @@ export class PluginResolver {
       this.log.debug( 'resolution failed', { errors: errCount } );
 
       return {
-        plugins: [], graph, error: new PluginError(
+        plugins: [], graph, error: new PluginResolveError(
           `resolution failed due to errors (${ errCount })`,
           { context: {
             graph, missing, conflicts, cycles,
