@@ -2,6 +2,7 @@ import type { ConstantInput, ConstantLike, ConstantRef, DerivedConstantDef } fro
 import type { DerivedPrefixDef, PrefixInput, PrefixLike, PrefixRef } from '../def/prefix';
 import type { DerivedQuantityDef, QuantityInput, QuantityLike, QuantityRef } from '../def/quantity';
 import type { DerivedUnitDef, UnitInput, UnitLike, UnitRef } from '../def/unit';
+import type { Container, ContainerFactoryMap } from '../utils/container';
 
 export type AnyRef =
   | PrefixRef
@@ -71,12 +72,5 @@ export type RegistryInstanceMap = {
     IRegistry< RefOf< K > >
 };
 
-export type RegistryFactoryMap = {
-  [ K in RegistryKey ]:
-    ( ctx: UnitraContext ) => RegistryInstanceMap[ K ];
-};
-
-export type RegistryContainer = {
-  [ K in RegistryKey ]:
-    () => RegistryInstanceMap[ K ];
-};
+export type RegistryFactoryMap = ContainerFactoryMap< RegistryInstanceMap >;
+export type RegistryContainer = Container< RegistryInstanceMap >;
