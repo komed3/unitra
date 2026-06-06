@@ -5,6 +5,8 @@ import type { QuantityMap } from '../def/quantity';
 import type { UnitMap } from '../def/unit';
 import type { IUnitraError } from '../utils/error';
 import type { SemverRange, SemverVersion } from '../utils/semver';
+import type { FactoryFactoryMap } from './factory';
+import type { HookImplMap } from './hook';
 import type { RegistryFactoryMap } from './registry';
 import type { ServiceFactoryMap } from './service';
 
@@ -24,6 +26,7 @@ export type PluginContributions = {
 };
 
 export type PluginOverrides = {
+  factory?: Partial< FactoryFactoryMap >;
   registry?: Partial< RegistryFactoryMap >;
   service?: Partial< ServiceFactoryMap >;
 };
@@ -34,6 +37,7 @@ export type PluginDefinition = {
   meta: PluginMeta;
   dependencies?: DependencyMap;
   contributions?: PluginContributions;
+  hooks?: HookImplMap;
   overrides?: PluginOverrides;
 };
 
