@@ -10,37 +10,15 @@ export type AnyRef =
   | ConstantRef;
 
 export type RegistryDef< R extends AnyRef > =
-  R extends PrefixRef ? DerivedPrefixDef< R > :
-  R extends QuantityRef ? DerivedQuantityDef< R > :
-  R extends UnitRef ? DerivedUnitDef< R > :
-  R extends ConstantRef ? DerivedConstantDef< R > :
-  never;
-
-export interface IRegistry< Ref extends AnyRef > {
-  readonly size: number;
-  get: < R extends Ref > ( ref: R ) => RegistryDef< R > | undefined;
-  has: ( ref: Ref ) => boolean;
-  set: < R extends Ref > ( ref: R, def: RegistryDef< R > ) => void;
-  bulk: ( input: Iterable< [ Ref, RegistryDef< Ref > ] > ) => void;
-  entries: () => IterableIterator< [ Ref, RegistryDef< Ref > ] >;
-  values: () => IterableIterator< RegistryDef< Ref > >;
-  keys: () => IterableIterator< Ref >;
-  filter: ( predicate: ( def: RegistryDef< Ref > ) => boolean ) => RegistryDef< Ref >[];
-}
-
-export type RegistryInstanceMap = {
-  prefix: IRegistry< PrefixRef >;
-  quantity: IRegistry< QuantityRef >;
-  unit: IRegistry< UnitRef >;
-  constant: IRegistry< ConstantRef >;
-};
-
-export type RegistryKey = keyof RegistryInstanceMap;
-export type RegistryAccessor = < K extends RegistryKey > ( key: K ) => RegistryInstanceMap[ K ];
-
-export type RegistryFactoryMap = {
-  [ K in RegistryKey ]: ( ctx: UnitraContext ) => RegistryInstanceMap[ K ];
-};
+  R extends PrefixRef
+    ? DerivedPrefixDef< R >
+    : R extends QuantityRef
+      ? DerivedQuantityDef< R >
+      : R extends UnitRef
+        ? DerivedUnitDef< R >
+        : R extends ConstantRef
+          ? DerivedConstantDef< R >
+          : never;
 
 export type RegistryMap = {
   prefix: {
@@ -69,7 +47,36 @@ export type RegistryMap = {
   };
 };
 
+export type RegistryKey = keyof RegistryMap;
+
 export type RefOf< K extends RegistryKey > = RegistryMap[ K ][ 'ref' ];
 export type DefOf< K extends RegistryKey > = RegistryMap[ K ][ 'def' ];
 export type LikeOf< K extends RegistryKey > = RegistryMap[ K ][ 'like' ];
 export type InputOf< K extends RegistryKey > = RegistryMap[ K ][ 'input' ];
+
+export interface IRegistry< Ref extends AnyRef > {
+  readonly size: number;
+  get < R extends Ref > ( ref: R ) : RegistryDef< R > | undefined;
+  has ( ref: Ref ) : boolean;
+  set < R extends Ref > ( ref: R, def: RegistryDef< R > ) : void;
+  bulk ( input: Iterable< [ Ref, RegistryDef< Ref > ] > ) : void;
+  entries () : IterableIterator< [ Ref, RegistryDef< Ref > ] >;
+  values () : IterableIterator< RegistryDef< Ref > >;
+  keys () : IterableIterator< Ref >;
+  filter ( predicate: ( def: RegistryDef< Ref > ) => boolean ) : RegistryDef< Ref >[];
+}
+
+export type RegistryInstanceMap = {
+  [ K in RegistryKey ]:
+    IRegistry< RefOf< K > >
+};
+
+export type RegistryFactoryMap = {
+  [ K in RegistryKey ]:
+    ( ctx: UnitraContext ) => RegistryInstanceMap[ K ];
+};
+
+export type RegistryContainer = {
+  [ K in RegistryKey ]:
+    () => RegistryInstanceMap[ K ];
+};

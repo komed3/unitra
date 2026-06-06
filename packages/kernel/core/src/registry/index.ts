@@ -1,4 +1,4 @@
-import type { RegistryFactoryMap, RegistryInstanceMap } from '@unitra/types/core/registry';
+import type { RegistryContainer, RegistryFactoryMap, RegistryInstanceMap, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ConstantRef } from '@unitra/types/def/constant';
 import type { PrefixRef } from '@unitra/types/def/prefix';
@@ -6,10 +6,10 @@ import type { QuantityRef } from '@unitra/types/def/quantity';
 import type { UnitRef } from '@unitra/types/def/unit';
 import { Registry } from './Registry';
 
-export const createRegistryAccessor = (
+export const createRegistry = (
   ctx: UnitraContext,
   factories?: Partial< RegistryFactoryMap >
-) => {
+) : RegistryContainer => {
   const cache: Partial< RegistryInstanceMap > = {};
 
   const defaults: RegistryFactoryMap = {
@@ -18,4 +18,14 @@ export const createRegistryAccessor = (
     unit: ( ctx ) => new Registry< UnitRef >( ctx ),
     constant: ( ctx ) => new Registry< ConstantRef >( ctx )
   };
+
+  const get = < K extends RegistryKey > ( key: K ) : RegistryInstanceMap[ K ] =>
+    cache[ key ] ??= ( factories?.[ key ] ?? defaults[ key ] )( ctx );
+
+  return Object.freeze( {
+    prefix: () => get( 'prefix' ),
+    quantity: () => get( 'quantity' ),
+    unit: () => get( 'unit' ),
+    constant: () => get( 'constant' )
+  } );
 };
