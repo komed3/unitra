@@ -1,7 +1,7 @@
 import type { CompoundStruct, UnitStruct } from '../def/unit';
 import type { ReferenceState } from '../node';
+import type { Container, ContainerFactoryMap } from '../utils/container';
 import type { DefOf, InputOf, RefOf, RegistryKey } from './registry';
-import type { UnitraContext } from './unitra';
 
 export interface IAssert {
   isRef < K extends RegistryKey > ( key: K, value: unknown ) : value is RefOf< K >;
@@ -28,14 +28,5 @@ export type ServiceInstanceMap = {
   serialize: ISerialize;
 };
 
-export type ServiceKey = keyof ServiceInstanceMap;
-
-export type ServiceFactoryMap = {
-  [ K in ServiceKey ]:
-    ( ctx: UnitraContext ) => ServiceInstanceMap[ K ];
-};
-
-export type ServiceContainer = {
-  [ K in ServiceKey ]:
-    () => ServiceInstanceMap[ K ];
-};
+export type ServiceFactoryMap = ContainerFactoryMap< ServiceInstanceMap >;
+export type ServiceContainer = Container< ServiceInstanceMap >;
