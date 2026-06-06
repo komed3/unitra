@@ -1,4 +1,4 @@
-import { PluginDefinition } from '@unitra/types/core/plugin';
+import type { PluginDefinition } from '@unitra/types/core/plugin';
 import siPrefixRegistry from './';
 
 export default ( {
