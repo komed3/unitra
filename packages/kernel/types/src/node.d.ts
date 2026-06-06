@@ -1,6 +1,6 @@
-import type { ConstantRef } from '../def/constant';
-import type { PrefixRef } from '../def/prefix';
-import type { UnitRef } from '../def/unit';
+import type { ConstantRef } from './def/constant';
+import type { PrefixRef } from './def/prefix';
+import type { UnitRef } from './def/unit';
 
 export type UnitNode = {
   readonly type: 'unit';
@@ -43,5 +43,6 @@ export type SerializedNode = {
 };
 
 export type SerializerMap = {
-  [ K in keyof NodeMap ]: ( node: NodeMap[ K ] ) => SerializedNode;
+  [ K in keyof NodeMap ]:
+    ( node: NodeMap[ K ] ) => SerializedNode;
 };

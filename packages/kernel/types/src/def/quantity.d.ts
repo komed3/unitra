@@ -16,7 +16,8 @@ export type QuantityRef<
   D extends Dimension = Dimension,
   S extends string = string
 > = S & {
-  readonly [ quantityBrand ]: QuantityBrand< D, S >;
+  readonly [ quantityBrand ]:
+    QuantityBrand< D, S >;
 };
 
 export type QuantityDim< R extends QuantityRef > = R[ typeof quantityBrand ][ 'dim' ];
@@ -26,8 +27,8 @@ export type QuantityDef<
   D extends Dimension = Dimension,
   R extends QuantityRef< D > = QuantityRef< D >
 > = {
-  id: R;
-  dim: D;
+  readonly id: R;
+  readonly dim: D;
   branch?: Branch;
   deprecated?: Deprecated< QuantityRef< D > >;
   meta: Meta;
@@ -36,8 +37,14 @@ export type QuantityDef<
 export type DerivedQuantityDef< R extends QuantityRef > = QuantityDef< QuantityDim< R >, R >;
 
 export type QuantityMap = Readonly< {
-  [ R in QuantityRef ]: DerivedQuantityDef< R >;
+  [ R in QuantityRef ]:
+    DerivedQuantityDef< R >;
 } >;
 
-export type QuantityLike = QuantityRef | QuantityDef;
-export type QuantityInput = QuantityLike | string;
+export type QuantityLike =
+  | QuantityRef
+  | QuantityDef;
+
+export type QuantityInput =
+  | QuantityLike
+  | string;

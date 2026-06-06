@@ -68,8 +68,8 @@ export interface IUnitraError< C extends ErrorCode = ErrorCode > extends Error {
   readonly cause?: unknown;
   readonly type: string;
   readonly summary: string | undefined;
-  toString: () => string;
-  serialize: () => SerializedError;
-  format: ( options?: ErrorFormatterConfig ) => string;
-  log: () => void;
+  toString () : string;
+  serialize () : SerializedError;
+  format ( options?: ErrorFormatterConfig ) : string;
+  log () : void;
 }

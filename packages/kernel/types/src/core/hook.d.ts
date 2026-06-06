@@ -1,4 +1,4 @@
-import type { ReferenceState } from './node';
+import type { ReferenceState } from '../node';
 import type { UnitraContext } from './unitra';
 
 export interface HookRegistry {
@@ -17,8 +17,12 @@ export interface HookRegistry {
 
 export type HookId = keyof HookRegistry;
 export type HookSpec< K extends HookId > = HookRegistry[ K ];
-export type HookValue< K extends HookId > = HookSpec< K > extends { value: infer V } ? V : void;
 export type HookCtx< K extends HookId > = HookSpec< K >[ 'ctx' ];
+
+export type HookValue< K extends HookId > =
+  HookSpec< K > extends { value: infer V }
+    ? V
+    : void;
 
 export type HookHandler< K extends HookId > =
   HookSpec< K > extends { value: infer V }
@@ -36,14 +40,18 @@ export type HookDef< K extends HookId > = {
 };
 
 export type HookImplMap = {
-  readonly [ K in HookId ]?: ReadonlyArray< HookDef< K > >;
+  readonly [ K in HookId ]?:
+    ReadonlyArray< HookDef< K > >;
 };
 
-export type HookEntry = Array< [ HookId, ReadonlyArray< HookDef< HookId > > ] >;
+export type HookEntries = Array< [
+  HookId,
+  ReadonlyArray< HookDef< HookId > >
+] >;
 
 export interface IHook {
-  invalidate: ( id: HookId ) => void;
-  add: < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) => void;
-  merge: ( hooks: HookImplMap ) => void;
-  run: < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value?: HookValue< K > ) => HookValue< K >;
+  invalidate ( id: HookId ) : void;
+  add < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) : void;
+  merge ( hooks: HookImplMap ) : void;
+  run < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K >;
 }

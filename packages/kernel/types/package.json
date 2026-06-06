@@ -12,6 +12,7 @@
     "./core/*": "./src/core/*.d.ts",
     "./def/*": "./src/def/*.d.ts",
     "./dim": "./src/dim.d.ts",
+    "./node": "./src/node.d.ts",
     "./utils/*": "./src/utils/*.d.ts"
   },
   "scripts": {

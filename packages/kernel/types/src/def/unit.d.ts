@@ -22,7 +22,8 @@ export type UnitRef<
   T extends UnitType = UnitType,
   S extends string = string
 > = S & {
-  readonly [ unitBrand ]: UnitBrand< D, T, S >;
+  readonly [ unitBrand ]:
+    UnitBrand< D, T, S >;
 };
 
 export type UnitDim< R extends UnitRef > = R[ typeof unitBrand ][ 'dim' ];
@@ -112,8 +113,14 @@ export type UnitDef<
 export type DerivedUnitDef< R extends UnitRef > = UnitDef< UnitDim< R >, UnitKind< R >, R >;
 
 export type UnitMap = Readonly< {
-  [ R in UnitRef ]: DerivedUnitDef< R >;
+  [ R in UnitRef ]:
+    DerivedUnitDef< R >;
 } >;
 
-export type UnitLike = UnitRef | UnitDef;
-export type UnitInput = UnitLike | string;
+export type UnitLike =
+  | UnitRef
+  | UnitDef;
+
+export type UnitInput =
+  | UnitLike
+  | string;

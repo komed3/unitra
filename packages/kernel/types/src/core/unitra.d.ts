@@ -9,11 +9,13 @@ export type CoreInstanceMap = {
 };
 
 export type CoreFactoryMap = {
-  [ K in keyof CoreInstanceMap ]: ( ctx: UnitraContext ) => CoreInstanceMap[ K ];
+  [ K in keyof CoreInstanceMap ]:
+    ( ctx: UnitraContext ) => CoreInstanceMap[ K ];
 };
 
 export type CoreContainer = {
-  [ K in keyof CoreInstanceMap ]: () => CoreInstanceMap[ K ];
+  [ K in keyof CoreInstanceMap ]:
+    () => CoreInstanceMap[ K ];
 };
 
 export type UnitraContext = {

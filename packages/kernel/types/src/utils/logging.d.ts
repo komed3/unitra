@@ -11,17 +11,17 @@ export type LogEntry = Readonly< {
 
 export interface ILogFormatter< T extends object = {} > {
   readonly config: Readonly< T >;
-  format: ( entry: LogEntry ) => string;
+  format ( entry: LogEntry ) : string;
 }
 
 export interface ILogHandler< T extends object = {} > {
   readonly config: Readonly< T >;
-  write: ( entry: LogEntry ) => void;
+  write ( entry: LogEntry ) : void;
 }
 
 export interface ILogger {
-  debug: ( message: string, data?: unknown ) => void;
-  log: ( message: string, data?: unknown ) => void;
-  warn: ( message: string, data?: unknown ) => void;
-  error: ( message: string, data?: unknown ) => void;
+  debug ( message: string, data?: unknown ) : void;
+  log ( message: string, data?: unknown ) : void;
+  warn ( message: string, data?: unknown ) : void;
+  error ( message: string, data?: unknown ) : void;
 }
