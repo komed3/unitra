@@ -55,6 +55,18 @@ importers:
         specifier: workspace:*
         version: link:../../../kernel/types
 
+  packages/plugin/quantity/base:
+    dependencies:
+      '@unitra/dict':
+        specifier: workspace:*
+        version: link:../../../kernel/dict
+      '@unitra/dim':
+        specifier: workspace:*
+        version: link:../../../kernel/dim
+      '@unitra/types':
+        specifier: workspace:*
+        version: link:../../../kernel/types
+
 packages:
 
   '@nodelib/fs.scandir@2.1.5':

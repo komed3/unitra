@@ -1,0 +1,39 @@
+{
+  "name": "@unitra/plugin-quantity-base",
+  "description": "Unitra plugin for SI base quantities",
+  "version": "0.0.1",
+  "license": "MIT",
+  "author": {
+    "name": "Paul Köhler (komed3)",
+    "email": "webmaster@komed3.de",
+    "url": "https://komed3.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/komed3/unitra.git",
+    "directory": "packages/plugin/quantity/base"
+  },
+  "bugs": {
+    "url": "https://github.com/komed3/unitra/issues"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./def/*": "./dist/def/*.js",
+    "./plugin": "./dist/plugin.js"
+  },
+  "scripts": {
+    "build": "tsc -b && tsc-alias",
+    "lint": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@unitra/dict": "workspace:*",
+    "@unitra/dim": "workspace:*",
+    "@unitra/types": "workspace:*"
+  }
+}
