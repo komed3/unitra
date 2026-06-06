@@ -1,72 +1,76 @@
-import type { UnitraErrorCode } from '@unitra/dict/error';
-import type { HookCtx, HookId, HookValue } from '../core/hook';
+import type { ErrorCode } from '@unitra/dict/utils';
+import type { HookId } from '../core/hook';
 import type { PluginResolveGraph } from '../core/plugin';
-import type { LikeOf, RegistryKey } from '../core/registry';
+import type { InputOf, RegistryKey } from '../core/registry';
 import type { SemverVersion } from './semver';
 
-export type UnitraErrorOptions< T = unknown > = {
-  data?: T;
-  cause?: unknown;
-};
+export interface ErrorRegistry {
+  [ ErrorCode.ASSERT_ERROR ]: {
+    key: RegistryKey;
+    value: unknown;
+  };
+  [ ErrorCode.HOOK_ERROR ]: {
+    id: HookId;
+    hookCtx: unknown;
+    value?: unknown;
+  };
+  [ ErrorCode.PLUGIN_RESOLVE_ERROR ]: {
+    graph: PluginResolveGraph;
+    missing: ReadonlyArray< string >;
+    conflicts: ReadonlyArray< string >;
+    cycles: ReadonlyArray< string >;
+    overrides: Record< string, string[] >;
+    errCount: number;
+  };
+  [ ErrorCode.RESOLVE_ERROR ]: {
+    key: RegistryKey;
+    value: InputOf< RegistryKey >;
+  };
+  [ ErrorCode.SEMVER_ERROR ]: {
+    version: SemverVersion;
+    semver: string;
+    tag: string;
+    parts: string[];
+  };
+}
+
+export type ErrorContext< C extends ErrorCode > =
+  C extends keyof ErrorRegistry
+    ? ErrorRegistry[ C ]
+    : never;
+
+export type UnitraErrorOptions< C extends ErrorCode = ErrorCode > =
+  [ ErrorContext< C > ] extends [ never ]
+    ? { cause?: unknown }
+    : { context: ErrorContext< C >, cause?: unknown };
 
 export type SerializedError = {
   name: string;
-  code?: UnitraErrorCode;
+  code?: ErrorCode;
   message: string;
   summary?: string;
   stack?: string;
-  data?: unknown;
+  context?: unknown;
   cause?: SerializedError;
 };
 
 export type ErrorFormatterConfig = {
   showCode?: boolean;
   showSummary?: boolean;
-  showData?: boolean;
+  showContext?: boolean;
   showStack?: boolean;
   showCauses?: boolean;
   indent?: string;
 };
 
-export interface IUnitraError< C extends UnitraErrorCode = UnitraErrorCode, T = unknown > extends Error {
+export interface IUnitraError< C extends ErrorCode = ErrorCode > extends Error {
   readonly code?: C;
-  readonly data?: T;
+  readonly context?: ErrorContext< C >;
   readonly cause?: unknown;
   readonly type: string;
   readonly summary: string | undefined;
-  toString: () => string;
-  serialize: () => SerializedError;
-  format: ( options?: ErrorFormatterConfig ) => string;
-  log: () => void;
+  toString () : string;
+  serialize () : SerializedError;
+  format ( options?: ErrorFormatterConfig ) : string;
+  log () : void;
 }
-
-export type AssertError = IUnitraError< UnitraErrorCode.ASSERT_ERROR, {
-  key: RegistryKey;
-  value: unknown;
-} >;
-
-export type HookRunError< K extends HookId > = IUnitraError< UnitraErrorCode.HOOK_RUN_ERROR, {
-  id: K;
-  ctx: HookCtx< K >;
-  value?: HookValue< K >;
-} >;
-
-export type PluginResolutionError = IUnitraError< UnitraErrorCode.PLUGIN_RESOLUTION_ERROR, {
-  graph: PluginResolveGraph;
-  missing: ReadonlyArray< string >;
-  conflicts: ReadonlyArray< string >;
-  cycles: ReadonlyArray< string >;
-  errCount: number;
-} >;
-
-export type ResolveError< K extends RegistryKey > = IUnitraError< UnitraErrorCode.RESOLVE_ERROR, {
-  key: RegistryKey;
-  value: LikeOf< K >;
-} >;
-
-export type SemverError = IUnitraError< UnitraErrorCode.SEMVER_ERROR, {
-  version: SemverVersion;
-  semver: string;
-  tag: string;
-  parts: string[];
-} >;

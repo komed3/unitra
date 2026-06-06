@@ -7,13 +7,14 @@ type PrefixBrand< S extends string > = {
 };
 
 export type PrefixRef< S extends string = string > = S & {
-  readonly [ prefixBrand ]: PrefixBrand< S >;
+  readonly [ prefixBrand ]:
+    PrefixBrand< S >;
 };
 
 export type PrefixId< R extends PrefixRef > = R[ typeof prefixBrand ][ 'id' ];
 
 export type PrefixDef< R extends PrefixRef = PrefixRef > = {
-  id: R;
+  readonly id: R;
   factor: number;
   aliases?: ReadonlyArray< string >;
   deprecated?: Deprecated< PrefixRef >;
@@ -22,6 +23,15 @@ export type PrefixDef< R extends PrefixRef = PrefixRef > = {
 
 export type DerivedPrefixDef< R extends PrefixRef > = PrefixDef< R >;
 
-export type PrefixMap = Readonly< { [ R in PrefixRef ]: DerivedPrefixDef< R > } >;
+export type PrefixMap = Readonly< {
+  [ R in PrefixRef ]:
+    DerivedPrefixDef< R >;
+} >;
 
-export type PrefixLike = PrefixRef | PrefixDef | string;
+export type PrefixLike =
+  | PrefixRef
+  | PrefixDef;
+
+export type PrefixInput =
+  | PrefixLike
+  | string;

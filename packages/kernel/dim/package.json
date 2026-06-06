@@ -1,6 +1,21 @@
 {
   "name": "@unitra/dim",
+  "description": "Physical dimension handling for Unitra framework",
   "version": "0.0.1",
+  "license": "MIT",
+  "author": {
+    "name": "Paul Köhler (komed3)",
+    "email": "webmaster@komed3.de",
+    "url": "https://komed3.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/komed3/unitra.git",
+    "directory": "packages/kernel/dim"
+  },
+  "bugs": {
+    "url": "https://github.com/komed3/unitra/issues"
+  },
   "type": "module",
   "files": [
     "dist",

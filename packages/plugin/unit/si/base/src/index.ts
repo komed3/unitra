@@ -1,4 +1,4 @@
-import type { UnitMap } from '@unitra/types/unit';
+import type { UnitMap } from '@unitra/types/def/unit';
 
 import ampereDef, { ampere } from './def/ampere';
 import candelaDef, { candela } from './def/candela';

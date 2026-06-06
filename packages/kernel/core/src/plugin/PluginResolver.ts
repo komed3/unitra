@@ -1,8 +1,6 @@
-import type { PluginCatalog, PluginDefinition, PluginResolveGraph, PluginResolveResult } from '@unitra/types/plugin';
-import type { SemverRange } from '@unitra/types/semver';
-import { PluginResolutionError } from '@unitra/utils/error';
-import { Semver } from '@unitra/utils/helper';
-import Logging from '@unitra/utils/logging';
+import type { PluginCatalog, PluginDefinition, PluginResolveGraph, PluginResolveResult } from '@unitra/types/core/plugin';
+import type { SemverRange } from '@unitra/types/utils/semver';
+import { Logging, PluginResolveError, Semver } from '../utils';
 import { PluginRegistry } from './PluginRegistry';
 
 type Requirements = Map< string, Array< {
@@ -12,7 +10,6 @@ type Requirements = Map< string, Array< {
 
 export class PluginResolver {
   private static readonly log = Logging.createSource( 'plugin-resolver' );
-
   private static cacheRevision: number = -1;
   private static cache: PluginResolveResult | null = null;
 
@@ -27,11 +24,9 @@ export class PluginResolver {
     for ( const [ id, list ] of catalog ) {
       const edges = new Set< string >();
 
-      for ( const plugin of list ) {
-        for ( const dep of Object.keys( plugin.dependencies ?? {} ) ) {
+      for ( const plugin of list )
+        for ( const dep of Object.keys( plugin.dependencies ?? {} ) )
           edges.add( dep );
-        }
-      }
 
       graph.set( id, edges );
     }
@@ -57,21 +52,22 @@ export class PluginResolver {
   }
 
   private static detectMissing ( catalog: PluginCatalog, req: Requirements ) : string[] {
-    const out: string[] = [];
+    const missing: string[] = [];
 
-    for ( const [ id, list ] of req ) {
-      if ( ! catalog.has( id ) ) {
-        for ( const r of list ) {
-          this.pushError( out, `${ r.plugin.id } → missing ${ id }@${ r.range }`, 'not installed' );
-        }
-      }
-    }
+    for ( const [ id, list ] of req )
+      if ( ! catalog.has( id ) )
+        for ( const r of list )
+          this.pushError(
+            missing,
+            `${ r.plugin.id } → missing ${ id }@${ r.range }`,
+            'not installed'
+          );
 
-    return out;
+    return missing;
   }
 
   private static detectConflicts ( catalog: PluginCatalog, req: Requirements ) : string[] {
-    const out: string[] = [];
+    const conflicts: string[] = [];
 
     for ( const [ id, list ] of req ) {
       const versions = catalog.get( id );
@@ -79,26 +75,31 @@ export class PluginResolver {
 
       const available = versions.map( v => v.version );
 
-      for ( const r of list ) {
-        if ( ! available.some( v => Semver.satisfies( v, r.range ) ) ) {
-          this.pushError( out, `${ r.plugin.id } → conflict ${ id }@${ r.range }`, 'version mismatch' );
-        }
-      }
+      for ( const r of list )
+        if ( ! available.some( v => Semver.satisfies( v, r.range ) ) )
+          this.pushError(
+            conflicts,
+            `${ r.plugin.id } → conflict ${ id }@${ r.range }`,
+            'version mismatch'
+          );
     }
 
-    return out;
+    return conflicts;
   }
 
   private static detectCycles ( graph: PluginResolveGraph ) : string[] {
-    const visited = new Set< string >();
-    const stack = new Set< string >();
-    const path: string[] = [];
-    const cycles: string[] = [];
+    const visited = new Set< string >(), stack = new Set< string >();
+    const path: string[] = [], cycles: string[] = [];
 
     const dfs = ( node: string ) => {
       if ( stack.has( node ) ) {
         const i = path.indexOf( node );
-        this.pushError( cycles, path.slice( i ).concat( node ).join( ' → ' ), 'cycle detected' );
+        this.pushError(
+          cycles,
+          path.slice( i ).concat( node ).join( ' → ' ),
+          'cycle detected'
+        );
+
         return;
       }
 
@@ -115,8 +116,26 @@ export class PluginResolver {
     };
 
     for ( const n of graph.keys() ) dfs( n );
-
     return cycles;
+  }
+
+  private static detectOverrideConflicts ( catalog: PluginCatalog ) : Record< string, string[] > {
+    const index = new Map< string, Set< string > >();
+
+    const add = ( id: string, ns: string, key: string ) =>
+      index.set( `${ns}.${key}`, ( index.get( `${ns}.${key}` ) ?? new Set() ).add( id ) );
+
+    for ( const list of catalog.values() )
+      for ( const { id, overrides } of list )
+        for ( const [ ns, map ] of Object.entries( overrides ?? {} ) )
+          for ( const k of Object.keys( map ?? {} ) )
+            add( id, ns, k );
+
+    const out: Record< string, string[] > = {};
+    for ( const [ k, v ] of index )
+      if ( v.size > 1 ) out[ k ] = [ ...v ];
+
+    return out;
   }
 
   private static topologicalSort ( graph: PluginResolveGraph, catalog: PluginCatalog ) : PluginDefinition[] {
@@ -154,16 +173,22 @@ export class PluginResolver {
     const missing = this.detectMissing( catalog, requirements );
     const conflicts = this.detectConflicts( catalog, requirements );
     const cycles = this.detectCycles( graph );
-    const errCount = missing.length + conflicts.length + cycles.length;
+    const overrides = this.detectOverrideConflicts( catalog );
+
+    const errCount = missing.length + conflicts.length +
+      cycles.length + Object.keys( overrides ).length;
 
     if ( errCount ) {
       this.log.debug( 'resolution failed', { errors: errCount } );
 
       return {
-        plugins: [], graph,
-        error: new PluginResolutionError( `resolution failed due to errors (${ errCount })`, {
-          data: { graph, missing, conflicts, cycles, errCount }
-        } )
+        plugins: [], graph, error: new PluginResolveError(
+          `resolution failed due to errors (${ errCount })`,
+          { context: {
+            graph, missing, conflicts, cycles,
+            overrides, errCount
+          } }
+        )
       };
     }
 

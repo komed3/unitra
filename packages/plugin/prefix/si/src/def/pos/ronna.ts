@@ -1,5 +1,5 @@
 import { Format, Lang } from '@unitra/dict/common';
-import type { DerivedPrefixDef, PrefixRef } from '@unitra/types/prefix';
+import type { DerivedPrefixDef, PrefixRef } from '@unitra/types/def/prefix';
 
 export const ronna = 'R' as PrefixRef< 'R' >;
 

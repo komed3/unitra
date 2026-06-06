@@ -2,7 +2,7 @@ import { Format, Lang, SIType, System } from '@unitra/dict/common';
 import { UnitStatus, UnitType } from '@unitra/dict/unit';
 import { LuminousIntensityDim } from '@unitra/dim/base';
 import { luminousIntensity } from '@unitra/plugin-quantity-base/def/luminousIntensity';
-import type { DerivedUnitDef, UnitRef } from '@unitra/types/unit';
+import type { DerivedUnitDef, UnitRef } from '@unitra/types/def/unit';
 
 export const candela = 'cd' as UnitRef< typeof LuminousIntensityDim, UnitType.NAMED, 'cd' >;
 

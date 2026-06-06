@@ -2,7 +2,7 @@ import { Format, Lang, SIType, System } from '@unitra/dict/common';
 import { UnitStatus, UnitType } from '@unitra/dict/unit';
 import { TimeDim } from '@unitra/dim/base';
 import { time } from '@unitra/plugin-quantity-base/def/time';
-import type { DerivedUnitDef, UnitRef } from '@unitra/types/unit';
+import type { DerivedUnitDef, UnitRef } from '@unitra/types/def/unit';
 
 export const second = 's' as UnitRef< typeof TimeDim, UnitType.NAMED, 's' >;
 

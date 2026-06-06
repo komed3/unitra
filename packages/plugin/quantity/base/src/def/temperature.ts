@@ -1,7 +1,7 @@
 import { Format, Lang } from '@unitra/dict/common';
 import { Branch } from '@unitra/dict/quantity';
 import { TemperatureDim } from '@unitra/dim/base';
-import type { DerivedQuantityDef, QuantityRef } from '@unitra/types/quantity';
+import type { DerivedQuantityDef, QuantityRef } from '@unitra/types/def/quantity';
 
 export const temperature = 'temperature' as QuantityRef< typeof TemperatureDim, 'temperature' >;
 

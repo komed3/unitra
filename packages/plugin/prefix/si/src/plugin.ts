@@ -1,4 +1,4 @@
-import type { PluginDefinition } from '@unitra/types/plugin';
+import type { PluginDefinition } from '@unitra/types/core/plugin';
 import siPrefixRegistry from './';
 
 export default ( {
@@ -6,7 +6,11 @@ export default ( {
   version: '0.0.1',
   meta: {
     name: 'SI Prefixes',
-    tags: [ 'si', 'prefixes' ]
+    description: 'Unitra plugin for SI prefixes',
+    tags: [ 'si', 'prefixes' ],
+    license: 'MIT',
+    author: 'Paul Köhler (komed3)',
+    repo: 'https://github.com/komed3/unitra/tree/master/packages/plugin/prefix/si'
   },
   contributions: {
     prefixes: [

@@ -1,19 +1,20 @@
+import type { Container, ContainerFactoryMap } from '../utils/container';
 import type { ILogger } from '../utils/logging';
-import type { FactoryService } from './factory';
-import type { IHookEngine } from './hook';
-import type { RegistryAccessor } from './registry';
-import type { ServiceContext } from './service';
+import type { IHook } from './hook';
+import type { RegistryContainer } from './registry';
+import type { ServiceContainer } from './service';
 
-export type CoreContext = {
-  hook: IHookEngine;
+export type CoreInstanceMap = {
   log: ILogger;
+  hook: IHook;
 };
 
-export type UnitraContext = {
-  readonly V: 1;
+export type CoreFactoryMap = ContainerFactoryMap< CoreInstanceMap >;
+export type CoreContainer = Container< CoreInstanceMap >;
 
-  core: CoreContext;
-  factory: FactoryService;
-  registry: RegistryAccessor;
-  service: ServiceContext;
+export type UnitraContext = {
+  readonly VERSION: 1;
+  core: CoreContainer;
+  registry: RegistryContainer;
+  service: ServiceContainer;
 };

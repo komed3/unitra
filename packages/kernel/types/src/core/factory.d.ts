@@ -1,9 +1,12 @@
-import type { PrefixRef } from '../def/prefix';
-import type { ReferenceState } from './node';
+import type { ConstantInput } from '../def/constant';
+import type { PrefixInput } from '../def/prefix';
+import type { UnitInput } from '../def/unit';
+import type { ReferenceState } from '../node';
+import type { Container, ContainerFactoryMap } from '../utils/container';
 
 export type UnitModifier = {
   exp?: number;
-  prefix?: PrefixRef;
+  prefix?: PrefixInput;
 };
 
 export type ConstantModifier = {
@@ -11,15 +14,18 @@ export type ConstantModifier = {
 };
 
 export interface IUnitFactory {
-  mul: ( value: UnitLike, mod: UnitModifier ) => UnitFactory;
-  div: ( unit: UnitLike, mod: UnitModifier ) => UnitFactory;
-  constant: ( value: ConstantLike, mod: ConstantModifier ) => UnitFactory;
-  factor: ( value: number ) => UnitFactory;
-  toObj: () => ReferenceState;
-  toJSON: () => string;
-  serialize: () => string;
+  mul ( value: UnitInput, mod?: UnitModifier ) : IUnitFactory;
+  div ( unit: UnitInput, mod?: UnitModifier ) : IUnitFactory;
+  constant ( value: ConstantInput, mod?: ConstantModifier ) : IUnitFactory;
+  factor ( value: number ) : IUnitFactory;
+  toObj () : ReferenceState;
+  toJSON () : string;
+  serialize () : string;
 }
 
-export type FactoryService = {
-  unit: ( state?: ReferenceState ) => IUnitFactory;
+export type FactoryInstanceMap = {
+  unit: IUnitFactory;
 };
+
+export type FactoryFactoryMap = ContainerFactoryMap< FactoryInstanceMap >;
+export type FactoryContainer = Container< FactoryInstanceMap >;

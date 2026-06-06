@@ -1,6 +1,21 @@
 {
   "name": "@unitra/plugin-prefix-si",
+  "description": "Unitra plugin for SI prefixes",
   "version": "0.0.1",
+  "license": "MIT",
+  "author": {
+    "name": "Paul Köhler (komed3)",
+    "email": "webmaster@komed3.de",
+    "url": "https://komed3.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/komed3/unitra.git",
+    "directory": "packages/plugin/prefix/si"
+  },
+  "bugs": {
+    "url": "https://github.com/komed3/unitra/issues"
+  },
   "type": "module",
   "files": [
     "dist",
@@ -9,15 +24,14 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./plugin": "./dist/plugin.js",
-    "./def/*": "./dist/def/*.js"
+    "./def/*": "./dist/def/*.js",
+    "./plugin": "./dist/plugin.js"
   },
   "scripts": {
     "build": "tsc -b && tsc-alias",
     "lint": "tsc --noEmit"
   },
   "dependencies": {
-    "@unitra/core": "workspace:*",
     "@unitra/dict": "workspace:*",
     "@unitra/types": "workspace:*"
   }

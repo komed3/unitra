@@ -1,6 +1,21 @@
 {
   "name": "@unitra/core",
+  "description": "Core functionality for Unitra framework",
   "version": "0.0.1",
+  "license": "MIT",
+  "author": {
+    "name": "Paul Köhler (komed3)",
+    "email": "webmaster@komed3.de",
+    "url": "https://komed3.de"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/komed3/unitra.git",
+    "directory": "packages/kernel/core"
+  },
+  "bugs": {
+    "url": "https://github.com/komed3/unitra/issues"
+  },
   "type": "module",
   "files": [
     "dist",
@@ -10,7 +25,7 @@
   "exports": {
     ".": "./dist/index.js",
     "./plugin": "./dist/plugin/index.js",
-    "./service": "./dist/service/index.js"
+    "./utils": "./dist/utils/index.js"
   },
   "scripts": {
     "build": "tsc -b && tsc-alias",
@@ -19,7 +34,6 @@
   "dependencies": {
     "@unitra/dict": "workspace:*",
     "@unitra/dim": "workspace:*",
-    "@unitra/types": "workspace:*",
-    "@unitra/utils": "workspace:*"
+    "@unitra/types": "workspace:*"
   }
 }

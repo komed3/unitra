@@ -1,4 +1,4 @@
-import type { QuantityMap } from '@unitra/types/quantity';
+import type { QuantityMap } from '@unitra/types/def/quantity';
 
 import amountOfSubstanceDef, { amountOfSubstance } from './def/amountOfSubstance';
 import electricCurrentDef, { electricCurrent } from './def/electricCurrent';

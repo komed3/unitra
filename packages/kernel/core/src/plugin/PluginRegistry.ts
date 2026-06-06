@@ -1,6 +1,6 @@
-import type { PluginCatalog, PluginDefinition, PluginList } from '@unitra/types/plugin';
-import type { SemverVersion } from '@unitra/types/semver';
-import Logging from '@unitra/utils/logging';
+import type { PluginCatalog, PluginDefinition, PluginList } from '@unitra/types/core/plugin';
+import type { SemverVersion } from '@unitra/types/utils/semver';
+import { Logging } from '../utils';
 
 export class PluginRegistry {
   private static readonly log = Logging.createSource( 'plugin-registry' );
@@ -21,15 +21,23 @@ export class PluginRegistry {
   }
 
   public static add ( ...plugins: PluginDefinition[] ) : void {
+    let updated = false;
+
     for ( const plugin of plugins ) {
       const versions = this.registry.get( plugin.id ) ?? new Map< SemverVersion, PluginDefinition >();
-      const exists = versions.has( plugin.version );
+      const exists = versions.get( plugin.version );
+
+      if ( plugin === exists ) {
+        this.log.debug( `skip "${ plugin.id }@${ plugin.version }" plugin: already registered` );
+        continue;
+      }
 
       this.registry.set( plugin.id, versions.set( plugin.version, plugin ) );
       this.log.debug( `${ exists ? 'updated' : 'registered' } plugin "${ plugin.id }@${ plugin.version }"` );
+      updated = true;
     }
 
-    ( plugins.length && this.revId++ );
+    ( updated && this.revId++ );
   }
 
   public static remove ( id: string, version?: SemverVersion ) : void {

@@ -2,7 +2,7 @@ import { Format, Lang, SIType, System } from '@unitra/dict/common';
 import { UnitStatus, UnitType } from '@unitra/dict/unit';
 import { LengthDim } from '@unitra/dim/base';
 import { length } from '@unitra/plugin-quantity-base/def/length';
-import type { DerivedUnitDef, UnitRef } from '@unitra/types/unit';
+import type { DerivedUnitDef, UnitRef } from '@unitra/types/def/unit';
 
 export const meter = 'm' as UnitRef< typeof LengthDim, UnitType.NAMED, 'm' >;
 
