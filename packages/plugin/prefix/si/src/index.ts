@@ -1,3 +1,5 @@
+import { PrefixMap } from '@unitra/types/def/prefix';
+
 import decaDef, { deca } from './def/pos/deca';
 import exaDef, { exa } from './def/pos/exa';
 import gigaDef, { giga } from './def/pos/giga';
@@ -23,3 +25,31 @@ import quectoDef, { quecto } from './def/neg/quecto';
 import rontoDef, { ronto } from './def/neg/ronto';
 import yoctoDef, { yocto } from './def/neg/yocto';
 import zeptoDef, { zepto } from './def/neg/zepto';
+
+export default ( {
+  [ quetta ]: quettaDef,
+  [ ronna ]: ronnaDef,
+  [ yotta ]: yottaDef,
+  [ zetta ]: zettaDef,
+  [ exa ]: exaDef,
+  [ peta ]: petaDef,
+  [ tera ]: teraDef,
+  [ giga ]: gigaDef,
+  [ mega ]: megaDef,
+  [ kilo ]: kiloDef,
+  [ hecto ]: hectoDef,
+  [ deca ]: decaDef,
+
+  [ deci ]: deciDef,
+  [ centi ]: centiDef,
+  [ milli ]: milliDef,
+  [ micro ]: microDef,
+  [ nano ]: nanoDef,
+  [ pico ]: picoDef,
+  [ femto ]: femtoDef,
+  [ atto ]: attoDef,
+  [ zepto ]: zeptoDef,
+  [ yocto ]: yoctoDef,
+  [ ronto ]: rontoDef,
+  [ quecto ]: quectoDef
+} ) as const satisfies PrefixMap;
