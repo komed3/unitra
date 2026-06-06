@@ -14,9 +14,9 @@ export type ConstantModifier = {
 };
 
 export interface IUnitFactory {
-  mul ( value: UnitInput, mod: UnitModifier ) : UnitFactory;
-  div ( unit: UnitInput, mod: UnitModifier ) : UnitFactory;
-  constant ( value: ConstantInput, mod: ConstantModifier ) : UnitFactory;
+  mul ( value: UnitInput, mod?: UnitModifier ) : UnitFactory;
+  div ( unit: UnitInput, mod?: UnitModifier ) : UnitFactory;
+  constant ( value: ConstantInput, mod?: ConstantModifier ) : UnitFactory;
   factor ( value: number ) : UnitFactory;
   toObj () : ReferenceState;
   toJSON () : string;
