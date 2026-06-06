@@ -1,4 +1,7 @@
-import type { RegistryContainer, RegistryFactoryMap, RegistryInstanceMap, RegistryKey } from '@unitra/types/core/registry';
+import type {
+  IRegistry, RefOf, RegistryContainer, RegistryFactoryMap,
+  RegistryInstanceMap, RegistryKey
+} from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ConstantRef } from '@unitra/types/def/constant';
 import type { PrefixRef } from '@unitra/types/def/prefix';
@@ -29,3 +32,6 @@ export const createRegistry = (
     constant: () => get( 'constant' )
   } );
 };
+
+export const getTypedRegistry = < K extends RegistryKey > ( ctx: UnitraContext, key: K ) =>
+  ctx.registry[ key ] as unknown as IRegistry< RefOf< K > >;
