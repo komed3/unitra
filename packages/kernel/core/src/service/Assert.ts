@@ -1,7 +1,7 @@
 import type { DefOf, RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { IAssert } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
-import { getTypedRegistry } from '../engine/Registry';
+import { getTypedRegistry } from '../registry';
 import { AssertError, safeJsonStringify } from '../utils';
 
 export class Assert implements IAssert {

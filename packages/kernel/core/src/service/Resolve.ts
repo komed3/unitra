@@ -1,7 +1,7 @@
 import type { DefOf, InputOf, RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { IResolve } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
-import { getTypedRegistry } from '../engine/Registry';
+import { getTypedRegistry } from '../registry';
 import { ResolveError } from '../utils';
 
 export class Resolve implements IResolve {
