@@ -1,11 +1,11 @@
 import type { AnyRef, RegistryDef } from '@unitra/types/core/registry';
 
-export class RegistryStorage< Ref extends AnyRef > extends Map {
-  public override set < R extends Ref > ( ref: R, def: RegistryDef< R > ) : this {
-    return super.set( ref, def );
+export class RegistryStorage< Ref extends AnyRef > extends Map< Ref, RegistryDef< Ref > > {
+  public override set < R extends Ref > ( key: R, value: RegistryDef< R > ) : this {
+    return super.set( key, value );
   }
 
-  public override get < R extends Ref > ( ref: R ) : RegistryDef< R > | undefined {
-    return super.get( ref );
+  public override get < R extends Ref > ( key: R ) : RegistryDef< R > | undefined {
+    return super.get( key ) as RegistryDef< R > | undefined;
   }
 }
