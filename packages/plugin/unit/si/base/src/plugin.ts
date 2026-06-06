@@ -10,7 +10,7 @@ export default ( {
     tags: [ 'si', 'units' ],
     license: 'MIT',
     author: 'Paul Köhler (komed3)',
-    repo: 'https://github.com/komed3/unitra/packages/plugin/unit/si/base'
+    repo: 'https://github.com/komed3/unitra/tree/master/packages/plugin/unit/si/base'
   },
   dependencies: {
     '@unitra/plugin-quantity-base': '^0.0.1'

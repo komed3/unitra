@@ -10,7 +10,7 @@ export default ( {
     tags: [ 'quantities' ],
     license: 'MIT',
     author: 'Paul Köhler (komed3)',
-    repo: 'https://github.com/komed3/unitra/packages/plugin/quantity/base'
+    repo: 'https://github.com/komed3/unitra/tree/master/packages/plugin/quantity/base'
   },
   contributions: {
     quantities: [

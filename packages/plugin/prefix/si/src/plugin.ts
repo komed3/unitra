@@ -10,7 +10,7 @@ export default ( {
     tags: [ 'si', 'prefixes' ],
     license: 'MIT',
     author: 'Paul Köhler (komed3)',
-    repo: 'https://github.com/komed3/unitra/packages/plugin/prefix/si'
+    repo: 'https://github.com/komed3/unitra/tree/master/packages/plugin/prefix/si'
   },
   contributions: {
     prefixes: [
