@@ -1,8 +1,8 @@
 import type { ConstantModifier, IUnitFactory, UnitModifier } from '@unitra/types/core/factory';
-import type { Node, ReferenceState } from '@unitra/types/core/node';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ConstantInput } from '@unitra/types/def/constant';
 import type { UnitInput } from '@unitra/types/def/unit';
+import type { Node, ReferenceState } from '@unitra/types/node';
 import { safeJsonStringify } from '../utils';
 
 export class UnitFactory implements IUnitFactory {

@@ -1,7 +1,7 @@
-import type { NodeMap, ReferenceState, SerializedNode, SerializerMap } from '@unitra/types/core/node';
 import type { ISerialize } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { CompoundStruct, UnitStruct } from '@unitra/types/def/unit';
+import type { NodeMap, ReferenceState, SerializedNode, SerializerMap } from '@unitra/types/node';
 
 export class Serialize implements ISerialize {
   private static readonly map: SerializerMap = {

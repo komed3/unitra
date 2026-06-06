@@ -1,7 +1,4 @@
-import type {
-  HookCtx, HookDef, HookEntry, HookHandler, HookId,
-  HookImplMap, HookPipeline, HookValue
-} from '@unitra/types/core/hook';
+import type { HookCtx, HookDef, HookEntries, HookHandler, HookId, HookImplMap, HookPipeline, HookValue } from '@unitra/types/core/hook';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { HookError, Logging } from '../utils';
 
@@ -61,7 +58,7 @@ export class Hook {
   }
 
   public merge ( hooks: HookImplMap ) : void {
-    for ( const [ id, incoming ] of Object.entries( hooks ) as HookEntry ) {
+    for ( const [ id, incoming ] of Object.entries( hooks ) as HookEntries ) {
       if ( ! incoming || incoming.length === 0 ) continue;
 
       const existing = this.hooks.get( id ) ?? [];

@@ -1,7 +1,4 @@
-import type {
-  IRegistry, RefOf, RegistryContainer, RegistryFactoryMap,
-  RegistryInstanceMap, RegistryKey
-} from '@unitra/types/core/registry';
+import type { IRegistry, RefOf, RegistryContainer, RegistryFactoryMap, RegistryInstanceMap, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ConstantRef } from '@unitra/types/def/constant';
 import type { PrefixRef } from '@unitra/types/def/prefix';
