@@ -22,4 +22,24 @@ export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
   public set < R extends Ref > ( ref: R, def: RegistryDef< R > ) : void {
     this.items.set( ref, def );
   }
+
+  public bulk ( input: Iterable< [ Ref, RegistryDef< Ref > ] > ) : void {
+    for ( const [ ref, def ] of input ) this.items.set( ref, def );
+  }
+
+  public entries () : IterableIterator< [ Ref, RegistryDef< Ref > ] > {
+    return this.items.entries();
+  }
+
+  public keys () : IterableIterator< Ref > {
+    return this.items.keys();
+  }
+
+  public values () : IterableIterator< RegistryDef< Ref > > {
+    return this.items.values();
+  }
+
+  public filter ( predicate: ( def: RegistryDef< Ref > ) => boolean ) : RegistryDef< Ref >[] {
+    return [ ...this.items.values() ].filter( predicate );
+  }
 }
