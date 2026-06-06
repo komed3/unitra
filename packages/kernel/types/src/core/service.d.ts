@@ -28,12 +28,12 @@ export type ServiceInstanceMap = {
   serialize: ISerialize;
 };
 
+export type ServiceKey = keyof ServiceInstanceMap;
+
 export type ServiceFactoryMap = {
-  [ K in keyof ServiceInstanceMap ]: ( ctx: UnitraContext ) => ServiceInstanceMap[ K ];
+  [ K in ServiceKey ]: ( ctx: UnitraContext ) => ServiceInstanceMap[ K ];
 };
 
 export type ServiceContainer = {
-  [ K in keyof ServiceInstanceMap ]: () => ServiceInstanceMap[ K ];
+  [ K in ServiceKey ]: () => ServiceInstanceMap[ K ];
 };
-
-export type ServiceAccessor = () => ServiceContainer;

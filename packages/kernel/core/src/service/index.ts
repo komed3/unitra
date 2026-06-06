@@ -1,4 +1,4 @@
-import type { ServiceAccessor, ServiceContainer, ServiceFactoryMap, ServiceInstanceMap } from '@unitra/types/core/service';
+import type { ServiceContainer, ServiceFactoryMap, ServiceInstanceMap, ServiceKey } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { Assert } from './Assert';
 import { Resolve } from './Resolve';
@@ -6,10 +6,10 @@ import { Serialize } from './Serialize';
 
 export { Assert, Resolve };
 
-export const createServiceAccessor = (
+export const createServiceContainer = (
   ctx: UnitraContext,
   factories?: Partial< ServiceFactoryMap >
-) : ServiceAccessor => {
+) : ServiceContainer => {
   const cache: Partial< ServiceInstanceMap > = {};
 
   const defaults: ServiceFactoryMap = {
@@ -18,10 +18,10 @@ export const createServiceAccessor = (
     serialize: ( ctx ) => new Serialize( ctx )
   };
 
-  const get = < K extends keyof ServiceInstanceMap > ( key: K ) : ServiceInstanceMap[ K ] =>
+  const get = < K extends ServiceKey > ( key: K ) : ServiceInstanceMap[ K ] =>
     cache[ key ] ??= ( factories?.[ key ] ?? defaults[ key ] )( ctx );
 
-  return () : ServiceContainer => ( {
+  return Object.freeze( {
     assert: () => get( 'assert' ),
     resolve: () => get( 'resolve' ),
     serialize: () => get( 'serialize' )

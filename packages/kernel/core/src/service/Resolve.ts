@@ -8,15 +8,15 @@ export class Resolve implements IResolve {
   constructor ( private readonly ctx: UnitraContext ) {}
 
   public tryToRef < K extends RegistryKey > ( key: K, value: InputOf< K > ) : RefOf< K > | undefined {
-    if ( this.ctx.service().assert().isRef( key, value ) ) return value;
-    if ( this.ctx.service().assert().isDef( key, value ) ) return value.id;
+    if ( this.ctx.service.assert().isRef( key, value ) ) return value;
+    if ( this.ctx.service.assert().isDef( key, value ) ) return value.id;
 
     return undefined;
   }
 
   public tryToDef < K extends RegistryKey > ( key: K, value: InputOf< K > ) : DefOf< K > | undefined {
-    if ( this.ctx.service().assert().isDef( key, value ) ) return value;
-    if ( this.ctx.service().assert().isRef( key, value ) )
+    if ( this.ctx.service.assert().isDef( key, value ) ) return value;
+    if ( this.ctx.service.assert().isRef( key, value ) )
       return getTypedRegistry( this.ctx, key ).get( value );
 
     return undefined;

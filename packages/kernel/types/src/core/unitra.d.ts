@@ -1,7 +1,7 @@
 import type { ILogger } from '../utils/logging';
 import type { IHook } from './hook';
 import type { RegistryContainer } from './registry';
-import type { ServiceAccessor } from './service';
+import type { ServiceContainer } from './service';
 
 export type CoreInstanceMap = {
   log: ILogger;
@@ -22,5 +22,5 @@ export type UnitraContext = {
   readonly VERSION: 1;
   core: CoreAccessor;
   registry: RegistryContainer;
-  service: ServiceAccessor;
+  service: ServiceContainer;
 };

@@ -9,7 +9,7 @@ import type { QuantityRef } from '@unitra/types/def/quantity';
 import type { UnitRef } from '@unitra/types/def/unit';
 import { Registry } from './Registry';
 
-export const createRegistry = (
+export const createRegistryContainer = (
   ctx: UnitraContext,
   factories?: Partial< RegistryFactoryMap >
 ) : RegistryContainer => {

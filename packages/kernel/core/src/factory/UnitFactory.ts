@@ -19,8 +19,8 @@ export class UnitFactory implements IUnitFactory {
   }
 
   public mul ( value: UnitInput, mod?: UnitModifier ) : UnitFactory {
-    const unit = this.ctx.service().resolve().toRef( 'unit', value );
-    const prefix = mod?.prefix ? this.ctx.service().resolve().toRef( 'prefix', mod.prefix ) : undefined;
+    const unit = this.ctx.service.resolve().toRef( 'unit', value );
+    const prefix = mod?.prefix ? this.ctx.service.resolve().toRef( 'prefix', mod.prefix ) : undefined;
 
     return this.next( [ { type: 'unit', unit, exp: mod?.exp ?? 1, prefix } ] );
   }
@@ -30,7 +30,7 @@ export class UnitFactory implements IUnitFactory {
   }
 
   public constant ( value: ConstantInput, mod?: ConstantModifier ) : UnitFactory {
-    const constant = this.ctx.service().resolve().toRef( 'constant', value );
+    const constant = this.ctx.service.resolve().toRef( 'constant', value );
 
     return this.next( [ { type: 'constant', constant, exp: mod?.exp ?? 1 } ] );
   }
@@ -48,6 +48,6 @@ export class UnitFactory implements IUnitFactory {
   }
 
   public serialize () : string {
-    return this.ctx.service().serialize().fromReferenceState( this.state );
+    return this.ctx.service.serialize().fromReferenceState( this.state );
   }
 }
