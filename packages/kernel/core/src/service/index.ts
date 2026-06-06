@@ -4,8 +4,6 @@ import { Assert } from './Assert';
 import { Resolve } from './Resolve';
 import { Serialize } from './Serialize';
 
-export { Assert, Resolve };
-
 export const createServiceContainer = (
   ctx: UnitraContext,
   factories?: Partial< ServiceFactoryMap >
