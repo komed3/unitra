@@ -1,8 +1,8 @@
-import type { CoreAccessor, CoreContainer, CoreFactoryMap, CoreInstanceMap, UnitraContext } from '@unitra/types/core/unitra';
+import type { CoreContainer, CoreFactoryMap, CoreInstanceMap, UnitraContext } from '@unitra/types/core/unitra';
 import { Logging } from '../utils';
 import { Hook } from './Hook';
 
-export const createCoreAccessor = ( ctx: UnitraContext ) : CoreAccessor => {
+export const createCoreContainer = ( ctx: UnitraContext ) : CoreContainer => {
   const cache: Partial< CoreInstanceMap > = {};
 
   const defaults: CoreFactoryMap = {
@@ -13,7 +13,7 @@ export const createCoreAccessor = ( ctx: UnitraContext ) : CoreAccessor => {
   const get = < K extends keyof CoreInstanceMap > ( key: K ) : CoreInstanceMap[ K ] =>
     cache[ key ] ??= defaults[ key ]( ctx );
 
-  return () : CoreContainer => ( {
+  return Object.freeze( {
     log: () => get( 'log' ),
     hook: () => get( 'hook' )
   } );

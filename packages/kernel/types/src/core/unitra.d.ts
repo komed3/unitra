@@ -16,11 +16,9 @@ export type CoreContainer = {
   [ K in keyof CoreInstanceMap ]: () => CoreInstanceMap[ K ];
 };
 
-export type CoreAccessor = () => CoreContainer;
-
 export type UnitraContext = {
   readonly VERSION: 1;
-  core: CoreAccessor;
+  core: CoreContainer;
   registry: RegistryContainer;
   service: ServiceContainer;
 };

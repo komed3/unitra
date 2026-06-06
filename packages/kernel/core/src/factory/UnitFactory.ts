@@ -13,7 +13,7 @@ export class UnitFactory implements IUnitFactory {
 
   private next ( nodes: Node[] = [] ) : UnitFactory {
     const state = { nodes: [ ...this.state.nodes, ...nodes ] };
-    this.ctx.core().hook().run( 'core.factory.unit.next', { state } );
+    this.ctx.core.hook().run( 'core.factory.unit.next', { state } );
 
     return new UnitFactory( this.ctx, state );
   }

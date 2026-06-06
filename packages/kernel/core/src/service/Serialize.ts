@@ -25,10 +25,7 @@ export class Serialize implements ISerialize {
         .join( '*' )
     }`;
 
-    return this.ctx.core().hook().run(
-      'core.service.serialize',
-      { state }, body
-    );
+    return this.ctx.core.hook().run( 'core.service.serialize', { state }, body );
   }
 
   public fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string {

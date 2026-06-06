@@ -1,4 +1,7 @@
-import type { HookCtx, HookDef, HookEntry, HookHandler, HookId, HookImplMap, HookPipeline, HookValue } from '@unitra/types/core/hook';
+import type {
+  HookCtx, HookDef, HookEntry, HookHandler, HookId,
+  HookImplMap, HookPipeline, HookValue
+} from '@unitra/types/core/hook';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { HookError, Logging } from '../utils';
 
