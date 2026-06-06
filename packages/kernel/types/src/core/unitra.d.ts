@@ -1,3 +1,4 @@
+import type { Container, ContainerFactoryMap } from '../utils/container';
 import type { ILogger } from '../utils/logging';
 import type { IHook } from './hook';
 import type { RegistryContainer } from './registry';
@@ -8,15 +9,8 @@ export type CoreInstanceMap = {
   hook: IHook;
 };
 
-export type CoreFactoryMap = {
-  [ K in keyof CoreInstanceMap ]:
-    ( ctx: UnitraContext ) => CoreInstanceMap[ K ];
-};
-
-export type CoreContainer = {
-  [ K in keyof CoreInstanceMap ]:
-    () => CoreInstanceMap[ K ];
-};
+export type CoreFactoryMap = ContainerFactoryMap< CoreInstanceMap >;
+export type CoreContainer = Container< CoreInstanceMap >;
 
 export type UnitraContext = {
   readonly VERSION: 1;
