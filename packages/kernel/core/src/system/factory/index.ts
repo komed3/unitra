@@ -1,6 +1,6 @@
 import type { FactoryContainer, FactoryFactoryMap } from '@unitra/types/core/factory';
 import type { UnitraContext } from '@unitra/types/core/unitra';
-import { createContainer } from '../utils';
+import { createContainer } from '../../utils/context';
 import { UnitFactory } from './UnitFactory';
 
 export const createFactoryContainer = (
@@ -8,10 +8,6 @@ export const createFactoryContainer = (
   factories?: Partial< FactoryFactoryMap >
 ) : FactoryContainer =>
   createContainer(
-    ctx,
-    {
-      unit: ctx => new UnitFactory( ctx )
-    },
-    factories,
-    { cache: false }
+    ctx, { unit: ctx => new UnitFactory( ctx ) },
+    factories, { cache: false }
   );

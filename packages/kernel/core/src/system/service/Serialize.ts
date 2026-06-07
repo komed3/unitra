@@ -5,9 +5,9 @@ import type { NodeMap, ReferenceState, SerializedNode, SerializerMap } from '@un
 
 export class Serialize implements ISerialize {
   private static readonly map: SerializerMap = {
-    factor: ( node ) => ( { order: 0, value: `#${ node.value }` } ),
+    unit: ( node ) => ( { order: 2, value: `${ node.prefix ? `${ node.prefix }:` : '' }${ node.unit }^${ node.exp }` } ),
     constant: ( node ) => ( { order: 1, value: `@${ node.constant }^${ node.exp }` } ),
-    unit: ( node ) => ( { order: 2, value: `${ node.prefix ? `${ node.prefix }:` : '' }${ node.unit }^${ node.exp }` } )
+    factor: ( node ) => ( { order: 0, value: `#${ node.value }` } )
   } as const;
 
   private static serializeNode < K extends keyof NodeMap > ( type: K, node: NodeMap[ K ] ) : SerializedNode {
@@ -21,21 +21,20 @@ export class Serialize implements ISerialize {
       state.nodes
         .map( ( node ) => Serialize.serializeNode( node.type, node ) )
         .sort( ( a, b ) => a.order - b.order || a.value.localeCompare( b.value ) )
-        .map( ( n ) => n.value )
-        .join( '*' )
+        .map( ( n ) => n.value ).join( '*' )
     }`;
 
-    return this.ctx.core.hook().run( 'core.service.serialize', { state }, body );
+    return this.ctx.hook().run( 'core.service.serialize', { state }, body );
   }
 
   public fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string {
     return this.fromReferenceState( { nodes: struct.map(
-      ( node ) => 'factor' in node
-        ? { type: 'factor', value: node.factor }
-        : {
-          type: 'unit', unit: node.unit, exp: node.exp,
-          prefix: 'prefix' in node ? node.prefix : undefined
-        }
+      ( node ) => 'factor' in node ? {
+        type: 'factor', value: node.factor
+      } : {
+        type: 'unit', unit: node.unit, exp: node.exp,
+        prefix: 'prefix' in node ? node.prefix : undefined
+      }
     ) } );
   }
 }

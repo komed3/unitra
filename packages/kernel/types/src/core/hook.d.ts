@@ -49,9 +49,11 @@ export type HookEntries = Array< [
   ReadonlyArray< HookDef< HookId > >
 ] >;
 
-export interface IHook {
+export interface IHookEngine {
   invalidate ( id: HookId ) : void;
   add < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) : void;
   merge ( hooks: HookImplMap ) : void;
   run < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K >;
 }
+
+export type HookAccessor = () => IHookEngine;

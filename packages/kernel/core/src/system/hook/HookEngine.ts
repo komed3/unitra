@@ -1,28 +1,11 @@
-import type { HookCtx, HookDef, HookEntries, HookHandler, HookId, HookImplMap, HookPipeline, HookValue } from '@unitra/types/core/hook';
+import type { HookCtx, HookEntries, HookHandler, HookId, HookImplMap, HookPipeline, HookValue, IHookEngine } from '@unitra/types/core/hook';
 import type { UnitraContext } from '@unitra/types/core/unitra';
-import { HookError, Logging } from '../utils';
+import { HookError } from '../../utils/error';
+import { Logging } from '../../utils/logging';
+import { HookCache } from './HookCache';
+import { HookStorage } from './HookStorage';
 
-class HookStorage extends Map {
-  public override set < K extends HookId > ( id: K, hooks: HookDef< K >[] ) : this {
-    return super.set( id, hooks );
-  }
-
-  public override get < K extends HookId > ( id: K ) : HookDef< K >[] | undefined {
-    return super.get( id );
-  }
-}
-
-class HookCache extends Map {
-  public override set < K extends HookId > ( id: K, fn: HookPipeline< K > ) : this {
-    return super.set( id, fn );
-  }
-
-  public override get < K extends HookId > ( id: K ) : HookPipeline< K > | undefined {
-    return super.get( id );
-  }
-}
-
-export class Hook {
+export class HookEngine implements IHookEngine {
   private static readonly log = Logging.createSource( 'hook' );
   private readonly hooks = new HookStorage();
   private readonly cache = new HookCache();
@@ -46,10 +29,12 @@ export class Hook {
 
   public invalidate ( id: HookId ) : void {
     if ( this.cache.delete( id ) )
-      Hook.log.debug( `invalidate cached pipeline for "${ id }"` );
+      HookEngine.log.debug( `invalidate cached pipeline for "${ id }"` );
   }
-
+  
   public add < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) : void {
+    HookEngine.log.debug( `add hook for "${ id }" with priority ${ priority ?? 0 }` );
+
     const list = this.hooks.get( id ) || [];
     list.push( { handler, priority } );
     this.hooks.set( id, list );
@@ -72,7 +57,7 @@ export class Hook {
   public run < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value: HookValue< K > ) : HookValue< K >;
 
   public run < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K > {
-    Hook.log.debug( `run "${ id }"` );
+    HookEngine.log.debug( `run "${ id }"` );
 
     try { return this.getPipeline( id )( hookCtx, value ) as HookValue< K > }
     catch ( err ) { throw new HookError( `failed to run hook for "${ id }"`, {

@@ -28,11 +28,10 @@ export class Semver {
     const [ semver, tag ] = version.split( '-', 2 );
     const parts = semver.split( '.' );
 
-    if ( parts.length !== 3 )
-      throw new SemverError(
-        `invalid semantic version "${ version }"`,
-        { context: { version, semver, tag, parts } }
-      );
+    if ( parts.length !== 3 ) throw new SemverError(
+      `invalid semantic version "${ version }"`,
+      { context: { version, semver, tag, parts } }
+    );
 
     const [ major, minor, patch ] = parts.map( Number );
 

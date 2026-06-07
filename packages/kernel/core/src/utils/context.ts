@@ -5,9 +5,7 @@ export const createContainer = < T extends Record< PropertyKey, unknown > > (
   ctx: UnitraContext,
   defaults: ContainerFactoryMap< T >,
   overrides?: Partial< ContainerFactoryMap< T > >,
-  options: CreateContainerOptions = {
-    cache: true
-  }
+  options: CreateContainerOptions = { cache: true }
 ) : Container< T > => {
   const instances: Partial< T > = {};
 
@@ -21,4 +19,9 @@ export const createContainer = < T extends Record< PropertyKey, unknown > > (
   return Object.freeze( Object.fromEntries( Object.keys( defaults ).map(
     key => [ key, () => create( key as keyof T ) ]
   ) ) as Container< T > );
+};
+
+export const createAccessor = < T > ( factory: () => T ) : ( () => T ) => {
+  let instance: T;
+  return () => instance ??= factory();
 };

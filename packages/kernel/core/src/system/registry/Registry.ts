@@ -25,7 +25,7 @@ export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
 
   public bulk ( input: RegistryContent< Ref > | RegistryEntries< Ref > ) : void {
     const entries = ( Symbol.iterator in Object( input ) ? input : Object.entries( input ) ) as RegistryEntries< Ref >;
-    for( const [ ref, def ] of entries ) this.items.set( ref, def );
+    for ( const [ ref, def ] of entries ) this.items.set( ref, def );
   }
 
   public entries () : IterableIterator< [ Ref, RegistryDef< Ref > ] > {

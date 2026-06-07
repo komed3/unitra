@@ -3,7 +3,7 @@ import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ConstantInput } from '@unitra/types/def/constant';
 import type { UnitInput } from '@unitra/types/def/unit';
 import type { Node, ReferenceState } from '@unitra/types/node';
-import { safeJsonStringify } from '../utils';
+import { safeJsonStringify } from '../../utils/json';
 
 export class UnitFactory implements IUnitFactory {
   constructor (
@@ -13,7 +13,7 @@ export class UnitFactory implements IUnitFactory {
 
   private next ( nodes: Node[] = [] ) : UnitFactory {
     const state = { nodes: [ ...this.state.nodes, ...nodes ] };
-    this.ctx.core.hook().run( 'core.factory.unit.next', { state } );
+    this.ctx.hook().run( 'core.factory.unit.next', { state } );
 
     return new UnitFactory( this.ctx, state );
   }

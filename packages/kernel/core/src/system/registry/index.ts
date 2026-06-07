@@ -4,7 +4,7 @@ import type { ConstantRef } from '@unitra/types/def/constant';
 import type { PrefixRef } from '@unitra/types/def/prefix';
 import type { QuantityRef } from '@unitra/types/def/quantity';
 import type { UnitRef } from '@unitra/types/def/unit';
-import { createContainer } from '../utils';
+import { createContainer } from '../../utils/context';
 import { Registry } from './Registry';
 
 export const createRegistryContainer = (

@@ -8,7 +8,7 @@ export type TextLogFormatterConfig = {
 };
 
 export class TextLogFormatter extends LogFormatter< TextLogFormatterConfig > {
-  public format ( entry: LogEntry ) : string {
+  public override format ( entry: LogEntry ) : string {
     const out: string[] = [
       `[${ entry.isoTimestamp }]`,
       `[${ LogLevel[ entry.level ] }]`,

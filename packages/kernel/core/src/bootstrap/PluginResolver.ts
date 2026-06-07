@@ -1,12 +1,8 @@
-import type { PluginCatalog, PluginDefinition, PluginResolveGraph, PluginResolveResult } from '@unitra/types/core/plugin';
-import type { SemverRange } from '@unitra/types/utils/semver';
-import { Logging, PluginResolveError, Semver } from '../utils';
+import type { PluginCatalog, PluginDefinition, PluginRequirements, PluginResolveGraph, PluginResolveResult } from '@unitra/types/core/plugin';
+import { PluginResolveError } from '../utils/error';
+import { Logging } from '../utils/logging';
+import { Semver } from '../utils/Semver';
 import { PluginRegistry } from './PluginRegistry';
-
-type Requirements = Map< string, Array< {
-  plugin: PluginDefinition;
-  range: SemverRange;
-} > >;
 
 export class PluginResolver {
   private static readonly log = Logging.createSource( 'plugin-resolver' );
@@ -34,8 +30,8 @@ export class PluginResolver {
     return graph;
   }
 
-  private static buildRequirements ( catalog: PluginCatalog ) : Requirements {
-    const req: Requirements = new Map();
+  private static buildRequirements ( catalog: PluginCatalog ) : PluginRequirements {
+    const req: PluginRequirements = new Map();
 
     for ( const list of catalog.values() ) {
       for ( const plugin of list ) {
@@ -51,7 +47,7 @@ export class PluginResolver {
     return req;
   }
 
-  private static detectMissing ( catalog: PluginCatalog, req: Requirements ) : string[] {
+  private static detectMissing ( catalog: PluginCatalog, req: PluginRequirements ) : string[] {
     const missing: string[] = [];
 
     for ( const [ id, list ] of req )
@@ -62,7 +58,7 @@ export class PluginResolver {
     return missing;
   }
 
-  private static detectConflicts ( catalog: PluginCatalog, req: Requirements ) : string[] {
+  private static detectConflicts ( catalog: PluginCatalog, req: PluginRequirements ) : string[] {
     const conflicts: string[] = [];
 
     for ( const [ id, list ] of req ) {
@@ -127,7 +123,7 @@ export class PluginResolver {
     return conflicts;
   }
 
-  private static selectVersions ( catalog: PluginCatalog, req: Requirements ) : PluginCatalog {
+  private static selectVersions ( catalog: PluginCatalog ) : PluginCatalog {
     const selected: PluginCatalog = new Map();
 
     for ( const [ id, list ] of catalog ) {
@@ -185,20 +181,18 @@ export class PluginResolver {
       this.log.debug( 'resolution failed', { errors: errCount } );
 
       return {
-        plugins: [], graph, error: new PluginResolveError(
+        ref: this.cacheRevision, plugins: [], graph,
+        error: new PluginResolveError(
           `resolution failed due to errors (${ errCount })`,
-          { context: {
-            graph, missing, conflicts, cycles,
-            overrides, errCount
-          } }
+          { context: { graph, missing, conflicts, cycles, overrides, errCount } }
         )
       };
     }
 
     this.log.debug( 'building plugin list ...' );
-    const selected = this.selectVersions( catalog, requirements );
+    const selected = this.selectVersions( catalog );
     const plugins = this.topologicalSort( graph, selected );
-    const result = { graph, plugins };
+    const result = { ref: this.cacheRevision, graph, plugins };
 
     this.cache = result;
     this.cacheRevision = revision;
