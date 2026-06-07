@@ -15,6 +15,8 @@ export const safeJsonStringify = ( value: unknown, space?: string | number ) : s
       return value;
     }, space );
   } catch ( err ) {
-    return `Unable to stringify value: ${ err instanceof Error ? err.message : String( err ) }`;
+    return `Unable to stringify value: ${
+      err instanceof Error ? err.message : String( err )
+    }`;
   }
 };
