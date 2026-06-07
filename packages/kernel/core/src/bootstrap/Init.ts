@@ -10,6 +10,15 @@ export class Init {
   private static readonly log = Logging.createSource( 'bootstrap' );
   private static readonly VERSION = 1;
 
+  private static freezeCtx ( ctx: UnitraContext ) {
+    Object.freeze( ctx );
+    Object.freeze( ctx.VERSION );
+    Object.freeze( ctx.hook );
+    Object.freeze( ctx.registry );
+    Object.freeze( ctx.service );
+    Object.freeze( ctx.factory );
+  }
+
   public static createCtx () : UnitraContext {
     this.log.debug( `creating Unitra context (vers. ${ this.VERSION }) ...` );
     const ctx = { VERSION: this.VERSION } as UnitraContext;
@@ -28,12 +37,7 @@ export class Init {
       ctx.factory = createFactoryContainer( ctx );
 
       this.log.debug( 'freezing context ...' );
-      Object.freeze( ctx );
-      Object.freeze( ctx.VERSION );
-      Object.freeze( ctx.hook );
-      Object.freeze( ctx.registry );
-      Object.freeze( ctx.service );
-      Object.freeze( ctx.factory );
+      this.freezeCtx( ctx );
 
       this.log.debug( 'context created successfully' );
       return ctx;
