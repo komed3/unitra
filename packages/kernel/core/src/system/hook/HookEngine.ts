@@ -1,11 +1,11 @@
-import type { HookCtx, HookEntries, HookHandler, HookId, HookImplMap, HookPipeline, HookValue } from '@unitra/types/core/hook';
+import type { HookCtx, HookEntries, HookHandler, HookId, HookImplMap, HookPipeline, HookValue, IHookEngine } from '@unitra/types/core/hook';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { HookError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
 import { HookCache } from './HookCache';
 import { HookStorage } from './HookStorage';
 
-export class HookEngine {
+export class HookEngine implements IHookEngine {
   private static readonly log = Logging.createSource( 'hook' );
   private readonly hooks = new HookStorage();
   private readonly cache = new HookCache();

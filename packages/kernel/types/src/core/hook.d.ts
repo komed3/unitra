@@ -49,7 +49,7 @@ export type HookEntries = Array< [
   ReadonlyArray< HookDef< HookId > >
 ] >;
 
-export interface IHook {
+export interface IHookEngine {
   invalidate ( id: HookId ) : void;
   add < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) : void;
   merge ( hooks: HookImplMap ) : void;
