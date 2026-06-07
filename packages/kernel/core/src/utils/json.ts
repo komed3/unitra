@@ -2,7 +2,7 @@ export const safeJsonStringify = ( value: unknown, space?: string | number ) : s
   try {
     const seen = new WeakSet< object >();
 
-    return JSON.stringify( value, ( _key: string, value: unknown ) => {
+    return JSON.stringify( value, ( _, value: unknown ) => {
       if ( value instanceof Map ) return Object.fromEntries( value );
       if ( value instanceof Set ) return Array.from( value );
       if ( typeof value === 'bigint' ) return value.toString();
