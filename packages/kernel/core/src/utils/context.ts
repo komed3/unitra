@@ -20,3 +20,8 @@ export const createContainer = < T extends Record< PropertyKey, unknown > > (
     key => [ key, () => create( key as keyof T ) ]
   ) ) as Container< T > );
 };
+
+export const createAccessor = < T > ( factory: () => T ) : ( () => T ) => {
+  let instance: T;
+  return () => instance ??= factory();
+};

@@ -1,8 +1,7 @@
-import type { HookAccessor, IHookEngine } from '@unitra/types/core/hook';
+import type { HookAccessor } from '@unitra/types/core/hook';
 import type { UnitraContext } from '@unitra/types/core/unitra';
+import { createAccessor } from '../../utils/context';
 import { HookEngine } from './HookEngine';
 
-export const createHookAccessor = ( ctx: UnitraContext ) : HookAccessor => {
-  let instance: IHookEngine;
-  return () => instance ??= new HookEngine( ctx );
-}
+export const createHookAccessor = ( ctx: UnitraContext ) : HookAccessor =>
+  createAccessor( () => new HookEngine( ctx ) );
