@@ -1,5 +1,5 @@
 import type { ParsedSemverRange, ParsedSemverVersion, SemverOperator, SemverRange, SemverVersion } from '@unitra/types/utils/semver';
-import { SemverError } from '../error';
+import { SemverError } from './error';
 
 export class Semver {
   private static readonly OPMATCH = /^(\^|~|>=|<=|>|<|=)/;
@@ -28,14 +28,16 @@ export class Semver {
     const [ semver, tag ] = version.split( '-', 2 );
     const parts = semver.split( '.' );
 
-    if ( parts.length !== 3 ) throw new SemverError( `invalid semantic version "${ version }"`,
+    if ( parts.length !== 3 ) throw new SemverError(
+      `invalid semantic version "${ version }"`,
       { context: { version, semver, tag, parts } }
     );
 
     const [ major, minor, patch ] = parts.map( Number );
 
     if ( Number.isNaN( major ) || Number.isNaN( minor ) || Number.isNaN( patch ) )
-      throw new SemverError( `invalid semantic version "${ version }"`,
+      throw new SemverError(
+        `invalid semantic version "${ version }"`,
         { context: { version, semver, tag, parts } }
       );
 

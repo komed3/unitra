@@ -7,7 +7,7 @@ export type JsonLogFormatterConfig = {
 };
 
 export class JsonLogFormatter extends LogFormatter< JsonLogFormatterConfig > {
-  public format ( entry: LogEntry ) : string {
+  public override format ( entry: LogEntry ) : string {
     return safeJsonStringify( entry, this.config.space );
   }
 }

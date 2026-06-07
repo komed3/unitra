@@ -22,7 +22,7 @@ export class MemoryLogHandler extends LogHandler< MemoryLogHandlerConfig > {
     return this.entries.reduce( ( acc, e ) => acc + +( e.level === LogLevel.WARN ), 0 );
   }
 
-  public write ( entry: LogEntry ) : void {
+  public override write ( entry: LogEntry ) : void {
     if ( this.config.minLevel !== undefined && entry.level < this.config.minLevel ) return;
 
     this.entries.push( entry );
