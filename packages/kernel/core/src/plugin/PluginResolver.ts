@@ -138,6 +138,12 @@ export class PluginResolver {
     return out;
   }
 
+  private static selectVersions ( catalog: PluginCatalog, req: Requirements ) : PluginCatalog {
+    const selected: PluginCatalog = new Map();
+
+    return selected;
+  }
+
   private static topologicalSort ( graph: PluginResolveGraph, catalog: PluginCatalog ) : PluginDefinition[] {
     const visited = new Set< string >();
     const result: PluginDefinition[] = [];
