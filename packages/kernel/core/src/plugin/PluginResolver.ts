@@ -57,11 +57,7 @@ export class PluginResolver {
     for ( const [ id, list ] of req )
       if ( ! catalog.has( id ) )
         for ( const r of list )
-          this.pushError(
-            missing,
-            `${ r.plugin.id } → missing ${ id }@${ r.range }`,
-            'not installed'
-          );
+          this.pushError( missing, `${ r.plugin.id } → missing ${ id }@${ r.range }`, 'not installed' );
 
     return missing;
   }
@@ -77,11 +73,7 @@ export class PluginResolver {
 
       for ( const r of list )
         if ( ! available.some( v => Semver.satisfies( v, r.range ) ) )
-          this.pushError(
-            conflicts,
-            `${ r.plugin.id } → conflict ${ id }@${ r.range }`,
-            'version mismatch'
-          );
+          this.pushError( conflicts, `${ r.plugin.id } → conflict ${ id }@${ r.range }`, 'version mismatch' );
     }
 
     return conflicts;
@@ -94,11 +86,7 @@ export class PluginResolver {
     const dfs = ( node: string ) => {
       if ( stack.has( node ) ) {
         const i = path.indexOf( node );
-        this.pushError(
-          cycles,
-          path.slice( i ).concat( node ).join( ' → ' ),
-          'cycle detected'
-        );
+        this.pushError( cycles, path.slice( i ).concat( node ).join( ' → ' ), 'cycle detected' );
 
         return;
       }
@@ -140,6 +128,16 @@ export class PluginResolver {
 
   private static selectVersions ( catalog: PluginCatalog, req: Requirements ) : PluginCatalog {
     const selected: PluginCatalog = new Map();
+
+    for ( const [ id, list ] of catalog ) {
+      const sorted = [ ...list ].sort( ( a, b ) => Semver.compareVersions( b.version, a.version ) );
+      const best = sorted[ 0 ];
+
+      selected.set( id, [ best ] );
+
+      for ( let i = 1; i < sorted.length; i++ )
+        this.log.debug( `skip plugin "${ sorted[ i ].id }@${ sorted[ i ].version }" (using ${ best.version })` );
+    }
 
     return selected;
   }
