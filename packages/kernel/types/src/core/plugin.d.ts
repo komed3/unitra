@@ -50,7 +50,13 @@ export type PluginCatalog = Readonly< Map< string, PluginDefinition[] > >;
 
 export type PluginResolveGraph = Readonly< Map< string, Set< string > > >;
 
+export type PluginRequirements = Map< string, Array< {
+  plugin: PluginDefinition;
+  range: SemverRange;
+} > >;
+
 export type PluginResolveResult = {
+  readonly ref: number;
   plugins: ReadonlyArray< PluginDefinition >;
   graph: PluginResolveGraph;
   error?: IUnitraError< ErrorCode.PLUGIN_RESOLVE_ERROR >;
