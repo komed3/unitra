@@ -1,5 +1,6 @@
 import type { HookCtx, HookEntries, HookHandler, HookId, HookImplMap, HookPipeline, HookValue } from '@unitra/types/core/hook';
 import type { UnitraContext } from '@unitra/types/core/unitra';
+import { HookError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
 import { HookCache } from './HookCache';
 import { HookStorage } from './HookStorage';
@@ -50,5 +51,17 @@ export class HookEngine {
 
       this.invalidate( id );
     }
+  }
+
+  public run < K extends HookId > ( id: K, hookCtx: HookCtx< K > ) : void;
+  public run < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value: HookValue< K > ) : HookValue< K >;
+
+  public run < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K > {
+    HookEngine.log.debug( `run "${ id }"` );
+
+    try { return this.getPipeline( id )( hookCtx, value ) as HookValue< K > }
+    catch ( err ) { throw new HookError( `failed to run hook for "${ id }"`, {
+      context: { id, hookCtx, value }, cause: err
+    } ) }
   }
 }
