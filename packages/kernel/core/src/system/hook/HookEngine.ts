@@ -1,3 +1,4 @@
+import type { HookCtx, HookId, HookPipeline, HookValue } from '@unitra/types/core/hook';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { Logging } from '../../utils/logging';
 import { HookCache } from './HookCache';
@@ -9,4 +10,19 @@ export class HookEngine {
   private readonly cache = new HookCache();
 
   constructor ( private readonly ctx: UnitraContext ) {}
+
+  private getPipeline < K extends HookId > ( id: K ) : HookPipeline< K > {
+    const cached = this.cache.get( id );
+    if ( cached ) return cached;
+
+    const list = [ ...( this.hooks.get( id ) ?? [] ) ].sort(
+      ( a, b ) => ( b.priority ?? 0 ) - ( a.priority ?? 0 )
+    );
+
+    const pipeline = ( hookCtx: HookCtx< K >, value?: HookValue< K > ) =>
+      list.reduce( ( v, { handler } ) => handler( this.ctx, hookCtx, v ) as HookValue< K >, value );
+
+    this.cache.set( id, pipeline );
+    return pipeline;
+  }
 }
