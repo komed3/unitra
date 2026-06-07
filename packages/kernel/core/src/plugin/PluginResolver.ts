@@ -109,9 +109,10 @@ export class PluginResolver {
 
   private static detectOverrideConflicts ( catalog: PluginCatalog ) : Record< string, string[] > {
     const index = new Map< string, Set< string > >();
+    const out: Record< string, string[] > = {};
 
     const add = ( id: string, ns: string, key: string ) =>
-      index.set( `${ns}.${key}`, ( index.get( `${ns}.${key}` ) ?? new Set() ).add( id ) );
+      index.set( `${ ns }.${ key }`, ( index.get( `${ ns }.${ key }` ) ?? new Set() ).add( id ) );
 
     for ( const list of catalog.values() )
       for ( const { id, overrides } of list )
@@ -119,9 +120,14 @@ export class PluginResolver {
           for ( const k of Object.keys( map ?? {} ) )
             add( id, ns, k );
 
-    const out: Record< string, string[] > = {};
-    for ( const [ k, v ] of index )
-      if ( v.size > 1 ) out[ k ] = [ ...v ];
+    for ( const [ key, v ] of index ) {
+      if ( v.size <= 1 ) continue;
+
+      const list = [ ...v ];
+      out[ key ] = list;
+
+      this.log.error( `override conflict :: ${ key } → ${ list.join( ', ' ) }` );
+    }
 
     return out;
   }
