@@ -55,3 +55,5 @@ export interface IHookEngine {
   merge ( hooks: HookImplMap ) : void;
   run < K extends HookId > ( id: K, hookCtx: HookCtx< K >, value?: HookValue< K > ) : HookValue< K >;
 }
+
+export type HookAccessor = () => IHookEngine;
