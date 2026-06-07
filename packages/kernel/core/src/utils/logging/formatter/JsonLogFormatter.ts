@@ -1,5 +1,5 @@
 import type { LogEntry } from '@unitra/types/utils/logging';
-import { safeJsonStringify } from '../../fn/json';
+import { safeJsonStringify } from '../../json';
 import { LogFormatter } from './LogFormatter';
 
 export type JsonLogFormatterConfig = {

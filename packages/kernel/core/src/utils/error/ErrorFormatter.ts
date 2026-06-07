@@ -1,5 +1,5 @@
 import type { ErrorFormatterConfig, SerializedError } from '@unitra/types/utils/error';
-import { safeJsonStringify } from '../fn/json';
+import { safeJsonStringify } from '../json';
 import { serializeError } from './serializeError';
 
 export class ErrorFormatter {
