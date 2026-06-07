@@ -1,4 +1,4 @@
-import type { HookCtx, HookId, HookPipeline, HookValue } from '@unitra/types/core/hook';
+import type { HookCtx, HookEntries, HookHandler, HookId, HookImplMap, HookPipeline, HookValue } from '@unitra/types/core/hook';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { Logging } from '../../utils/logging';
 import { HookCache } from './HookCache';
@@ -24,5 +24,31 @@ export class HookEngine {
 
     this.cache.set( id, pipeline );
     return pipeline;
+  }
+
+  public invalidate ( id: HookId ) : void {
+    if ( this.cache.delete( id ) )
+      HookEngine.log.debug( `invalidate cached pipeline for "${ id }"` );
+  }
+  
+  public add < K extends HookId > ( id: K, handler: HookHandler< K >, priority?: number ) : void {
+    HookEngine.log.debug( `add hook for "${ id }" with priority ${ priority ?? 0 }` );
+
+    const list = this.hooks.get( id ) || [];
+    list.push( { handler, priority } );
+    this.hooks.set( id, list );
+
+    this.invalidate( id );
+  }
+
+  public merge ( hooks: HookImplMap ) : void {
+    for ( const [ id, incoming ] of Object.entries( hooks ) as HookEntries ) {
+      if ( ! incoming || incoming.length === 0 ) continue;
+
+      const existing = this.hooks.get( id ) ?? [];
+      this.hooks.set( id, [ ...existing, ...incoming ] );
+
+      this.invalidate( id );
+    }
   }
 }
