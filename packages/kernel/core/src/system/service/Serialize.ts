@@ -24,7 +24,7 @@ export class Serialize implements ISerialize {
         .map( ( n ) => n.value ).join( '*' )
     }`;
 
-    return this.ctx.core.hook().run( 'core.service.serialize', { state }, body );
+    return this.ctx.hook().run( 'core.service.serialize', { state }, body );
   }
 
   public fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string {
