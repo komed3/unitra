@@ -1,5 +1,5 @@
 import type { ParsedSemverRange, ParsedSemverVersion, SemverOperator, SemverRange, SemverVersion } from '@unitra/types/utils/semver';
-import { SemverError } from './error';
+import { SemverError } from '../error';
 
 export class Semver {
   private static readonly OPMATCH = /^(\^|~|>=|<=|>|<|=)/;
