@@ -196,7 +196,9 @@ export class PluginResolver {
       };
     }
 
-    const plugins = this.topologicalSort( graph, catalog );
+    this.log.debug( 'building plugin list ...' );
+    const selected = this.selectVersions( catalog, requirements );
+    const plugins = this.topologicalSort( graph, selected );
     const result = { graph, plugins };
 
     this.cache = result;
