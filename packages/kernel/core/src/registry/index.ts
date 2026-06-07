@@ -23,4 +23,4 @@ export const createRegistryContainer = (
   );
 
 export const getTypedRegistry = < K extends RegistryKey > ( ctx: UnitraContext, key: K ) =>
-  ctx.registry[ key ] as unknown as IRegistry< RefOf< K > >;
+  ctx.registry[ key ]() as unknown as IRegistry< RefOf< K > >;
