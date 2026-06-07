@@ -55,12 +55,15 @@ export type DefOf< K extends RegistryKey > = RegistryMap[ K ][ 'def' ];
 export type LikeOf< K extends RegistryKey > = RegistryMap[ K ][ 'like' ];
 export type InputOf< K extends RegistryKey > = RegistryMap[ K ][ 'input' ];
 
+export type RegistryContent< Ref extends AnyRef > = Readonly< Record< Ref, RegistryDef< Ref > > >;
+export type RegistryEntries< Ref extends AnyRef > = Iterable< [ Ref, RegistryDef< Ref > ] >;
+
 export interface IRegistry< Ref extends AnyRef > {
   readonly size: number;
   get < R extends Ref > ( ref: R ) : RegistryDef< R > | undefined;
   has ( ref: Ref ) : boolean;
   set < R extends Ref > ( ref: R, def: RegistryDef< R > ) : void;
-  bulk ( input: Iterable< [ Ref, RegistryDef< Ref > ] > ) : void;
+  bulk ( input: RegistryContent< Ref > | RegistryEntries< Ref > ) : void;
   entries () : IterableIterator< [ Ref, RegistryDef< Ref > ] >;
   values () : IterableIterator< RegistryDef< Ref > >;
   keys () : IterableIterator< Ref >;

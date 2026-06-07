@@ -1,4 +1,4 @@
-import type { AnyRef, IRegistry, RegistryDef } from '@unitra/types/core/registry';
+import type { AnyRef, IRegistry, RegistryContent, RegistryDef, RegistryEntries } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { RegistryStorage } from './RegistryStorage';
 
@@ -23,8 +23,9 @@ export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
     this.items.set( ref, def );
   }
 
-  public bulk ( input: Iterable< [ Ref, RegistryDef< Ref > ] > ) : void {
-    for ( const [ ref, def ] of input ) this.items.set( ref, def );
+  public bulk ( input: RegistryContent< Ref > | RegistryEntries< Ref > ) : void {
+    const entries = ( Symbol.iterator in Object( input ) ? input : Object.entries( input ) ) as RegistryEntries< Ref >;
+    for( const [ ref, def ] of entries ) this.items.set( ref, def );
   }
 
   public entries () : IterableIterator< [ Ref, RegistryDef< Ref > ] > {
