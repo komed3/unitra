@@ -57,7 +57,10 @@ export class PluginResolver {
     for ( const [ id, list ] of req )
       if ( ! catalog.has( id ) )
         for ( const r of list )
-          this.pushError( missing, `${ r.plugin.id } → missing ${ id }@${ r.range }`, 'not installed' );
+          this.pushError(
+            missing, `${ r.plugin.id } → missing ${ id }@${ r.range }`,
+            'not installed'
+          );
 
     return missing;
   }
@@ -73,7 +76,10 @@ export class PluginResolver {
 
       for ( const r of list )
         if ( ! available.some( v => Semver.satisfies( v, r.range ) ) )
-          this.pushError( conflicts, `${ r.plugin.id } → conflict ${ id }@${ r.range }`, 'version mismatch' );
+          this.pushError(
+            conflicts, `${ r.plugin.id } → conflict ${ id }@${ r.range }`,
+            'version mismatch'
+          );
     }
 
     return conflicts;
@@ -86,7 +92,10 @@ export class PluginResolver {
     const dfs = ( node: string ) => {
       if ( stack.has( node ) ) {
         const i = path.indexOf( node );
-        this.pushError( cycles, path.slice( i ).concat( node ).join( ' → ' ), 'cycle detected' );
+        this.pushError(
+          cycles, path.slice( i ).concat( node ).join( ' → ' ),
+          'cycle detected'
+        );
 
         return;
       }
@@ -107,9 +116,9 @@ export class PluginResolver {
     return cycles;
   }
 
-  private static detectOverrideConflicts ( catalog: PluginCatalog ) : Record< string, string[] > {
+  private static detectOverrideConflicts ( catalog: PluginCatalog ) : string[] {
     const index = new Map< string, Set< string > >();
-    const out: Record< string, string[] > = {};
+    const conflicts: string[] = [];
 
     const add = ( id: string, ns: string, key: string ) =>
       index.set( `${ ns }.${ key }`, ( index.get( `${ ns }.${ key }` ) ?? new Set() ).add( id ) );
@@ -120,16 +129,14 @@ export class PluginResolver {
           for ( const k of Object.keys( map ?? {} ) )
             add( id, ns, k );
 
-    for ( const [ key, v ] of index ) {
-      if ( v.size <= 1 ) continue;
+    for ( const [ key, list ] of index )
+      if ( list.size > 1 )
+        this.pushError(
+          conflicts, `override conflict :: ${ key } → ${ [ ...list ].join( ', ' ) }`,
+          'override conflict'
+        );
 
-      const list = [ ...v ];
-      out[ key ] = list;
-
-      this.log.error( `override conflict :: ${ key } → ${ list.join( ', ' ) }` );
-    }
-
-    return out;
+    return conflicts;
   }
 
   private static selectVersions ( catalog: PluginCatalog, req: Requirements ) : PluginCatalog {
@@ -184,9 +191,7 @@ export class PluginResolver {
     const conflicts = this.detectConflicts( catalog, requirements );
     const cycles = this.detectCycles( graph );
     const overrides = this.detectOverrideConflicts( catalog );
-
-    const errCount = missing.length + conflicts.length +
-      cycles.length + Object.keys( overrides ).length;
+    const errCount = missing.length + conflicts.length + cycles.length + overrides.length;
 
     if ( errCount ) {
       this.log.debug( 'resolution failed', { errors: errCount } );
