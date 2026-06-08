@@ -15,8 +15,8 @@ export default ( {
   dependencies: {
     '@unitra/plugin-quantity-base': '^0.0.1'
   },
-  contributions: {
-    units: [
+  contribs: {
+    unit: [
       siBaseUnitRegistry
     ]
   }

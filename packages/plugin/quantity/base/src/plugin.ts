@@ -12,8 +12,8 @@ export default ( {
     author: 'Paul Köhler (komed3)',
     repo: 'https://github.com/komed3/unitra/tree/master/packages/plugin/quantity/base'
   },
-  contributions: {
-    quantities: [
+  contribs: {
+    quantity: [
       baseQuantityRegistry
     ]
   }
