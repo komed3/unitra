@@ -1,4 +1,4 @@
-import { AnyRef } from '@unitra/types/core/registry';
+import type { AnyRef } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 
 export class Parser {
@@ -10,6 +10,10 @@ export class Parser {
 
       for ( const entry of reg().values() ) {
         map.set( entry.id, entry.id );
+
+        if ( 'aliases' in entry && entry.aliases?.length )
+          for ( const alias of entry.aliases )
+            map.set( alias, entry.id );
       }
     }
   }
