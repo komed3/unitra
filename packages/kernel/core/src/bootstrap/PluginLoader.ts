@@ -40,7 +40,7 @@ export class PluginLoader {
     const hooks = ( plugin: PluginDefinition ) : void => {
       if ( ! plugin.hooks ) return;
 
-      this.log.debug( `merging hooks of plugin "${ plugin.id }" ...` );
+      this.log.debug( `register hooks for [ ${ Object.keys( plugin.hooks ).join( ', ' ) } ] ...` );
       ctx.hook().merge( plugin.hooks );
     };
 
@@ -50,7 +50,7 @@ export class PluginLoader {
       for ( const key of Object.keys( plugin.contribs ) as RegistryKey[] ) {
         if ( ! plugin.contribs[ key ]?.length ) continue;
 
-        this.log.debug( `registering ${ key } lib of plugin "${ plugin.id }" ...` );
+        this.log.debug( `registering ${ key } contributions ...` );
         const registry = getTypedRegistry( ctx, key );
         for ( const map of plugin.contribs[ key ] ) registry.bulk( map );
       }
