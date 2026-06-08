@@ -37,27 +37,30 @@ export class PluginLoader {
   public static load ( plugins: ReadonlyArray< PluginDefinition >, ctx: UnitraContext ) : void {
     this.log.debug( 'loading plugins ...' );
 
-    const contrib = ( plugin: PluginDefinition ) : void => {
+    const hooks = ( plugin: PluginDefinition ) : void => {
+      if ( ! plugin.hooks ) return;
+
+      this.log.debug( `merging hooks of plugin "${ plugin.id }" ...` );
+      ctx.hook().merge( plugin.hooks );
+    };
+
+    const contribs = ( plugin: PluginDefinition ) : void => {
       if ( ! plugin.contribs ) return;
 
       for ( const key of Object.keys( plugin.contribs ) as RegistryKey[] ) {
         if ( ! plugin.contribs[ key ]?.length ) continue;
 
-        this.log.debug( `registering ${ key } contributions of plugin "${ plugin.id }" ...` );
+        this.log.debug( `registering ${ key } lib of plugin "${ plugin.id }" ...` );
         const registry = getTypedRegistry( ctx, key );
         for ( const map of plugin.contribs[ key ] ) registry.bulk( map );
       }
     };
 
     for ( const plugin of plugins ) {
-      this.log.debug( `loading plugin "${ plugin.id }" ...` );
+      this.log.debug( `loading plugin "${ plugin.id }@${ plugin.version }" ...` );
 
-      if ( plugin.hooks ) {
-        this.log.debug( `merging hooks of plugin "${ plugin.id }" ...` );
-        ctx.hook().merge( plugin.hooks );
-      }
-
-      contrib( plugin );
+      hooks( plugin );
+      contribs( plugin );
     }
 
     this.log.debug( 'plugins loaded' );
