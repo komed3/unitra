@@ -11,3 +11,7 @@ export type UnitraContext = {
   service: ServiceContainer;
   factory: FactoryContainer;
 };
+
+export interface IUnitra {
+  clone () : IUnitra;
+}

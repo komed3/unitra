@@ -57,6 +57,7 @@ export class Init {
     Object.freeze( ctx );
 
     Object.freeze( ctx.VERSION );
+    Object.freeze( ctx.REVISION );
     Object.freeze( ctx.hook );
     Object.freeze( ctx.registry );
     Object.freeze( ctx.service );

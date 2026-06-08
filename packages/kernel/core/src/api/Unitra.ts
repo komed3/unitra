@@ -1,24 +1,26 @@
-import type { UnitraContext } from '@unitra/types/core/unitra';
+import type { IUnitra, UnitraContext } from '@unitra/types/core/unitra';
 import { Init } from '../bootstrap';
 import { Logging } from '../utils/logging';
 
-export class Unitra {
+export class Unitra implements IUnitra {
   private static readonly log = Logging.createSource( 'unitra' );
   private static cacheRevision: number = -1;
-  private static cache: Unitra | null = null;
+  private static cache: IUnitra | null = null;
 
   private readonly ctx: UnitraContext;
 
   private constructor () {
     this.ctx = Init.run();
-    this.ctx.hook().run( 'core.unitra.create', {} );
+    this.ctx.hook().run( 'core.unitra.create', { self: this } );
+
+    Unitra.log.debug( 'Unitra instance created' );
   }
 
-  public clone () : Unitra {
+  public clone () : IUnitra {
     return Object.assign( Object.create( Object.getPrototypeOf( this ) ), this );
   }
 
-  public static getInstance () : Unitra {
+  public static getInstance () : IUnitra {
     if ( ! this.cache || this.cacheRevision !== Init.revision ) {
       this.log.debug( 'cache invalidated, create new instance' );
 

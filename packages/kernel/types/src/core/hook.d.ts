@@ -1,5 +1,5 @@
 import type { ReferenceState } from '../node';
-import type { UnitraContext } from './unitra';
+import type { IUnitra, UnitraContext } from './unitra';
 
 export interface HookRegistry {
   'core.bootstrap.init': {
@@ -17,7 +17,9 @@ export interface HookRegistry {
     };
   };
   'core.unitra.create': {
-    ctx: {}
+    ctx: {
+      self: IUnitra;
+    }
   };
 }
 
