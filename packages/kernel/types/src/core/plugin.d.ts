@@ -50,7 +50,7 @@ export type PluginRequirements = Map< string, Array< {
 } > >;
 
 export type PluginResolveResult = {
-  readonly ref: number;
+  readonly revId: number;
   plugins: ReadonlyArray< PluginDefinition >;
   graph: PluginResolveGraph;
   error?: IUnitraError< ErrorCode.PLUGIN_RESOLVE_ERROR >;

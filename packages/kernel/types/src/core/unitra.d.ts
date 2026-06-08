@@ -5,6 +5,7 @@ import type { ServiceContainer } from './service';
 
 export type UnitraContext = {
   readonly VERSION: 1;
+  readonly REVISION: number;
   hook: HookAccessor;
   registry: RegistryContainer;
   service: ServiceContainer;

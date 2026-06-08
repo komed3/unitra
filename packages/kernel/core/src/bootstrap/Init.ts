@@ -11,25 +11,31 @@ import { PluginResolver } from './PluginResolver';
 
 export class Init {
   private static readonly log = Logging.createSource( 'bootstrap' );
+  private static cacheRevision: number = -1;
 
   public static get VERSION () : number {
     return 1;
   }
 
+  public static get REVISION () : number {
+    return this.cacheRevision;
+  }
+
   private static getPlugins () : ReadonlyArray< PluginDefinition > {
-    const { plugins, error } = PluginResolver.resolve();
+    const { revId, plugins, error } = PluginResolver.resolve();
 
     if ( error ) {
       console.error( error.format() );
       throw error;
     }
 
+    this.cacheRevision = revId;
     return plugins;
   }
 
   private static createCtx () : UnitraContext {
     this.log.debug( `create Unitra context (vers. ${ this.VERSION }) ...` );
-    return { VERSION: this.VERSION } as UnitraContext;
+    return { VERSION: this.VERSION, REVISION: this.REVISION } as UnitraContext;
   }
 
   private static mountServices ( ctx: UnitraContext, overrides: PluginOverrides ) : void {

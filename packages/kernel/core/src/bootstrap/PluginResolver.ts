@@ -181,7 +181,7 @@ export class PluginResolver {
       this.log.debug( 'resolution failed', { errors: errCount } );
 
       return {
-        ref: this.cacheRevision, plugins: [], graph,
+        revId: this.cacheRevision, plugins: [], graph,
         error: new PluginResolveError(
           `resolution failed due to errors (${ errCount })`,
           { context: { graph, missing, conflicts, cycles, overrides, errCount } }
@@ -192,7 +192,7 @@ export class PluginResolver {
     this.log.debug( 'building plugin list ...' );
     const selected = this.selectVersions( catalog );
     const plugins = this.topologicalSort( graph, selected );
-    const result = { ref: this.cacheRevision, graph, plugins };
+    const result = { revId: this.cacheRevision, graph, plugins };
 
     this.cache = result;
     this.cacheRevision = revision;
