@@ -16,9 +16,7 @@ export class Init {
 
   private static createCtx () : UnitraContext {
     this.log.debug( `create Unitra context (vers. ${ this.VERSION }) ...` );
-    const ctx = { VERSION: this.VERSION } as UnitraContext;
-
-    return ctx;
+    return { VERSION: this.VERSION } as UnitraContext;
   }
 
   private static mountServices ( ctx: UnitraContext, overrides: PluginOverrides ) : void {
@@ -26,13 +24,13 @@ export class Init {
     ctx.hook = createHookAccessor( ctx );
 
     this.log.debug( 'mount registry container ...' );
-    ctx.registry = createRegistryContainer( ctx );
+    ctx.registry = createRegistryContainer( ctx, overrides.registry );
 
     this.log.debug( 'mount service container ...' );
-    ctx.service = createServiceContainer( ctx );
+    ctx.service = createServiceContainer( ctx, overrides.service );
 
     this.log.debug( 'mount factory container ...' );
-    ctx.factory = createFactoryContainer( ctx );
+    ctx.factory = createFactoryContainer( ctx, overrides.factory );
   }
 
   private static freezeCtx ( ctx: UnitraContext ) : void {
@@ -50,6 +48,7 @@ export class Init {
     try {
       const ctx = this.createCtx();
       const overrides = {} as PluginOverrides;
+
       this.mountServices( ctx, overrides );
       this.freezeCtx( ctx );
 
