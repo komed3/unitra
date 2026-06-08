@@ -1,6 +1,9 @@
+import type { IUnitFactory } from '@unitra/types/core/factory';
+import type { IRegistry, RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { IAssert, IResolve, ISerialize } from '@unitra/types/core/service';
 import type { IUnitra, UnitraContext } from '@unitra/types/core/unitra';
 import { Init } from '../bootstrap';
+import { getTypedRegistry } from '../system/registry';
 import { Logging } from '../utils/logging';
 
 export class Unitra implements IUnitra {
@@ -25,6 +28,10 @@ export class Unitra implements IUnitra {
     Unitra.log.debug( 'Unitra instance created' );
   }
 
+  public registry < K extends RegistryKey > ( key: K ) : IRegistry< RefOf< K > > {
+    return getTypedRegistry( this.ctx, key );
+  }
+
   public assert () : IAssert {
     return this.ctx.service.assert();
   }
@@ -35,6 +42,10 @@ export class Unitra implements IUnitra {
 
   public serialize () : ISerialize {
     return this.ctx.service.serialize();
+  }
+
+  public unit () : IUnitFactory {
+    return this.ctx.factory.unit();
   }
 
   public clone () : IUnitra {
