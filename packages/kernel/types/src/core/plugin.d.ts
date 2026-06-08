@@ -1,13 +1,9 @@
 import type { ErrorCode } from '@unitra/dict/utils';
-import type { ConstantMap } from '../def/constant';
-import type { PrefixMap } from '../def/prefix';
-import type { QuantityMap } from '../def/quantity';
-import type { UnitMap } from '../def/unit';
 import type { IUnitraError } from '../utils/error';
 import type { SemverRange, SemverVersion } from '../utils/semver';
 import type { FactoryFactoryMap } from './factory';
 import type { HookImplMap } from './hook';
-import type { RegistryFactoryMap } from './registry';
+import type { MapOf, RegistryFactoryMap, RegistryKey } from './registry';
 import type { ServiceFactoryMap } from './service';
 
 export type DependencyMap = Readonly< Record< string, SemverRange > >;
@@ -22,11 +18,9 @@ export type PluginMeta = {
   homepage?: string;
 };
 
-export type PluginContributions = {
-  prefixes?: ReadonlyArray< PrefixMap >;
-  quantities?: ReadonlyArray< QuantityMap >;
-  units?: ReadonlyArray< UnitMap >;
-  constants?: ReadonlyArray< ConstantMap >;
+export type PluginContribs = {
+  [ K in RegistryKey ]?:
+    ReadonlyArray< MapOf< K > >;
 };
 
 export type PluginOverrides = {
@@ -40,7 +34,7 @@ export type PluginDefinition = {
   readonly version: SemverVersion;
   meta: PluginMeta;
   dependencies?: DependencyMap;
-  contributions?: PluginContributions;
+  contribs?: PluginContribs;
   hooks?: HookImplMap;
   overrides?: PluginOverrides;
 };
