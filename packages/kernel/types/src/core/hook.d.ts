@@ -2,6 +2,9 @@ import type { ReferenceState } from '../node';
 import type { UnitraContext } from './unitra';
 
 export interface HookRegistry {
+  'core.bootstrap.init': {
+    ctx: {};
+  };
   'core.factory.unit.next': {
     ctx: {
       state: ReferenceState;

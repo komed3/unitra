@@ -28,10 +28,14 @@ export class Init {
   }
 
   public static run () : UnitraContext {
-    try{
+    try {
       const ctx = this.createCtx();
       this.freezeCtx( ctx );
 
+      this.log.debug( 'context created successfully' );
+      this.log.debug( 'Unitra is now in ready state' );
+
+      ctx.hook().run( 'core.bootstrap.init', {} );
       return ctx;
     } catch ( err ) {
       this.log.error( 'failed to create context' );
