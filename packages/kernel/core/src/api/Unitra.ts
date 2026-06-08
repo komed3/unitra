@@ -14,6 +14,10 @@ export class Unitra implements IUnitra {
     return this.ctx.VERSION;
   }
 
+  public get root () : UnitraContext {
+    return this.ctx;
+  }
+
   private constructor () {
     this.ctx = Init.run();
     this.ctx.hook().run( 'core.unitra.create', { self: this } );

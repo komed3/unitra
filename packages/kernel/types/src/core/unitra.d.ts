@@ -14,6 +14,7 @@ export type UnitraContext = {
 
 export interface IUnitra {
   readonly version: number;
+  readonly root: UnitraContext;
   assert () : IAssert;
   resolve () : IResolve;
   serialize () : ISerialize;
