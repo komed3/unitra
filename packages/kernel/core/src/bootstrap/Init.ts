@@ -20,7 +20,7 @@ export class Init {
     const { plugins, error } = PluginResolver.resolve();
 
     if ( error ) {
-      console.log( error.format() );
+      console.error( error.format() );
       throw error;
     }
 

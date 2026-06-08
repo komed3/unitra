@@ -6,7 +6,27 @@ export class PluginLoader {
   private static readonly log = Logging.createSource( 'plugin-loader' );
 
   public static overrides ( plugins: ReadonlyArray< PluginDefinition > ) : PluginOverrides {
-    const overrides = {} as PluginOverrides;
+    this.log.debug( 'resolving plugin overrides ...' );
+    const overrides: PluginOverrides = {};
+
+    const merge = < T extends object > (
+      target: T, source: Partial< T > | undefined,
+      plugin: PluginDefinition, type: string
+    ) : void => {
+      if ( ! source ) return;
+
+      for ( const key of Object.keys( source ) )
+        this.log.debug( `plugin "${ plugin.id }" overrides ${ type }.${ key }` );
+
+      Object.assign( target, source );
+    };
+
+    for ( const plugin of plugins ) {
+      merge( overrides.factory ??= {}, plugin.overrides?.factory, plugin, 'factory' );
+      merge( overrides.registry ??= {}, plugin.overrides?.registry, plugin, 'registry' );
+      merge( overrides.service ??= {}, plugin.overrides?.service, plugin, 'service' );
+    }
+
     return overrides;
   }
 
