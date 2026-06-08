@@ -1,22 +1,22 @@
+import { AnyRef } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
-import { UnitRef } from '@unitra/types/def/unit';
-import { safeJsonStringify } from '../../utils/json';
 
 export class Parser {
-  private readonly cache: any;
+  private readonly tokens: any;
 
-  private populateCache () : void {
-    const units = new Map< string, UnitRef >();
-    for ( const unit of this.ctx.registry.unit().values() ) {
-      units.set( unit.id, unit.id );
-      for ( const alias of unit.aliases ?? [] ) units.set( alias, unit.id );
+  private populateTokens () : void {
+    for ( const [ key, reg ] of Object.entries( this.ctx.registry ) ) {
+      const map = new Map< string, AnyRef >();
+
+      for ( const entry of reg().values() ) {
+        map.set( entry.id, entry.id );
+      }
     }
-    console.log( safeJsonStringify( units ) );
   }
 
   constructor ( private readonly ctx: UnitraContext ) {}
 
   public test () {
-    this.populateCache();
+    this.populateTokens();
   }
 }
