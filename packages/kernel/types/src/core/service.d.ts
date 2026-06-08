@@ -22,10 +22,13 @@ export interface ISerialize {
   fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string;
 }
 
+export interface IParser {}
+
 export type ServiceInstanceMap = {
   assert: IAssert;
   resolve: IResolve;
   serialize: ISerialize;
+  parser: IParser;
 };
 
 export type ServiceFactoryMap = ContainerFactoryMap< ServiceInstanceMap >;
