@@ -89,9 +89,3 @@ export class PluginRegistry {
     return catalog;
   }
 }
-
-export const addPlugins = ( ...plugins: PluginDefinition[] ) => PluginRegistry.add( ...plugins );
-export const addPlugin = ( plugin: PluginDefinition ) => PluginRegistry.add( plugin );
-export const removePlugin = ( id: string, version?: SemverVersion ) => PluginRegistry.remove( id, version );
-export const hasPlugin = ( id: string, version?: SemverVersion ) => PluginRegistry.has( id, version );
-export const listPlugins = () => PluginRegistry.list();
