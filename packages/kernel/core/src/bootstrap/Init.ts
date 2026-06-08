@@ -1,11 +1,19 @@
 import type { UnitraContext } from '@unitra/types/core/unitra';
+import { InitError } from '../utils/error';
 import { Logging } from '../utils/logging';
 
 export class Init {
   private static readonly log = Logging.createSource( 'bootstrap' );
 
-  public get VERSION () : number {
+  public static get VERSION () : number {
     return 1;
+  }
+
+  private static createCtx () : UnitraContext {
+    this.log.debug( `create Unitra context (vers. ${ this.VERSION }) ...` );
+    const ctx = { VERSION: this.VERSION } as UnitraContext;
+
+    return ctx;
   }
 
   private static freezeCtx ( ctx: UnitraContext ) {
@@ -17,5 +25,17 @@ export class Init {
     Object.freeze( ctx.registry );
     Object.freeze( ctx.service );
     Object.freeze( ctx.factory );
+  }
+
+  public static run () : UnitraContext {
+    try{
+      const ctx = this.createCtx();
+      this.freezeCtx( ctx );
+
+      return ctx;
+    } catch ( err ) {
+      this.log.error( 'failed to create context' );
+      throw new InitError( 'failed to create context', { context: {}, cause: err } );
+    }
   }
 }
