@@ -1,7 +1,7 @@
 import type { FactoryContainer } from './factory';
 import type { HookAccessor } from './hook';
 import type { RegistryContainer } from './registry';
-import type { ServiceContainer } from './service';
+import type { IAssert, IResolve, ISerialize, ServiceContainer } from './service';
 
 export type UnitraContext = {
   readonly VERSION: 1;
@@ -13,5 +13,9 @@ export type UnitraContext = {
 };
 
 export interface IUnitra {
+  readonly version: number;
+  assert () : IAssert;
+  resolve () : IResolve;
+  serialize () : ISerialize;
   clone () : IUnitra;
 }
