@@ -1,10 +1,10 @@
-import type { AnyRef } from '@unitra/types/core/registry';
+import type { AnyRef, IRegistry, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 
 export class Parser {
-  private readonly tokens: any;
+  private readonly tokenCache = new Map< RegistryKey, Map< string, AnyRef > >();
 
-  private populateTokens () : void {
+  private populateTokenCache () : void {
     for ( const [ key, reg ] of Object.entries( this.ctx.registry ) ) {
       const map = new Map< string, AnyRef >();
 
@@ -15,12 +15,10 @@ export class Parser {
           for ( const alias of entry.aliases )
             map.set( alias, entry.id );
       }
+
+      this.tokenCache.set( key as RegistryKey, map );
     }
   }
 
   constructor ( private readonly ctx: UnitraContext ) {}
-
-  public test () {
-    this.populateTokens();
-  }
 }
