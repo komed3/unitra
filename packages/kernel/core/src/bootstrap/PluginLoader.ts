@@ -16,7 +16,9 @@ export class PluginLoader {
       if ( ! source ) return;
 
       for ( const key of Object.keys( source ) )
-        this.log.debug( `plugin "${ plugin.id }" overrides ${ type }.${ key }` );
+        this.log.debug( `plugin "${ plugin.id }" overrides ${ type }.${ key } -> ${
+          ( source[ key as keyof T ] as CallableFunction )?.name || 'anonymous'
+        }` );
 
       Object.assign( target, source );
     };
