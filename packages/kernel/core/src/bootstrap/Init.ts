@@ -1,4 +1,9 @@
+import type { PluginOverrides } from '@unitra/types/core/plugin';
 import type { UnitraContext } from '@unitra/types/core/unitra';
+import { createFactoryContainer } from '../system/factory';
+import { createHookAccessor } from '../system/hook';
+import { createRegistryContainer } from '../system/registry';
+import { createServiceContainer } from '../system/service';
 import { InitError } from '../utils/error';
 import { Logging } from '../utils/logging';
 
@@ -16,7 +21,21 @@ export class Init {
     return ctx;
   }
 
-  private static freezeCtx ( ctx: UnitraContext ) {
+  private static mountServices ( ctx: UnitraContext, overrides: PluginOverrides ) : void {
+    this.log.debug( 'mount hook accessor ...' );
+    ctx.hook = createHookAccessor( ctx );
+
+    this.log.debug( 'mount registry container ...' );
+    ctx.registry = createRegistryContainer( ctx );
+
+    this.log.debug( 'mount service container ...' );
+    ctx.service = createServiceContainer( ctx );
+
+    this.log.debug( 'mount factory container ...' );
+    ctx.factory = createFactoryContainer( ctx );
+  }
+
+  private static freezeCtx ( ctx: UnitraContext ) : void {
     Init.log.debug( 'freezing context ...' );
     Object.freeze( ctx );
 
@@ -30,6 +49,8 @@ export class Init {
   public static run () : UnitraContext {
     try {
       const ctx = this.createCtx();
+      const overrides = {} as PluginOverrides;
+      this.mountServices( ctx, overrides );
       this.freezeCtx( ctx );
 
       this.log.debug( 'context created successfully' );
