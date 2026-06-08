@@ -1,5 +1,7 @@
 import type { PluginDefinition, PluginOverrides } from '@unitra/types/core/plugin';
+import type { RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
+import { getTypedRegistry } from '../system/registry';
 import { Logging } from '../utils/logging';
 
 export class PluginLoader {
@@ -32,5 +34,32 @@ export class PluginLoader {
     return overrides;
   }
 
-  public static load ( plugins: ReadonlyArray< PluginDefinition >, ctx: UnitraContext ) : void {}
+  public static load ( plugins: ReadonlyArray< PluginDefinition >, ctx: UnitraContext ) : void {
+    this.log.debug( 'loading plugins ...' );
+
+    const contrib = ( plugin: PluginDefinition ) : void => {
+      if ( ! plugin.contribs ) return;
+
+      for ( const key of Object.keys( plugin.contribs ) as RegistryKey[] ) {
+        if ( ! plugin.contribs[ key ]?.length ) continue;
+
+        this.log.debug( `registering ${ key } contributions of plugin "${ plugin.id }" ...` );
+        const registry = getTypedRegistry( ctx, key );
+        for ( const map of plugin.contribs[ key ] ) registry.bulk( map );
+      }
+    };
+
+    for ( const plugin of plugins ) {
+      this.log.debug( `loading plugin "${ plugin.id }" ...` );
+
+      if ( plugin.hooks ) {
+        this.log.debug( `merging hooks of plugin "${ plugin.id }" ...` );
+        ctx.hook().merge( plugin.hooks );
+      }
+
+      contrib( plugin );
+    }
+
+    this.log.debug( 'plugins loaded' );
+  }
 }
