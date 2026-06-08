@@ -24,7 +24,7 @@
   ],
   "exports": {
     ".": "./dist/index.js",
-    "./plugin": "./dist/plugin/index.js",
+    "./bootstrap": "./dist/bootstrap/index.js",
     "./utils": "./dist/utils/index.js"
   },
   "scripts": {
