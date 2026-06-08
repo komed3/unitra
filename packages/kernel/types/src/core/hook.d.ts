@@ -16,6 +16,9 @@ export interface HookRegistry {
       state: ReferenceState;
     };
   };
+  'core.unitra.create': {
+    ctx: {}
+  };
 }
 
 export type HookId = keyof HookRegistry;

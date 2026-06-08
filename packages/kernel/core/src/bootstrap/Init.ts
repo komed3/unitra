@@ -13,11 +13,11 @@ export class Init {
   private static readonly log = Logging.createSource( 'bootstrap' );
   private static cacheRevision: number = -1;
 
-  public static get VERSION () : number {
+  public static get version () : number {
     return 1;
   }
 
-  public static get REVISION () : number {
+  public static get revision () : number {
     return this.cacheRevision;
   }
 
@@ -34,8 +34,8 @@ export class Init {
   }
 
   private static createCtx () : UnitraContext {
-    this.log.debug( `create Unitra context (vers. ${ this.VERSION }) ...` );
-    return { VERSION: this.VERSION, REVISION: this.REVISION } as UnitraContext;
+    this.log.debug( `create Unitra context (vers. ${ this.version }) ...` );
+    return { VERSION: this.version, REVISION: this.revision } as UnitraContext;
   }
 
   private static mountServices ( ctx: UnitraContext, overrides: PluginOverrides ) : void {
