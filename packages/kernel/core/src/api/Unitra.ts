@@ -60,6 +60,6 @@ export class Unitra implements IUnitra {
       this.cache = new Unitra();
     }
 
-    return this.cache.clone();
+    return this.cache;
   }
 }
