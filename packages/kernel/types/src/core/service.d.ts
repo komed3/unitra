@@ -42,11 +42,14 @@ export interface IParser {
   parse ( input: unknown ) : ParserResult;
 }
 
+export interface IFormatter {}
+
 export type ServiceInstanceMap = {
   assert: IAssert;
+  formatter: IFormatter;
+  parser: IParser;
   resolve: IResolve;
   serialize: ISerialize;
-  parser: IParser;
 };
 
 export type ServiceFactoryMap = ContainerFactoryMap< ServiceInstanceMap >;
