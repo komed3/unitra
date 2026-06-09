@@ -12,9 +12,12 @@ export class Parser {
       const tokens: TokenCache = new Map();
 
       for ( const [ key, reg ] of Object.entries( this.ctx.registry ) ) {
-        const map = new Map< string, AnyRef >();
+        const map = new Map< string, [ AnyRef, boolean ] >();
 
-        for ( const item of reg().values() ) {}
+        for ( const item of reg().values() ) {
+          const prefixable = 'prefixable' in item && item.prefixable;
+          map.set( item.id, [ item.id, prefixable ] );
+        }
       }
 
       return tokens;
