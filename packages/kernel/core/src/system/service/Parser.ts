@@ -1,9 +1,9 @@
 import type { AnyRef, RegistryKey } from '@unitra/types/core/registry';
-import type { ParserResult, TokenCache } from '@unitra/types/core/service';
+import type { IParser, ParserResult, TokenCache } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { Logging } from '../../utils/logging';
 
-export class Parser {
+export class Parser implements IParser {
   private static log = Logging.createSource( 'parser' );
   private tokenCache: TokenCache | undefined;
 
