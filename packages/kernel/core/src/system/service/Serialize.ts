@@ -2,6 +2,7 @@ import type { IAssert, ISerialize } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { CompoundStruct, UnitStruct } from '@unitra/types/def/unit';
 import type { NodeMap, ReferenceState, SerializedNode, SerializedState, SerializerMap } from '@unitra/types/node';
+import { VersionError } from '../../utils/error';
 
 export class Serialize implements ISerialize {
   private static readonly map: SerializerMap = {
@@ -33,6 +34,13 @@ export class Serialize implements ISerialize {
   public toReferenceState ( input: SerializedState ) : ReferenceState {
     const assert: IAssert = this.ctx.service.assert();
     assert.assertSerializedState( input );
+
+    const [ version, body ] = input.slice( 1 ).split( '::', 2 );
+
+    if ( Number( version ) !== this.ctx.VERSION ) throw new VersionError(
+      `version mismatch: expected ${ this.ctx.VERSION }, got ${ version }`,
+      { context: { version: Number( version ) } }
+    );
 
     const state = { nodes: [] };
     this.ctx.hook().run( 'core.service.deserialize', { state } );
