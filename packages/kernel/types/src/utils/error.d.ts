@@ -2,12 +2,16 @@ import type { ErrorCode } from '@unitra/dict/utils';
 import type { HookId } from '../core/hook';
 import type { PluginResolveGraph } from '../core/plugin';
 import type { InputOf, RegistryKey } from '../core/registry';
+import type { NodeType, ReferenceState } from '../node';
 import type { SemverVersion } from './semver';
 
 export interface ErrorRegistry {
   [ ErrorCode.ASSERT_ERROR ]: {
     key: RegistryKey;
     value: unknown;
+  } | {
+    value: unknown;
+    type?: NodeType;
   };
   [ ErrorCode.HOOK_ERROR ]: {
     id: HookId;
@@ -32,6 +36,14 @@ export interface ErrorRegistry {
     semver: string;
     tag: string;
     parts: string[];
+  };
+  [ ErrorCode.PARSER_ERROR ]: {
+    input?: unknown;
+    source?: string;
+    token?: string;
+    position?: number;
+    tokens?: string[];
+    state?: ReferenceState;
   };
 }
 
