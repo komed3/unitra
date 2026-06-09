@@ -14,7 +14,8 @@ export class Serialize implements ISerialize {
   private readonly deserializeMap: DeserializeMap = {
     unit: ( value ) => {
       const [ val, exp ] = value.split( '^', 2 );
-      const [ prefix, unit ] = val.split( ':', 2 );
+      const [ unit, prefix ] = val.split( ':', 2 ).reverse();
+
       return {
         type: 'unit', exp: Number( exp ) || 1, unit: this.ctx.service.resolve().toRef( 'unit', unit ),
         prefix: prefix ? this.ctx.service.resolve().toRef( 'prefix', prefix ) : undefined
@@ -22,6 +23,7 @@ export class Serialize implements ISerialize {
     },
     constant: ( value ) => {
       const [ constant, exp ] = value.slice( 1 ).split( '^', 2 );
+
       return {
         type: 'constant', exp: Number( exp ) || 1,
         constant: this.ctx.service.resolve().toRef( 'constant', constant )
