@@ -49,3 +49,7 @@ export type SerializerMap = {
   [ K in keyof NodeMap ]:
     ( node: NodeMap[ K ] ) => SerializedNode;
 };
+
+export type SerializedState = string & {
+  readonly serializedState: unique symbol;
+};
