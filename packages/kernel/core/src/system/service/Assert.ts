@@ -22,7 +22,24 @@ export class Assert implements IAssert {
   public isNode ( value: unknown, type: 'constant' ) : value is ConstantNode;
   public isNode ( value: unknown, type: 'factor' ) : value is FactorNode;
 
-  public isNode ( value: unknown, type?: 'unit' | 'constant' | 'factor' ) : value is Node {}
+  public isNode ( value: unknown, type?: 'unit' | 'constant' | 'factor' ) : value is Node {
+    if ( typeof value !== 'object' || value === null ) return false;
+    const node = value as Record< string, unknown >;
+
+    if ( node.type !== ( type ?? node.type ) ) return false;
+    if ( typeof node.exp !== 'number' || ! Number.isFinite( node.exp ) || node.exp === 0 ) return false;
+
+    switch ( node.type ) {
+      case 'unit':
+        return this.isRef( 'unit', node.unit ) && ( ! ( 'prefix' in node ) || this.isRef( 'prefix', node.prefix ) );
+      case 'constant':
+        return this.isRef( 'constant', node.constant );
+      case 'factor':
+        return typeof node.value === 'number' && Number.isFinite( node.value );
+      default:
+        return false;
+    }
+  }
 
   public isState ( value: unknown ) : value is ReferenceState {
     return typeof value === 'object' && value !== null && 'nodes' in value &&
