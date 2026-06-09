@@ -29,7 +29,7 @@ export type ParserResult = {
 };
 
 export interface IParser {
-  parse ( input: string ) : ParserResult;
+  parse ( input: unknown ) : ParserResult;
 }
 
 export type ServiceInstanceMap = {

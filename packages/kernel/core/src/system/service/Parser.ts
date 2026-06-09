@@ -37,7 +37,7 @@ export class Parser {
     } )();
   }
 
-  public parse ( input: string ) : ParserResult {
+  public parse ( input: unknown ) : ParserResult {
     return { state: { nodes: [] } };
   }
 }
