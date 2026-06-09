@@ -36,7 +36,9 @@ export class Assert implements IAssert {
 
     switch ( node.type ) {
       case 'unit':
-        return this.isRef( 'unit', node.unit ) && ( ! ( 'prefix' in node ) || this.isRef( 'prefix', node.prefix ) );
+        return this.isRef( 'unit', node.unit ) && (
+          node.prefix === undefined || this.isRef( 'prefix', node.prefix )
+        );
       case 'constant':
         return this.isRef( 'constant', node.constant );
       case 'factor':
