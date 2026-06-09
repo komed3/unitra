@@ -33,11 +33,20 @@ export class Parser {
       }
 
       Parser.log.debug( `token cache populated with ${ size } entries` );
+      this.ctx.hook().run( 'core.service.parser.token', { tokens } );
+
       return tokens;
     } )();
   }
 
   public parse ( input: unknown ) : ParserResult {
-    return { state: { nodes: [] } };
+    input = this.ctx.hook().run( 'core.service.parser.before', {}, input );
+
+    // parser logic goes here ...
+
+    const result = {} as ParserResult;
+    this.ctx.hook().run( 'core.service.parser.after', { result, input } );
+
+    return result;
   }
 }
