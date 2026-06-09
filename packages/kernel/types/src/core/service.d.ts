@@ -28,7 +28,9 @@ export type ParserResult = {
   state: ReferenceState;
 };
 
-export interface IParser {}
+export interface IParser {
+  parse ( input: string ) : ParserResult;
+}
 
 export type ServiceInstanceMap = {
   assert: IAssert;
