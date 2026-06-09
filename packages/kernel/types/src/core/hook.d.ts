@@ -1,5 +1,5 @@
 import type { ReferenceState } from '../node';
-import type { TokenCache } from './service';
+import type { ParserResult, TokenCache } from './service';
 import type { IUnitra, UnitraContext } from './unitra';
 
 export interface HookRegistry {
@@ -13,6 +13,7 @@ export interface HookRegistry {
   };
   'core.service.parser.after': {
     ctx: {
+      result: ParserResult;
       input: unknown;
     };
   };
