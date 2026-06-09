@@ -1,7 +1,7 @@
 import type { CompoundStruct, UnitStruct } from '../def/unit';
 import type { ReferenceState } from '../node';
 import type { Container, ContainerFactoryMap } from '../utils/container';
-import type { DefOf, InputOf, RefOf, RegistryKey } from './registry';
+import type { AnyRef, DefOf, InputOf, RefOf, RegistryKey } from './registry';
 
 export interface IAssert {
   isRef < K extends RegistryKey > ( key: K, value: unknown ) : value is RefOf< K >;
@@ -21,6 +21,8 @@ export interface ISerialize {
   fromReferenceState ( state: ReferenceState ) : string;
   fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string;
 }
+
+export type TokenCache = Map< RegistryKey, Map< string, [ AnyRef, boolean ] > >;
 
 export type ParserResult = {
   state: ReferenceState;
