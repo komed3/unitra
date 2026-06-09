@@ -32,6 +32,11 @@ export interface HookRegistry {
       tokens: string[];
     };
   };
+  'core.service.deserialize': {
+    ctx: {
+      state: ReferenceState;
+    };
+  };
   'core.service.serialize': {
     value: string;
     ctx: {

@@ -34,7 +34,9 @@ export class Serialize implements ISerialize {
     const assert: IAssert = this.ctx.service.assert();
     assert.assertSerializedState( input );
 
-    return { nodes: [] };
+    const state = { nodes: [] };
+    this.ctx.hook().run( 'core.service.deserialize', { state } );
+    return state;
   }
 
   public fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string {
