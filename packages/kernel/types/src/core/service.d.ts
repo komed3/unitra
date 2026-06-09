@@ -27,6 +27,7 @@ export interface IResolve {
 
 export interface ISerialize {
   fromReferenceState ( state: ReferenceState ) : string;
+  toReferenceState ( input: SerializedState ) : ReferenceState;
   fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string;
 }
 

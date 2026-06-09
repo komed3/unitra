@@ -1,7 +1,7 @@
-import type { ISerialize } from '@unitra/types/core/service';
+import type { IAssert, ISerialize } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { CompoundStruct, UnitStruct } from '@unitra/types/def/unit';
-import type { NodeMap, ReferenceState, SerializedNode, SerializerMap } from '@unitra/types/node';
+import type { NodeMap, ReferenceState, SerializedNode, SerializedState, SerializerMap } from '@unitra/types/node';
 
 export class Serialize implements ISerialize {
   private static readonly map: SerializerMap = {
@@ -17,6 +17,9 @@ export class Serialize implements ISerialize {
   constructor ( private readonly ctx: UnitraContext ) {}
 
   public fromReferenceState ( state: ReferenceState ) : string {
+    const assert: IAssert = this.ctx.service.assert();
+    assert.assertState( state );
+
     const body = `$${ this.ctx.VERSION }::${
       state.nodes
         .map( ( node ) => Serialize.serializeNode( node.type, node ) )
@@ -25,6 +28,13 @@ export class Serialize implements ISerialize {
     }`;
 
     return this.ctx.hook().run( 'core.service.serialize', { state }, body );
+  }
+
+  public toReferenceState ( input: SerializedState ) : ReferenceState {
+    const assert: IAssert = this.ctx.service.assert();
+    assert.assertSerializedState( input );
+
+    return { nodes: [] };
   }
 
   public fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string {
