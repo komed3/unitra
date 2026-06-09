@@ -5,14 +5,36 @@ import type { NodeMap, ReferenceState, SerializedNode, SerializedState, Serializ
 import { VersionError } from '../../utils/error';
 
 export class Serialize implements ISerialize {
-  private static readonly map: SerializerMap = {
+  private readonly serializeMap: SerializerMap = {
     unit: ( node ) => ( { order: 2, value: `${ node.prefix ? `${ node.prefix }:` : '' }${ node.unit }^${ node.exp }` } ),
     constant: ( node ) => ( { order: 1, value: `@${ node.constant }^${ node.exp }` } ),
     factor: ( node ) => ( { order: 0, value: `#${ node.value }^${ node.exp }` } )
   } as const;
 
-  private static serializeNode < K extends keyof NodeMap > ( type: K, node: NodeMap[ K ] ) : SerializedNode {
-    return this.map[ type ]( node );
+  private readonly deserializeMap: { [ K in keyof NodeMap ]: ( value: string ) => NodeMap[ K ] } = {
+    unit: ( value ) => {
+      const [ val, exp ] = value.split( '^', 2 );
+      const [ prefix, unit ] = val.split( ':', 2 ).reverse();
+      return {
+        type: 'unit', exp: Number( exp ) || 1, unit: this.ctx.service.resolve().toRef( 'unit', unit ),
+        prefix: prefix ? this.ctx.service.resolve().toRef( 'prefix', prefix ) : undefined
+      };
+    },
+    constant: ( value ) => {
+      const [ val, exp ] = value.split( '^', 2 );
+      return {
+        type: 'constant', exp: Number( exp ) || 1,
+        constant: this.ctx.service.resolve().toRef( 'constant', val.slice( 1 ) )
+      };
+    },
+    factor: ( value ) => {
+      const [ val, exp ] = value.split( '^', 2 );
+      return { type: 'factor', value: Number( val ), exp: Number( exp ) || 1 };
+    }
+  } as const;
+
+  private serializeNode < K extends keyof NodeMap > ( type: K, node: NodeMap[ K ] ) : SerializedNode {
+    return this.serializeMap[ type ]( node );
   }
 
   constructor ( private readonly ctx: UnitraContext ) {}
@@ -23,7 +45,7 @@ export class Serialize implements ISerialize {
 
     const body = `$${ this.ctx.VERSION }::${
       state.nodes
-        .map( ( node ) => Serialize.serializeNode( node.type, node ) )
+        .map( ( node ) => this.serializeNode( node.type, node ) )
         .sort( ( a, b ) => a.order - b.order || a.value.localeCompare( b.value ) )
         .map( ( n ) => n.value ).join( '*' )
     }`;
@@ -35,14 +57,15 @@ export class Serialize implements ISerialize {
     const assert: IAssert = this.ctx.service.assert();
     assert.assertSerializedState( input );
 
+    const state = { nodes: [] };
     const [ version, body ] = input.slice( 1 ).split( '::', 2 );
+    const parts = body ? body.split( '*' ) : [];
 
     if ( Number( version ) !== this.ctx.VERSION ) throw new VersionError(
       `version mismatch: expected ${ this.ctx.VERSION }, got ${ version }`,
       { context: { version: Number( version ) } }
     );
 
-    const state = { nodes: [] };
     this.ctx.hook().run( 'core.service.deserialize', { state } );
     return state;
   }
