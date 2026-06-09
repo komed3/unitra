@@ -11,3 +11,4 @@ export * from './errors/ParserError';
 export * from './errors/PluginResolveError';
 export * from './errors/ResolveError';
 export * from './errors/SemverError';
+export * from './errors/VersionError';

@@ -45,6 +45,9 @@ export interface ErrorRegistry {
     tokens?: string[];
     state?: ReferenceState;
   };
+  [ ErrorCode.VERSION_ERROR ]: {
+    version: number;
+  };
 }
 
 export type ErrorContext< C extends ErrorCode > =
