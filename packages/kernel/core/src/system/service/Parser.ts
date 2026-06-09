@@ -41,16 +41,17 @@ export class Parser {
 
   public parse ( input: unknown ) : ParserResult {
     input = this.ctx.hook().run( 'core.service.parser.before', {}, input );
+    const result = {} as ParserResult;
 
     if ( this.ctx.service.assert().isState( input ) )
-      return { state: input };
+      result.state = input;
 
     if ( this.ctx.service.assert().isSerializedState( input ) )
-      return { state: this.ctx.service.serialize().toReferenceState( input ) };
+      result.state = this.ctx.service.serialize().toReferenceState( input );
 
-    const result = {} as ParserResult;
+    // ...
+
     this.ctx.hook().run( 'core.service.parser.after', { result, input } );
-
     return result;
   }
 }
