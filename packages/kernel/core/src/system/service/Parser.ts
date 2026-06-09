@@ -46,7 +46,7 @@ export class Parser {
     if ( this.ctx.service.assert().isState( input ) )
       result.state = input;
 
-    if ( this.ctx.service.assert().isSerializedState( input ) )
+    else if ( this.ctx.service.assert().isSerializedState( input ) )
       result.state = this.ctx.service.serialize().toReferenceState( input );
 
     // ...
