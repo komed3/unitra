@@ -22,6 +22,10 @@ export interface ISerialize {
   fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string;
 }
 
+export type ParserResult = {
+  state: ReferenceState;
+};
+
 export interface IParser {}
 
 export type ServiceInstanceMap = {
