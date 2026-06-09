@@ -13,7 +13,7 @@ export class Parser {
     return this.tokenCache ??= ( () => {
       Parser.log.debug( 'populate token cache ...' );
 
-      const tokens: TokenCache = new Map();
+      const token: TokenCache = new Map();
       let size = 0;
 
       for ( const [ key, reg ] of Object.entries( this.ctx.registry ) ) {
@@ -28,14 +28,14 @@ export class Parser {
               map.set( alias, [ item.id, prefixable ] );
         }
 
-        tokens.set( key as RegistryKey, map );
+        token.set( key as RegistryKey, map );
         size += map.size;
       }
 
       Parser.log.debug( `token cache populated with ${ size } entries` );
-      this.ctx.hook().run( 'core.service.parser.token', { tokens } );
+      this.ctx.hook().run( 'core.service.parser.token', { token } );
 
-      return tokens;
+      return token;
     } )();
   }
 

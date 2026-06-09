@@ -23,7 +23,7 @@ export interface HookRegistry {
   };
   'core.service.parser.token': {
     ctx: {
-      tokens: TokenCache;
+      token: TokenCache;
     };
   };
   'core.service.serialize': {
