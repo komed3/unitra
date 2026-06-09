@@ -71,9 +71,8 @@ export class Serialize implements ISerialize {
     );
 
     for ( const part of parts ) {
-      if ( part.startsWith( '@' ) ) nodes.push( this.deserializeNode( 'constant', part ) );
-      else if ( part.startsWith( '#' ) ) nodes.push( this.deserializeNode( 'factor', part ) );
-      else nodes.push( this.deserializeNode( 'unit', part ) );
+      const type = part.startsWith( '@' ) ? 'constant' : part.startsWith( '#' ) ? 'factor' : 'unit';
+      nodes.push( this.deserializeNode( type, part ) );
     }
 
     const state = { nodes };
