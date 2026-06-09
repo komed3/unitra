@@ -1,7 +1,8 @@
 import type { IUnitFactory } from '@unitra/types/core/factory';
 import type { IRegistry, RefOf, RegistryKey } from '@unitra/types/core/registry';
-import type { IAssert, IResolve, ISerialize, ParserResult } from '@unitra/types/core/service';
+import type { IAssert, IResolve, ParserResult } from '@unitra/types/core/service';
 import type { IUnitra, UnitraContext } from '@unitra/types/core/unitra';
+import type { ReferenceState } from '@unitra/types/node';
 import { Init } from '../bootstrap';
 import { getTypedRegistry } from '../system/registry';
 import { Logging } from '../utils/logging';
@@ -40,8 +41,8 @@ export class Unitra implements IUnitra {
     return this.ctx.service.resolve();
   }
 
-  public serialize () : ISerialize {
-    return this.ctx.service.serialize();
+  public serialize ( input: ReferenceState ) : string {
+    return this.ctx.service.serialize().fromReferenceState( input );
   }
 
   public parse ( input: unknown ) : ParserResult {
