@@ -18,6 +18,7 @@ export class Assert implements IAssert {
   }
 
   public isNode ( value: unknown ) : value is Node;
+  public isNode ( value: unknown, type: 'unit' | 'constant' | 'factor' | undefined ) : value is Node;
   public isNode ( value: unknown, type: 'unit' ) : value is UnitNode;
   public isNode ( value: unknown, type: 'constant' ) : value is ConstantNode;
   public isNode ( value: unknown, type: 'factor' ) : value is FactorNode;
@@ -57,6 +58,26 @@ export class Assert implements IAssert {
     if ( ! this.isDef( key, value ) ) throw new AssertError(
       `expected a ${ key } definition, but got ${ safeJsonStringify( value ) }`,
       { context: { key, value } }
+    );
+  }
+
+  public assertNode ( value: unknown ) : asserts value is Node;
+  public assertNode ( value: unknown, type: 'unit' | 'constant' | 'factor' | undefined ) : asserts value is Node;
+  public assertNode ( value: unknown, type: 'unit' ) : asserts value is UnitNode;
+  public assertNode ( value: unknown, type: 'constant' ) : asserts value is ConstantNode;
+  public assertNode ( value: unknown, type: 'factor' ) : asserts value is FactorNode;
+
+  public assertNode ( value: unknown, type?: 'unit' | 'constant' | 'factor' ) : asserts value is Node {
+    if ( ! this.isNode( value, type ) ) throw new AssertError(
+      `expected a ${ type ? `${ type } node` : 'node' }, but got ${ safeJsonStringify( value ) }`,
+      { context: { value, type } }
+    );
+  }
+
+  public assertState ( value: unknown ) : asserts value is ReferenceState {
+    if ( ! this.isState( value ) ) throw new AssertError(
+      `expected a reference state, but got ${ safeJsonStringify( value ) }`,
+      { context: { value } }
     );
   }
 }
