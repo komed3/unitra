@@ -1,7 +1,8 @@
+import type { ReferenceState } from '../node';
 import type { FactoryContainer, IUnitFactory } from './factory';
 import type { HookAccessor } from './hook';
 import type { IRegistry, RefOf, RegistryContainer, RegistryKey } from './registry';
-import type { IAssert, IResolve, ISerialize, ServiceContainer } from './service';
+import type { IAssert, IResolve, ParserResult, ServiceContainer } from './service';
 
 export type UnitraContext = {
   readonly VERSION: 1;
@@ -18,7 +19,8 @@ export interface IUnitra {
   registry < K extends RegistryKey > ( key: K ) : IRegistry< RefOf< K > >;
   assert () : IAssert;
   resolve () : IResolve;
-  serialize () : ISerialize;
+  serialize ( input: ReferenceState ) : string;
+  parse ( input: unknown ) : ParserResult;
   unit () : IUnitFactory;
   clone () : IUnitra;
 }
