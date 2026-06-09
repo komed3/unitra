@@ -37,6 +37,10 @@ export class Serialize implements ISerialize {
     return this.serializeMap[ type ]( node );
   }
 
+  private deserializeNode < K extends keyof NodeMap > ( type: K, value: string ) : NodeMap[ K ] {
+    return this.deserializeMap[ type ]( value );
+  }
+
   constructor ( private readonly ctx: UnitraContext ) {}
 
   public fromReferenceState ( state: ReferenceState ) : string {
@@ -57,7 +61,7 @@ export class Serialize implements ISerialize {
     const assert: IAssert = this.ctx.service.assert();
     assert.assertSerializedState( input );
 
-    const state = { nodes: [] };
+    const state: ReferenceState = { nodes: [] };
     const [ version, body ] = input.slice( 1 ).split( '::', 2 );
     const parts = body ? body.split( '*' ) : [];
 
@@ -65,6 +69,12 @@ export class Serialize implements ISerialize {
       `version mismatch: expected ${ this.ctx.VERSION }, got ${ version }`,
       { context: { version: Number( version ) } }
     );
+
+    for ( const part of parts ) {
+      if ( part.startsWith( '@' ) ) state.nodes.push( this.deserializeNode( 'constant', part ) );
+      else if ( part.startsWith( '#' ) ) state.nodes.push( this.deserializeNode( 'factor', part ) );
+      else state.nodes.push( this.deserializeNode( 'unit', part ) );
+    }
 
     this.ctx.hook().run( 'core.service.deserialize', { state } );
     return state;
