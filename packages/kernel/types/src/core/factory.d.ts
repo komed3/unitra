@@ -17,7 +17,7 @@ export interface IUnitFactory {
   mul ( value: UnitInput, mod?: UnitModifier ) : IUnitFactory;
   div ( unit: UnitInput, mod?: UnitModifier ) : IUnitFactory;
   constant ( value: ConstantInput, mod?: ConstantModifier ) : IUnitFactory;
-  factor ( value: number ) : IUnitFactory;
+  factor ( value: number, mod?: ConstantModifier ) : IUnitFactory;
   toObj () : ReferenceState;
   toJSON () : string;
   serialize () : string;

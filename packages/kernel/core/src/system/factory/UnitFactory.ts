@@ -35,8 +35,8 @@ export class UnitFactory implements IUnitFactory {
     return this.next( [ { type: 'constant', constant, exp: mod?.exp ?? 1 } ] );
   }
 
-  public factor ( value: number ) : UnitFactory {
-    return this.next( [ { type: 'factor', value } ] );
+  public factor ( value: number, mod?: ConstantModifier ) : UnitFactory {
+    return this.next( [ { type: 'factor', value, exp: mod?.exp ?? 1 } ] );
   }
 
   public toObj () : ReferenceState {
