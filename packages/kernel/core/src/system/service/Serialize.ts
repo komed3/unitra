@@ -39,7 +39,8 @@ export class Serialize implements ISerialize {
     return this.serializeMap[ type ]( node );
   }
 
-  private deserializeNode < K extends keyof NodeMap > ( type: K, value: string ) : NodeMap[ K ] {
+  private deserializeNode ( value: string ) : Node {
+    const type = value.startsWith( '@' ) ? 'constant' : value.startsWith( '#' ) ? 'factor' : 'unit';
     return this.deserializeMap[ type ]( value );
   }
 
@@ -72,10 +73,8 @@ export class Serialize implements ISerialize {
       { context: { version: Number( version ) } }
     );
 
-    for ( const part of parts ) {
-      const type = part.startsWith( '@' ) ? 'constant' : part.startsWith( '#' ) ? 'factor' : 'unit';
-      nodes.push( this.deserializeNode( type, part ) );
-    }
+    for ( const part of parts )
+      nodes.push( this.deserializeNode( part ) );
 
     const state = { nodes };
     this.ctx.hook().run( 'core.service.deserialize', { state } );
