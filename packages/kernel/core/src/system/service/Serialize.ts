@@ -7,7 +7,7 @@ export class Serialize implements ISerialize {
   private static readonly map: SerializerMap = {
     unit: ( node ) => ( { order: 2, value: `${ node.prefix ? `${ node.prefix }:` : '' }${ node.unit }^${ node.exp }` } ),
     constant: ( node ) => ( { order: 1, value: `@${ node.constant }^${ node.exp }` } ),
-    factor: ( node ) => ( { order: 0, value: `#${ node.value }` } )
+    factor: ( node ) => ( { order: 0, value: `#${ node.value }^${ node.exp }` } )
   } as const;
 
   private static serializeNode < K extends keyof NodeMap > ( type: K, node: NodeMap[ K ] ) : SerializedNode {
@@ -30,7 +30,7 @@ export class Serialize implements ISerialize {
   public fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string {
     return this.fromReferenceState( { nodes: struct.map(
       ( node ) => 'factor' in node ? {
-        type: 'factor', value: node.factor
+        type: 'factor', value: node.factor, exp: 1
       } : {
         type: 'unit', unit: node.unit, exp: node.exp,
         prefix: 'prefix' in node ? node.prefix : undefined
