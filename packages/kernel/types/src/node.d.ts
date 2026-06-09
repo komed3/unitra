@@ -45,9 +45,14 @@ export type SerializedNode = {
   value: string;
 };
 
-export type SerializerMap = {
+export type SerializeMap = {
   [ K in keyof NodeMap ]:
     ( node: NodeMap[ K ] ) => SerializedNode;
+};
+
+export type DeserializeMap = {
+  [ K in keyof NodeMap ]:
+    ( value: string ) => NodeMap[ K ];
 };
 
 export type SerializedState = string & {
