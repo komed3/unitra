@@ -1,7 +1,7 @@
 import type { IAssert, ISerialize } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { CompoundStruct, UnitStruct } from '@unitra/types/def/unit';
-import type { DeserializeMap, NodeMap, ReferenceState, SerializedNode, SerializedState, SerializeMap } from '@unitra/types/node';
+import type { DeserializeMap, Node, NodeMap, ReferenceState, SerializedNode, SerializedState, SerializeMap } from '@unitra/types/node';
 import { VersionError } from '../../utils/error';
 
 export class Serialize implements ISerialize {
@@ -14,22 +14,22 @@ export class Serialize implements ISerialize {
   private readonly deserializeMap: DeserializeMap = {
     unit: ( value ) => {
       const [ val, exp ] = value.split( '^', 2 );
-      const [ prefix, unit ] = val.split( ':', 2 ).reverse();
+      const [ prefix, unit ] = val.split( ':', 2 );
       return {
         type: 'unit', exp: Number( exp ) || 1, unit: this.ctx.service.resolve().toRef( 'unit', unit ),
         prefix: prefix ? this.ctx.service.resolve().toRef( 'prefix', prefix ) : undefined
       };
     },
     constant: ( value ) => {
-      const [ val, exp ] = value.split( '^', 2 );
+      const [ constant, exp ] = value.slice( 1 ).split( '^', 2 );
       return {
         type: 'constant', exp: Number( exp ) || 1,
-        constant: this.ctx.service.resolve().toRef( 'constant', val.slice( 1 ) )
+        constant: this.ctx.service.resolve().toRef( 'constant', constant )
       };
     },
     factor: ( value ) => {
-      const [ val, exp ] = value.split( '^', 2 );
-      return { type: 'factor', value: Number( val ), exp: Number( exp ) || 1 };
+      const [ factor, exp ] = value.slice( 1 ).split( '^', 2 );
+      return { type: 'factor', value: Number( factor ), exp: Number( exp ) || 1 };
     }
   } as const;
 
@@ -61,7 +61,7 @@ export class Serialize implements ISerialize {
     const assert: IAssert = this.ctx.service.assert();
     assert.assertSerializedState( input );
 
-    const state: ReferenceState = { nodes: [] };
+    const nodes: Node[] = [];
     const [ version, body ] = input.slice( 1 ).split( '::', 2 );
     const parts = body ? body.split( '*' ) : [];
 
@@ -71,11 +71,12 @@ export class Serialize implements ISerialize {
     );
 
     for ( const part of parts ) {
-      if ( part.startsWith( '@' ) ) state.nodes.push( this.deserializeNode( 'constant', part ) );
-      else if ( part.startsWith( '#' ) ) state.nodes.push( this.deserializeNode( 'factor', part ) );
-      else state.nodes.push( this.deserializeNode( 'unit', part ) );
+      if ( part.startsWith( '@' ) ) nodes.push( this.deserializeNode( 'constant', part ) );
+      else if ( part.startsWith( '#' ) ) nodes.push( this.deserializeNode( 'factor', part ) );
+      else nodes.push( this.deserializeNode( 'unit', part ) );
     }
 
+    const state = { nodes };
     this.ctx.hook().run( 'core.service.deserialize', { state } );
     return state;
   }
