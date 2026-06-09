@@ -1,4 +1,5 @@
 import type { ReferenceState } from '../node';
+import type { TokenCache } from './service';
 import type { IUnitra, UnitraContext } from './unitra';
 
 export interface HookRegistry {
@@ -8,6 +9,20 @@ export interface HookRegistry {
   'core.factory.unit.next': {
     ctx: {
       state: ReferenceState;
+    };
+  };
+  'core.service.parser.after': {
+    ctx: {
+      input: unknown;
+    };
+  };
+  'core.service.parser.before': {
+    ctx: {};
+    value: unknown;
+  };
+  'core.service.parser.token': {
+    ctx: {
+      tokens: TokenCache;
     };
   };
   'core.service.serialize': {
