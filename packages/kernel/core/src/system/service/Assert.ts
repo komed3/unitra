@@ -1,7 +1,7 @@
 import type { DefOf, RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { IAssert } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
-import type { ConstantNode, FactorNode, Node, ReferenceState, UnitNode } from '@unitra/types/node';
+import type { ConstantNode, FactorNode, Node, NodeType, ReferenceState, UnitNode } from '@unitra/types/node';
 import { AssertError } from '../../utils/error';
 import { safeJsonStringify } from '../../utils/json';
 import { getTypedRegistry } from '../registry';
@@ -18,12 +18,12 @@ export class Assert implements IAssert {
   }
 
   public isNode ( value: unknown ) : value is Node;
-  public isNode ( value: unknown, type: 'unit' | 'constant' | 'factor' | undefined ) : value is Node;
+  public isNode ( value: unknown, type: NodeType | undefined ) : value is Node;
   public isNode ( value: unknown, type: 'unit' ) : value is UnitNode;
   public isNode ( value: unknown, type: 'constant' ) : value is ConstantNode;
   public isNode ( value: unknown, type: 'factor' ) : value is FactorNode;
 
-  public isNode ( value: unknown, type?: 'unit' | 'constant' | 'factor' ) : value is Node {
+  public isNode ( value: unknown, type?: NodeType ) : value is Node {
     if ( typeof value !== 'object' || value === null ) return false;
     const node = value as Record< string, unknown >;
 
@@ -62,12 +62,12 @@ export class Assert implements IAssert {
   }
 
   public assertNode ( value: unknown ) : asserts value is Node;
-  public assertNode ( value: unknown, type: 'unit' | 'constant' | 'factor' | undefined ) : asserts value is Node;
+  public assertNode ( value: unknown, type: NodeType | undefined ) : asserts value is Node;
   public assertNode ( value: unknown, type: 'unit' ) : asserts value is UnitNode;
   public assertNode ( value: unknown, type: 'constant' ) : asserts value is ConstantNode;
   public assertNode ( value: unknown, type: 'factor' ) : asserts value is FactorNode;
 
-  public assertNode ( value: unknown, type?: 'unit' | 'constant' | 'factor' ) : asserts value is Node {
+  public assertNode ( value: unknown, type?: NodeType ) : asserts value is Node {
     if ( ! this.isNode( value, type ) ) throw new AssertError(
       `expected a ${ type ? `${ type } node` : 'node' }, but got ${ safeJsonStringify( value ) }`,
       { context: { value, type } }

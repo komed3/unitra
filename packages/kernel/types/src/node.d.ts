@@ -2,6 +2,8 @@ import type { ConstantRef } from './def/constant';
 import type { PrefixRef } from './def/prefix';
 import type { UnitRef } from './def/unit';
 
+export type NodeType = 'unit' | 'constant' | 'factor';
+
 export type UnitNode = {
   readonly type: 'unit';
   unit: UnitRef;
@@ -18,6 +20,7 @@ export type ConstantNode = {
 export type FactorNode = {
   readonly type: 'factor';
   value: number;
+  exp: number;
 };
 
 export type Node =
