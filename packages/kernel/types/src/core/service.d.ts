@@ -1,6 +1,8 @@
+import type { ErrorCode } from '@unitra/dict/utils';
 import type { CompoundStruct, UnitStruct } from '../def/unit';
 import type { ReferenceState } from '../node';
 import type { Container, ContainerFactoryMap } from '../utils/container';
+import type { IUnitraError } from '../utils/error';
 import type { AnyRef, DefOf, InputOf, RefOf, RegistryKey } from './registry';
 
 export interface IAssert {
@@ -26,6 +28,7 @@ export type TokenCache = Map< RegistryKey, Map< string, [ AnyRef, boolean ] > >;
 
 export type ParserResult = {
   state: ReferenceState;
+  error?: IUnitraError< ErrorCode.PARSER_ERROR >;
 };
 
 export interface IParser {
