@@ -1,10 +1,14 @@
 import type { DefOf, RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { IAssert } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
-import type { ConstantNode, FactorNode, Node, NodeType, ReferenceState, UnitNode } from '@unitra/types/node';
+import type { ConstantNode, FactorNode, Node, NodeType, ReferenceState, SerializedState, UnitNode } from '@unitra/types/node';
 import { AssertError } from '../../utils/error';
 import { safeJsonStringify } from '../../utils/json';
 import { getTypedRegistry } from '../registry';
+
+const NUM = '\\d+', EXP = '-?\\d+', CHARS = '[A-Za-z0-9_]+';
+const PART = `(?:#${ NUM }\\^${ EXP }|@${ CHARS }\\^${ EXP }|${ CHARS }\\^${ EXP }|${ CHARS }:${ CHARS }\\^${ EXP })`;
+const SERIALIZED = new RegExp( `^\\$\\d+::${ PART }(?:\\*${ PART })*$` );
 
 export class Assert implements IAssert {
   constructor ( private readonly ctx: UnitraContext ) {}
@@ -47,6 +51,10 @@ export class Assert implements IAssert {
       Array.isArray( value.nodes ) && value.nodes.every( node => this.isNode( node ) );
   }
 
+  public isSerializedState ( value: unknown ) : value is SerializedState {
+    return typeof value === 'string' && SERIALIZED.test( value );
+  }
+
   public assertRef < K extends RegistryKey > ( key: K, value: unknown ) : asserts value is RefOf< K > {
     if ( ! this.isRef( key, value ) ) throw new AssertError(
       `expected a ${ key } reference, but got ${ safeJsonStringify( value ) }`,
@@ -77,6 +85,13 @@ export class Assert implements IAssert {
   public assertState ( value: unknown ) : asserts value is ReferenceState {
     if ( ! this.isState( value ) ) throw new AssertError(
       `expected a reference state, but got ${ safeJsonStringify( value ) }`,
+      { context: { value } }
+    );
+  }
+
+  public assertSerializedState ( value: unknown ) : asserts value is SerializedState {
+    if ( ! this.isSerializedState( value ) ) throw new AssertError(
+      `expected a serialized state, but got ${ safeJsonStringify( value ) }`,
       { context: { value } }
     );
   }
