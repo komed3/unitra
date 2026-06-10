@@ -1,20 +1,29 @@
 import type { AnyRef, RegistryKey } from '@unitra/types/core/registry';
-import type { IParser, ParserResult, TokenCache } from '@unitra/types/core/service';
+import type { IParser, ParserResult, ParserToken, TokenCache } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
 
 export class Parser implements IParser {
+  private static readonly OPERATOR_MAP = {
+    '*': '*', '×': '*', '·': '*', '/': '/', 'per': '/', '^': '^'
+  } as const;
+
+  private static readonly NATURAL_MAP = {
+    'per': '/', 'over': '/', 'square': '^2', 'squared': '^2',
+    'cube': '^3', 'cubed': '^3'
+  } as const;
+
   private static log = Logging.createSource( 'parser' );
   private tokenCache: TokenCache | undefined;
 
   constructor ( private readonly ctx: UnitraContext ) {}
 
-  private get token () : TokenCache {
+  private get tokens () : TokenCache {
     return this.tokenCache ??= ( () => {
       Parser.log.debug( 'populate token cache ...' );
 
-      const token: TokenCache = new Map();
+      const tokens: TokenCache = new Map();
       let size = 0;
 
       for ( const [ key, reg ] of Object.entries( this.ctx.registry ) ) {
@@ -29,18 +38,31 @@ export class Parser implements IParser {
               map.set( alias, [ item.id, prefixable ] );
         }
 
-        token.set( key as RegistryKey, map );
+        tokens.set( key as RegistryKey, map );
         size += map.size;
       }
 
       Parser.log.debug( `token cache populated with ${ size } entries` );
-      this.ctx.hook().run( 'core.service.parser.token', { token } );
+      this.ctx.hook().run( 'core.service.parser.cache', { tokens } );
 
-      return token;
+      return tokens;
     } )();
   }
 
   private parseInput ( result: ParserResult, input: string ) : void {}
+
+  private tokenize ( input: string ) : ParserToken[] {
+    const tokens: ParserToken[] = [];
+    let i = 0;
+
+    const pushOperator = ( op: string ) => {
+      const mapped = Parser.OPERATOR_MAP[ op as keyof typeof Parser.OPERATOR_MAP ];
+      if ( mapped ) tokens.push( { type: 'operator', value: mapped } );
+    };
+
+    this.ctx.hook().run( 'core.service.parser.tokenize', { input, tokens } );
+    return tokens;
+  }
 
   public parse ( input: unknown ) : ParserResult {
     input = this.ctx.hook().run( 'core.service.parser.before', {}, input );
