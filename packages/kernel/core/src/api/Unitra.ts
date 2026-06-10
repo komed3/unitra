@@ -1,6 +1,7 @@
 import type { IUnitFactory } from '@unitra/types/core/factory';
+import type { ParserResult } from '@unitra/types/core/parser';
 import type { IRegistry, RefOf, RegistryKey } from '@unitra/types/core/registry';
-import type { IAssert, IResolve, ParserResult } from '@unitra/types/core/service';
+import type { IAssert, IResolve } from '@unitra/types/core/service';
 import type { IUnitra, UnitraContext } from '@unitra/types/core/unitra';
 import type { ReferenceState } from '@unitra/types/node';
 import { Init } from '../bootstrap';
@@ -46,7 +47,7 @@ export class Unitra implements IUnitra {
   }
 
   public parse ( input: unknown ) : ParserResult {
-    return this.ctx.service.parser().parse( input );
+    return this.ctx.parser().parse( input );
   }
 
   public unit () : IUnitFactory {
