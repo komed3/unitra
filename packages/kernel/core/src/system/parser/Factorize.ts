@@ -8,6 +8,20 @@ export class Factorize {
 
   constructor ( private readonly ctx: UnitraContext ) {}
 
+  private parseExponent ( tokens: ParserToken[], pos: number ) : [ number, number ] {
+    const token = tokens[ pos ];
+    if ( ! token || token.type !== 'operator' || token.value !== '^' ) return [ 1, pos ];
+
+    pos++;
+    const value = tokens[ pos ];
+
+    if ( ! value || value.type !== 'number' ) throw new ParserError(
+      'expected exponent', { context: { position: pos } }
+    );
+
+    return [ value.value, pos + 1 ];
+  }
+
   private parseGroup ( tokens: ParserToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {
     pos++;
 
@@ -70,7 +84,7 @@ export class Factorize {
     );
 
     this.ctx.hook().run( 'core.parser.factorize', { tokens, result } );
-    Factorize.log.debug( `factorized ${ tokens.length } tokens into ${ result.factors.length } factors`, { result } );
+    Factorize.log.debug( `factorized ${ tokens.length } tokens into ${ factors.length } factors`, { result } );
 
     return result;
   }
