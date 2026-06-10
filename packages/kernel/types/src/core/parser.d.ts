@@ -1,14 +1,15 @@
 import type { ErrorCode } from '@unitra/dict/utils';
+import type { UnitRef } from '../def/unit';
 import type { ReferenceState } from '../node';
 import type { IUnitraError } from '../utils/error';
 import type { AnyRef, RegistryKey } from './registry';
 
-export type GrammarToken = {
-  ref: AnyRef;
-  prefixable: boolean;
+export type GrammarToken< R extends AnyRef = AnyRef > = {
+  ref: R;
+  prefixable: R extends UnitRef ? boolean : false;
 };
 
-export type ParserGrammarMap = Map< string, GrammarToken >;
+export type ParserGrammarMap< R extends AnyRef = AnyRef > = Map< string, GrammarToken< R > >;
 export type ParserGrammar = Map< RegistryKey, ParserGrammarMap >;
 
 export type ParserResult = {

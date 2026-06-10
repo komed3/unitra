@@ -1,5 +1,5 @@
-import type { ParserGrammar, ParserGrammarMap } from '@unitra/types/core/parser';
-import type { RegistryKey } from '@unitra/types/core/registry';
+import type { GrammarToken, ParserGrammar, ParserGrammarMap } from '@unitra/types/core/parser';
+import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { Logging } from '../../utils/logging';
 
@@ -39,5 +39,13 @@ export class Grammar {
 
   public get grammar () : ParserGrammar {
     return this.cache ??= this.populateGrammarCache();
+  }
+
+  public get < K extends RegistryKey > ( key: K ) : ParserGrammarMap< RefOf< K > > | undefined {
+    return this.grammar.get( key );
+  }
+
+  public find < K extends RegistryKey > ( key: K, input: string ) : GrammarToken< RefOf< K > > | undefined {
+    return this.grammar.get( key )?.get( input );
   }
 }
