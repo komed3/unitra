@@ -26,9 +26,8 @@ export type ParserToken =
   | ParserRParenToken;
 
 export type ParsedFactor = {
-  divide: boolean;
-  exp: number;
   token: ParserIDToken | ParserNumberToken;
+  exp: number;
 };
 
 export type ParsedExpression = {
