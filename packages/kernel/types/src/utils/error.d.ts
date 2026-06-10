@@ -1,5 +1,6 @@
 import type { ErrorCode } from '@unitra/dict/utils';
 import type { HookId } from '../core/hook';
+import type { ParserToken } from '../core/parser';
 import type { PluginResolveGraph } from '../core/plugin';
 import type { InputOf, RegistryKey } from '../core/registry';
 import type { NodeType, ReferenceState } from '../node';
@@ -42,6 +43,7 @@ export interface ErrorRegistry {
     state?: ReferenceState;
     position?: number;
     tokens?: string[];
+    parserToken?: ParserToken;
   };
   [ ErrorCode.VERSION_ERROR ]: {
     version: number;
