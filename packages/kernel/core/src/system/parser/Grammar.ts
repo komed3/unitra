@@ -1,5 +1,5 @@
-import type { ParserGrammar } from '@unitra/types/core/parser';
-import type { AnyRef, RegistryKey } from '@unitra/types/core/registry';
+import type { ParserGrammar, ParserGrammarMap } from '@unitra/types/core/parser';
+import type { RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { Logging } from '../../utils/logging';
 
@@ -16,7 +16,7 @@ export class Grammar {
     let size = 0;
 
     for ( const [ key, reg ] of Object.entries( this.ctx.registry ) ) {
-      const map = new Map< string, [ AnyRef, boolean ] >();
+      const map: ParserGrammarMap = new Map();
 
       for ( const item of reg().values() ) {
         const prefixable = 'prefixable' in item && item.prefixable;
