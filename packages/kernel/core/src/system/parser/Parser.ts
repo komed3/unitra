@@ -5,7 +5,10 @@ import { Logging } from '../../utils/logging';
 
 export class Parser implements IParser {
   private static log = Logging.createSource( 'parser' );
+
   constructor ( private readonly ctx: UnitraContext ) {}
+
+  private parseInput ( result: ParserResult, input: string ) : void {}
 
   public parse ( input: unknown ) : ParserResult {
     input = this.ctx.hook().run( 'core.parser.input', {}, input );
@@ -19,6 +22,8 @@ export class Parser implements IParser {
         { context: { input }, cause: err }
       ) }
     }
+
+    else this.parseInput( result, String( input ) );
 
     this.ctx.hook().run( 'core.parser.result', { result } );
     return result;
