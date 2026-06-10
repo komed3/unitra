@@ -3,6 +3,7 @@ import { Logging } from '../../utils/logging';
 
 export class Tokenize {
   private static readonly log = Logging.createSource( 'parser::tokenize' );
+  private static readonly ALPHA = /^\p{L}$/u;
 
   private static readonly SUPER_MAP = {
     '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5',
@@ -23,4 +24,16 @@ export class Tokenize {
   ] as const;
 
   constructor ( private readonly ctx: UnitraContext ) {}
+
+  private isWhitespace ( c: string ) : boolean {
+    return c === ' ' || c === '\t' || c === '\n' || c === '\r';
+  }
+
+  private isDigit ( c: string ) : boolean {
+    return c >= '0' && c <= '9';
+  }
+
+  private isAlpha ( c: string ) : boolean {
+    return Tokenize.ALPHA.test( c );
+  }
 }
