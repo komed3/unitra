@@ -79,7 +79,7 @@ export class Tokenize {
     return [ value, pos ];
   }
 
-  private pushOperator ( tokens: ParserToken[], value: string ) : boolean {
+  private pushNatural ( tokens: ParserToken[], value: string ) : boolean {
     const mapped = Tokenize.NATURAL_MAP[ value.toLowerCase() as keyof typeof Tokenize.NATURAL_MAP ];
     if ( ! mapped ) return false;
 
@@ -170,7 +170,7 @@ export class Tokenize {
       if ( this.isAlpha( c ) ) {
         const [ value, next ] = this.readIdentifier( input, pos );
 
-        if ( ! this.pushOperator( tokens, value ) )
+        if ( ! this.pushNatural( tokens, value ) )
           tokens.push( { type: 'identifier', value } );
 
         pos = next;
