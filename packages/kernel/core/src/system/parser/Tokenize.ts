@@ -45,4 +45,15 @@ export class Tokenize {
       ).join( '' )
     );
   }
+
+  private readIdentifier ( input: string, start: number ) : [ string, number ] {
+    let pos = start;
+
+    while ( pos < input.length && (
+      this.isAlpha( input[ pos ] ) ||
+      this.isDigit( input[ pos ] )
+    ) ) pos++;
+
+    return [ input.slice( start, pos ), pos ];
+  }
 }
