@@ -33,6 +33,13 @@ export interface ISerialize {
 
 export type TokenCache = Map< RegistryKey, Map< string, [ AnyRef, boolean ] > >;
 
+export type ParserToken =
+  | { type: 'number'; value: number | string }
+  | { type: 'identifier'; value: string }
+  | { type: 'operator'; value: '*' | '/' | '^' }
+  | { type: 'lparen' }
+  | { type: 'rparen' };
+
 export type ParserResult = {
   state: ReferenceState;
   error?: IUnitraError< ErrorCode.PARSER_ERROR >;
