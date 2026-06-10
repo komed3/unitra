@@ -8,6 +8,19 @@ export class Factorize {
 
   constructor ( private readonly ctx: UnitraContext ) {}
 
+  private parseFactor ( tokens: ParserToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {
+    const token = tokens[ pos ];
+    if ( ! token ) throw new ParserError( 'unexpected end of input', { context: { position: pos } } );
+
+    if ( token.type === 'lparen' ) return this.parseGroup( tokens, pos, sign );
+    if ( token.type !== 'identifier' && token.type !== 'number' ) throw new ParserError(
+      'expected identifier or number', { context: { position: pos } }
+    );
+
+    const [ exp, next ] = this.parseExponent( tokens, pos + 1 );
+    return [ [ { token, exp: exp * sign } ], next ];
+  }
+
   private parseExpression ( tokens: ParserToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {
     const factors: ParsedFactor[] = [];
 
