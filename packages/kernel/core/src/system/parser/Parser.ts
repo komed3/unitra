@@ -2,11 +2,16 @@ import type { IParser, ParserResult } from '@unitra/types/core/parser';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
+import { Grammar } from './Grammar';
 
 export class Parser implements IParser {
-  private static log = Logging.createSource( 'parser' );
+  private static readonly log = Logging.createSource( 'parser' );
 
-  constructor ( private readonly ctx: UnitraContext ) {}
+  private readonly grammar: Grammar;
+
+  constructor ( private readonly ctx: UnitraContext ) {
+    this.grammar = new Grammar( ctx );
+  }
 
   private parseInput ( result: ParserResult, input: string ) : void {}
 
