@@ -1,5 +1,5 @@
 import type { ReferenceState } from '../node';
-import type { ParserGrammar, ParserResult, ParserToken } from './parser';
+import type { ParsedExpression, ParserGrammar, ParserResult, ParserToken } from './parser';
 import type { IUnitra, UnitraContext } from './unitra';
 
 export interface HookRegistry {
@@ -11,19 +11,25 @@ export interface HookRegistry {
       state: ReferenceState;
     };
   };
-  'core.parser.result': {
+  'core.parser.grammar': {
     ctx: {
-      result: ParserResult;
+      grammar: ParserGrammar;
+      size: number;
+    };
+  };
+  'core.parser.factorize': {
+    ctx: {
+      tokens: ParserToken[];
+      result: ParsedExpression;
     };
   };
   'core.parser.input': {
     ctx: {};
     value: unknown;
   };
-  'core.parser.grammar': {
+  'core.parser.result': {
     ctx: {
-      grammar: ParserGrammar;
-      size: number;
+      result: ParserResult;
     };
   };
   'core.parser.tokenize': {
