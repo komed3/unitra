@@ -39,7 +39,6 @@ export interface ErrorRegistry {
   };
   [ ErrorCode.PARSER_ERROR ]: {
     input?: unknown;
-    source?: string;
     token?: string;
     position?: number;
     tokens?: string[];

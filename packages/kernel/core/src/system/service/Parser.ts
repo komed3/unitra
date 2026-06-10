@@ -67,9 +67,6 @@ export class Parser implements IParser {
     const tokens: ParserToken[] = [];
     let i = 0;
 
-    const peek = () => input[ i ];
-    const next = () => input[ i++ ];
-
     const pushOperator = ( op: string ) => {
       const mapped = Parser.OPERATOR_MAP[ op as keyof typeof Parser.OPERATOR_MAP ];
       if ( mapped ) tokens.push( { type: 'operator', value: mapped } );
@@ -88,7 +85,7 @@ export class Parser implements IParser {
     };
 
     while ( i < input.length ) {
-      let c = peek();
+      const c = input[ i ];
 
       if ( c === ' ' || c === '\t' || c === '\n' ) { i++; continue }
       if ( Object.keys( Parser.OPERATOR_MAP ).includes( c ) ) { pushOperator( c ); i++; continue }
@@ -120,6 +117,11 @@ export class Parser implements IParser {
         else tokens.push( { type: 'identifier', value: raw } );
         continue;
       }
+
+      throw new ParserError(
+        `unexpected character: ${ c } at position ${ i }`,
+        { context: { input, position: i } }
+      );
     }
 
     this.ctx.hook().run( 'core.service.parser.tokenize', { input, tokens } );
@@ -137,7 +139,8 @@ export class Parser implements IParser {
     else if ( this.ctx.service.assert().isSerializedState( input ) ) {
       try { result.state = this.ctx.service.serialize().toReferenceState( input ) }
       catch ( err ) { result.error = new ParserError(
-        'failed to parse serialized state', { context: { input }, cause: err }
+        'failed to parse serialized state',
+        { context: { input }, cause: err }
       ) }
     }
 
