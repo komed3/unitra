@@ -25,6 +25,16 @@ export type ParserToken =
   | ParserLParenToken
   | ParserRParenToken;
 
+export type ParsedFactor = {
+  divide: boolean;
+  exp: number;
+  token: ParserIDToken | ParserNumberToken;
+};
+
+export type ParsedExpression = {
+  factors: ParsedFactor[];
+};
+
 export type ParserResult = {
   state: ReferenceState;
   input: unknown;

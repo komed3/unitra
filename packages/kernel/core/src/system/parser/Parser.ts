@@ -8,20 +8,19 @@ import { Tokenize } from './Tokenize';
 
 export class Parser implements IParser {
   private static readonly log = Logging.createSource( 'parser' );
-  private readonly tokenize: Tokenize;
-  private readonly structure: StructureParser;
   private readonly grammar: Grammar;
+  private readonly tokenize: Tokenize;
 
   constructor ( private readonly ctx: UnitraContext ) {
-    this.tokenize = new Tokenize( ctx );
-    this.structure = new StructureParser( ctx );
     this.grammar = new Grammar( ctx );
+    this.tokenize = new Tokenize( ctx );
   }
 
   private parseInput ( result: ParserResult, input: string ) : void {
     try {
       Parser.log.debug( `parsing "${ input }" ...` );
       const tokens = this.tokenize.run( input );
+      const structure = new StructureParser( this.ctx, tokens ).run();
     }
 
     catch ( err ) {
