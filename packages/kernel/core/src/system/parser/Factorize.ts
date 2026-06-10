@@ -8,7 +8,28 @@ export class Factorize {
 
   constructor ( private readonly ctx: UnitraContext ) {}
 
-  private parseExpression ( tokens: ParserToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {}
+  private parseExpression ( tokens: ParserToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {
+    const factors: ParsedFactor[] = [];
+
+    let result = this.parseFactor( tokens, pos, sign );
+    factors.push( ...result[ 0 ] );
+    pos = result[ 1 ];
+
+    while ( pos < tokens.length ) {
+      const token = tokens[ pos ];
+
+      if ( ! token || token.type === 'rparen' ) break;
+      if ( token.type !== 'operator' || ( token.value !== '*' && token.value !== '/' ) ) break;
+
+      const nextSign = token.value === '/' ? -sign : sign;
+      result = this.parseFactor( tokens, pos + 1, nextSign );
+
+      factors.push( ...result[ 0 ] );
+      pos = result[ 1 ];
+    }
+
+    return [ factors, pos ];
+  }
 
   public run ( tokens: ParserToken[] ) : ParsedExpression {
     const [ factors, pos ] = this.parseExpression( tokens, 0, 1 );
