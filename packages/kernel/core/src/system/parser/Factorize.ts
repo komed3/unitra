@@ -10,6 +10,9 @@ export class Factorize {
   public run ( tokens: ParserToken[] ) : ParsedExpression {
     const result: ParsedExpression = { factors: [] };
 
+    this.ctx.hook().run( 'core.parser.factorize', { tokens, result } );
+    Factorize.log.debug( `factorized ${ tokens.length } tokens into ${ result.factors.length } factors`, { result } );
+
     return result;
   }
 }
