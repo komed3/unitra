@@ -111,4 +111,28 @@ export class Tokenize {
       'unbalanced parentheses', { context: { input } }
     );
   }
+
+  private insertImplicitMultiplication ( tokens: ParserToken[] ) : ParserToken[] {
+    const result: ParserToken[] = [];
+
+    const endsValue = ( t: ParserToken ) =>
+      t.type === 'identifier' ||
+      t.type === 'number' ||
+      t.type === 'rparen';
+
+    const startsValue = ( t: ParserToken ) =>
+      t.type === 'identifier' ||
+      t.type === 'number' ||
+      t.type === 'lparen';
+
+    for ( let i = 0; i < tokens.length; i++ ) {
+      const current = tokens[ i ], next = tokens[ i + 1 ];
+      result.push( current );
+
+      if ( next && endsValue( current ) && startsValue( next ) )
+        result.push( { type: 'operator', value: '*' } );
+    }
+
+    return result;
+  }
 }
