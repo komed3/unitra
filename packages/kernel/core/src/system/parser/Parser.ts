@@ -3,16 +3,19 @@ import type { UnitraContext } from '@unitra/types/core/unitra';
 import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
 import { Grammar } from './Grammar';
+import { StructureParser } from './StructureParser';
 import { Tokenize } from './Tokenize';
 
 export class Parser implements IParser {
   private static readonly log = Logging.createSource( 'parser' );
-  private readonly grammar: Grammar;
   private readonly tokenize: Tokenize;
+  private readonly structure: StructureParser;
+  private readonly grammar: Grammar;
 
   constructor ( private readonly ctx: UnitraContext ) {
-    this.grammar = new Grammar( ctx );
     this.tokenize = new Tokenize( ctx );
+    this.structure = new StructureParser( ctx );
+    this.grammar = new Grammar( ctx );
   }
 
   private parseInput ( result: ParserResult, input: string ) : void {
