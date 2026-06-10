@@ -60,7 +60,12 @@ export class Parser implements IParser {
   }
 
   private parseNumber ( raw: string ) : number {
-    return 0;
+    if ( raw.includes( '×10^' ) ) {
+      const [ base, exp ] = raw.split( '×10^' );
+      return Number( base ) * Math.pow( 10, Number( exp ) );
+    }
+
+    return Number( raw );
   }
 
   private tokenize ( input: string ) : ParserToken[] {
@@ -73,7 +78,7 @@ export class Parser implements IParser {
     };
 
     const pushNatural = ( nat: string ) => {
-      const mapped = Parser.NATURAL_MAP[ nat as keyof typeof Parser.NATURAL_MAP ];
+      const mapped = Parser.NATURAL_MAP[ nat.toLowerCase() as keyof typeof Parser.NATURAL_MAP ];
       if ( mapped ) {
         if ( mapped === '^2' || mapped === '^3' ) {
           tokens.push( { type: 'operator', value: '^' } );
@@ -92,11 +97,12 @@ export class Parser implements IParser {
       if ( c === '(' ) { tokens.push( { type: 'lparen' } ); i++; continue }
       if ( c === ')' ) { tokens.push( { type: 'rparen' } ); i++; continue }
 
-      if ( this.isDigit( c ) || c === '.' ) {
+      if ( this.isDigit( c ) || c === '.' || c === '+' || c === '-' ) {
         let start = i;
 
         while ( i < input.length && ( this.isDigit( input[ i ] ) || Parser.NUM_MAP.includes( input[ i ] ) ) ) i++;
-        tokens.push( { type: 'number', value: this.parseNumber( input.slice( start, i ) ) } );
+        const num = this.parseNumber( input.slice( start, i ) );
+        if ( ! isNaN( num ) ) tokens.push( { type: 'number', value: num } );
 
         continue;
       }
@@ -105,9 +111,9 @@ export class Parser implements IParser {
         let start = i;
 
         while ( i < input.length && this.isAlpha( input[ i ] ) ) i++;
-        const raw = input.slice( start, i ).toLowerCase();
+        const raw = input.slice( start, i );
 
-        if ( raw in Parser.NATURAL_MAP ) pushNatural( raw );
+        if ( raw.toLowerCase() in Parser.NATURAL_MAP ) pushNatural( raw );
         else tokens.push( { type: 'identifier', value: raw } );
 
         continue;
@@ -149,6 +155,7 @@ export class Parser implements IParser {
   private parseInput ( result: ParserResult, input: string ) : void {
     try {
       const tokens = this.tokenize( input );
+      console.log( tokens );
     } catch ( err ) {
       if ( err instanceof ParserError ) result.error = err;
       else result.error = new ParserError( 'failed to parse input', { context: { input }, cause: err } );
