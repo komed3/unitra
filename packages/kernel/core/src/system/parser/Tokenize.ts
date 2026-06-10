@@ -1,6 +1,7 @@
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
+import { ParserToken } from '@unitra/types/core/parser';
 
 export class Tokenize {
   private static readonly log = Logging.createSource( 'parser::tokenize' );
@@ -76,5 +77,19 @@ export class Tokenize {
     );
 
     return [ value, pos ];
+  }
+
+  private pushOperator ( tokens: ParserToken[], value: string ) : boolean {
+    const mapped = Tokenize.NATURAL_MAP[ value.toLowerCase() as keyof typeof Tokenize.NATURAL_MAP ];
+    if ( ! mapped ) return false;
+
+    if ( mapped.startsWith( '^' ) ) {
+      tokens.push( { type: 'operator', value: '^' } );
+      tokens.push( { type: 'number', value: Number( mapped.slice( 1 ) ) } );
+    } else {
+      tokens.push( { type: 'operator', value: mapped as '*' | '/' | '^' } );
+    }
+
+    return true;
   }
 }
