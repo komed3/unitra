@@ -55,10 +55,22 @@ export class Parser implements IParser {
     const tokens: ParserToken[] = [];
     let i = 0;
 
+    const peek = () => input[ i ];
+    const next = () => input[ i++ ];
+
     const pushOperator = ( op: string ) => {
       const mapped = Parser.OPERATOR_MAP[ op as keyof typeof Parser.OPERATOR_MAP ];
       if ( mapped ) tokens.push( { type: 'operator', value: mapped } );
     };
+
+    while ( i < input.length ) {
+      let c = peek();
+
+      if ( c === ' ' || c === '\t' || c === '\n' ) { i++; continue }
+      if ( c === '(' ) { tokens.push( { type: 'lparen' } ); i++; continue }
+      if ( c === ')' ) { tokens.push( { type: 'rparen' } ); i++; continue }
+      if ( c === '*' || c === '/' || c === '^' || c === '×' || c === '·' ) { pushOperator( c ); i++; continue }
+    }
 
     this.ctx.hook().run( 'core.service.parser.tokenize', { input, tokens } );
     return tokens;
