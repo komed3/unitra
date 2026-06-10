@@ -4,6 +4,7 @@ import { Logging } from '../../utils/logging';
 export class Tokenize {
   private static readonly log = Logging.createSource( 'parser::tokenize' );
   private static readonly ALPHA = /^\p{L}$/u;
+  private static readonly SUPER = /[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+/g;
 
   private static readonly SUPER_MAP = {
     '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5',
@@ -35,5 +36,13 @@ export class Tokenize {
 
   private isAlpha ( c: string ) : boolean {
     return Tokenize.ALPHA.test( c );
+  }
+
+  private normalizeSuperscript ( input: string ) : string {
+    return input.replace( Tokenize.SUPER, match =>
+      '^' + [ ...match ].map( c =>
+        Tokenize.SUPER_MAP[ c as keyof typeof Tokenize.SUPER_MAP ]
+      ).join( '' )
+    );
   }
 }
