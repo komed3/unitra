@@ -15,7 +15,21 @@ export class Parser implements IParser {
     this.tokenize = new Tokenize( ctx );
   }
 
-  private parseInput ( result: ParserResult, input: string ) : void {}
+  private parseInput ( result: ParserResult, input: string ) : void {
+    try {
+      Parser.log.debug( `parsing "${ input }" ...` );
+      const tokens = this.tokenize.run( input );
+    }
+
+    catch ( err ) {
+      Parser.log.error( `failed to parse input "${ input }"` );
+
+      if ( err instanceof ParserError ) result.error = err;
+      else result.error = new ParserError(
+        'failed to parse input', { context: { input }, cause: err }
+      );
+    }
+  }
 
   public parse ( input: unknown ) : ParserResult {
     input = this.ctx.hook().run( 'core.parser.input', {}, input );
