@@ -25,6 +25,24 @@ export class StructureParser {
     return token;
   }
 
+  private parseGroup ( divide: boolean ) : ParsedFactor[] {
+    this.consume();
+
+    const inner = this.parseExpression( false );
+    const end = this.consume();
+
+    if ( end.type !== 'rparen' ) this.throwErr( 'expected closing parenthesis' );
+
+    const exp = this.parseExponent();
+    for ( const factor of inner ) factor.exp *= exp;
+
+    if ( divide )
+      for ( const factor of inner )
+        factor.divide = ! factor.divide;
+
+    return inner;
+  }
+
   private parseFactor ( divide: boolean ) : ParsedFactor[] {
     const token = this.current();
     if ( ! token ) this.throwErr( 'unexpected end of input' );
