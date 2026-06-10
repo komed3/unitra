@@ -125,7 +125,30 @@ export class Parser implements IParser {
     }
 
     this.ctx.hook().run( 'core.service.parser.tokenize', { input, tokens } );
-    return tokens;
+    return this.insertImplicitMultiplication( tokens );
+  }
+
+  private insertImplicitMultiplication ( tokens: ParserToken[] ) : ParserToken[] {
+    const result: ParserToken[] = [];
+
+    const isValue = ( t: ParserToken ) =>
+      t.type === 'number' || t.type === 'identifier' || t.type === 'rparen';
+
+    const isValueStart = ( t: ParserToken ) =>
+      t.type === 'number' || t.type === 'identifier' || t.type === 'lparen';
+
+    for ( let i = 0; i < tokens.length; i++ ) {
+      const curr = tokens[ i ];
+      const next = tokens[ i + 1 ];
+
+      result.push( curr );
+      if ( ! next ) continue;
+
+      if ( isValue( curr ) && isValueStart( next ) )
+        result.push( { type: 'operator', value: '*' } );
+    }
+
+    return result;
   }
 
   private parseInput ( result: ParserResult, input: string ) : void {
