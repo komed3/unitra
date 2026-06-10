@@ -1,10 +1,8 @@
 import type { ParserToken } from '@unitra/types/core/parser';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { ParserError } from '../../utils/error';
-import { Logging } from '../../utils/logging';
 
 export class Tokenize {
-  private static readonly log = Logging.createSource( 'parser::tokenize' );
   private static readonly ALPHA = /^\p{L}$/u;
   private static readonly SUPER = /[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+/g;
 
@@ -112,9 +110,7 @@ export class Tokenize {
     );
   }
 
-  private insertImplicitMultiplication ( tokens: ParserToken[] ) : ParserToken[] {
-    const result: ParserToken[] = [];
-
+  private insertImplicitMultiplication ( tokens: ParserToken[] ) : void {
     const endsValue = ( t: ParserToken ) =>
       t.type === 'identifier' ||
       t.type === 'number' ||
@@ -127,12 +123,68 @@ export class Tokenize {
 
     for ( let i = 0; i < tokens.length; i++ ) {
       const current = tokens[ i ], next = tokens[ i + 1 ];
-      result.push( current );
 
-      if ( next && endsValue( current ) && startsValue( next ) )
-        result.push( { type: 'operator', value: '*' } );
+      if ( next && endsValue( current ) && startsValue( next ) ) {
+        tokens.splice( i + 1, 0, { type: 'operator', value: '*' } );
+        i++;
+      }
+    }
+  }
+
+  public run ( input: string ) : ParserToken[] {
+    input = this.normalizeSuperscript( input );
+
+    const tokens: ParserToken[] = [];
+    let pos = 0;
+
+    while ( pos < input.length ) {
+      const c = input[ pos ];
+
+      if ( this.isWhitespace( c ) ) { pos++; continue }
+      if ( c === '(' ) { tokens.push( { type: 'lparen' } ); pos++; continue }
+      if ( c === ')' ) { tokens.push( { type: 'rparen' } ); pos++; continue }
+
+      if ( c in Tokenize.OPERATOR_MAP ) {
+        tokens.push( { type: 'operator', value: Tokenize.OPERATOR_MAP[
+          c as keyof typeof Tokenize.OPERATOR_MAP
+        ] } );
+
+        pos++;
+        continue;
+      }
+
+      if ( this.isDigit( c ) || (
+        ( c === '+' || c === '-' || c === '.' ) &&
+        pos + 1 < input.length &&
+        this.isDigit( input[ pos + 1 ] )
+      ) ) {
+        const [ value, next ] = this.readNumber( input, pos );
+        tokens.push( { type: 'number', value } );
+
+        pos = next;
+        continue;
+      }
+
+      if ( this.isAlpha( c ) ) {
+        const [ value, next ] = this.readIdentifier( input, pos );
+
+        if ( ! this.pushOperator( tokens, value ) )
+          tokens.push( { type: 'identifier', value } );
+
+        pos = next;
+        continue;
+      }
+
+      throw new ParserError(
+        `unexpected character "${ c }" at position ${ pos }`,
+        { context: { input, position: pos } }
+      );
     }
 
-    return result;
+    this.validateParentheses( tokens, input );
+    this.insertImplicitMultiplication( tokens );
+
+    this.ctx.hook().run( 'core.parser.tokenize', { input, tokens } );
+    return tokens;
   }
 }
