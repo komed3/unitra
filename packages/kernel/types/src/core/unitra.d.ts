@@ -9,9 +9,9 @@ export type UnitraContext = {
   readonly VERSION: 1;
   readonly REVISION: number;
   hook: HookAccessor;
-  parser: ParserAccessor;
   registry: RegistryContainer;
   service: ServiceContainer;
+  parser: ParserAccessor;
   factory: FactoryContainer;
 };
 

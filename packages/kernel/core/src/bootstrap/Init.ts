@@ -2,6 +2,7 @@ import type { PluginDefinition, PluginOverrides } from '@unitra/types/core/plugi
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { createFactoryContainer } from '../system/factory';
 import { createHookAccessor } from '../system/hook';
+import { createParserAccessor } from '../system/parser';
 import { createRegistryContainer } from '../system/registry';
 import { createServiceContainer } from '../system/service';
 import { InitError } from '../utils/error';
@@ -47,6 +48,9 @@ export class Init {
 
     this.log.debug( 'mount service container ...' );
     ctx.service = createServiceContainer( ctx, overrides.service );
+
+    this.log.debug( 'mount parser accessor ...' );
+    ctx.parser = createParserAccessor( ctx );
 
     this.log.debug( 'mount factory container ...' );
     ctx.factory = createFactoryContainer( ctx, overrides.factory );
