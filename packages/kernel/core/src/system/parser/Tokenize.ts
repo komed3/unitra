@@ -53,7 +53,8 @@ export class Tokenize {
 
     while ( pos < input.length && (
       this.isAlpha( input[ pos ] ) ||
-      this.isDigit( input[ pos ] )
+      this.isDigit( input[ pos ] ) ||
+      input[ pos ] === '-'
     ) ) pos++;
 
     return [ input.slice( start, pos ), pos ];
@@ -178,7 +179,7 @@ export class Tokenize {
       }
 
       throw new ParserError(
-        `unexpected character "${ c }" at position ${ pos }`,
+        `unexpected character "${ c }" at position ${ pos + 1 }`,
         { context: { input, position: pos } }
       );
     }
