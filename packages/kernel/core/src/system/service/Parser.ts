@@ -6,8 +6,10 @@ import { Logging } from '../../utils/logging';
 
 export class Parser implements IParser {
   private static readonly OPERATOR_MAP = {
-    '*': '*', '×': '*', '·': '*', '/': '/', 'per': '/', '^': '^'
+    '*': '*', '×': '*', '·': '*', '/': '/', '^': '^'
   } as const;
+
+  private static readonly DIGIT_MAP = [ '.', 'e', '-', '+', '/' ];
 
   private static readonly NATURAL_MAP = {
     'per': '/', 'over': '/', 'square': '^2', 'squared': '^2',
@@ -49,7 +51,17 @@ export class Parser implements IParser {
     } )();
   }
 
-  private parseInput ( result: ParserResult, input: string ) : void {}
+  private isDigit ( c: string ) : boolean {
+    return c >= '0' && c <= '9';
+  }
+
+  private isAlpha ( c: string ) : boolean {
+    return ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' );
+  }
+
+  private parseNumber ( raw: string ) : number {
+    return 0;
+  }
 
   private tokenize ( input: string ) : ParserToken[] {
     const tokens: ParserToken[] = [];
@@ -67,14 +79,31 @@ export class Parser implements IParser {
       let c = peek();
 
       if ( c === ' ' || c === '\t' || c === '\n' ) { i++; continue }
+      if ( Object.keys( Parser.OPERATOR_MAP ).includes( c ) ) { pushOperator( c ); i++; continue }
       if ( c === '(' ) { tokens.push( { type: 'lparen' } ); i++; continue }
       if ( c === ')' ) { tokens.push( { type: 'rparen' } ); i++; continue }
-      if ( c === '*' || c === '/' || c === '^' || c === '×' || c === '·' ) { pushOperator( c ); i++; continue }
+
+      if ( this.isDigit( c ) || c === '.' ) {
+        let start = i, hasSlash = false;
+
+        while ( i < input.length ) {
+          const ch = input[ i ];
+          if ( ! this.isDigit( ch ) && ! Parser.DIGIT_MAP.includes( ch ) ) break;
+          if ( ch === '/' ) hasSlash = true;
+          i++;
+        }
+
+        const raw = input.slice( start, i );
+        tokens.push( { type: 'number', value: this.parseNumber( raw ) } );
+        continue;
+      }
     }
 
     this.ctx.hook().run( 'core.service.parser.tokenize', { input, tokens } );
     return tokens;
   }
+
+  private parseInput ( result: ParserResult, input: string ) : void {}
 
   public parse ( input: unknown ) : ParserResult {
     input = this.ctx.hook().run( 'core.service.parser.before', {}, input );
