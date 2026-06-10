@@ -133,7 +133,7 @@ export class PluginResolver {
       selected.set( id, [ best ] );
 
       for ( let i = 1; i < sorted.length; i++ )
-        this.log.debug( `skip plugin "${ sorted[ i ].id }@${ sorted[ i ].version }" (using ${ best.version })` );
+        this.log.warn( `skip plugin "${ sorted[ i ].id }@${ sorted[ i ].version }" (using ${ best.version })` );
     }
 
     return selected;
@@ -178,7 +178,7 @@ export class PluginResolver {
     const errCount = missing.length + conflicts.length + cycles.length + overrides.length;
 
     if ( errCount ) {
-      this.log.debug( 'resolution failed', { errors: errCount } );
+      this.log.error( 'resolution failed', { errors: errCount } );
 
       return {
         revId: this.cacheRevision, plugins: [], graph,
