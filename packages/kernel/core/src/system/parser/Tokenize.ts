@@ -1,4 +1,5 @@
 import type { UnitraContext } from '@unitra/types/core/unitra';
+import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
 
 export class Tokenize {
@@ -55,5 +56,25 @@ export class Tokenize {
     ) ) pos++;
 
     return [ input.slice( start, pos ), pos ];
+  }
+
+  private readNumber ( input: string, start: number ) : [ number, number ] {
+    let pos = start;
+
+    if ( input[ pos ] === '+' || input[ pos ] === '-' ) pos++;
+
+    while ( pos < input.length && (
+      this.isDigit( input[ pos ] ) ||
+      Tokenize.NUMBER_MOD.includes( input[ pos ] as typeof Tokenize.NUMBER_MOD[ number ] )
+    ) ) pos++;
+
+    const raw = input.slice( start, pos );
+    const value = Number( raw );
+
+    if ( Number.isNaN( value ) ) throw new ParserError(
+      `invalid number "${ raw }"`, { context: { input, position: start } }
+    );
+
+    return [ value, pos ];
   }
 }
