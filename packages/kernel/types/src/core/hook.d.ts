@@ -1,5 +1,5 @@
 import type { ReferenceState } from '../node';
-import type { ParserResult, ParserToken, TokenCache } from './parser';
+import type { ParserGrammar, ParserResult } from './parser';
 import type { IUnitra, UnitraContext } from './unitra';
 
 export interface HookRegistry {
@@ -22,13 +22,14 @@ export interface HookRegistry {
   };
   'core.parser.grammar': {
     ctx: {
-      tokens: TokenCache;
+      grammar: ParserGrammar;
+      size: number;
     };
   };
   'core.parser.tokenize': {
     ctx: {
       input: string;
-      tokens: ParserToken[];
+      tokens: unknown;
     };
   };
   'core.service.deserialize': {
