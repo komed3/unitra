@@ -9,7 +9,7 @@ export class Parser implements IParser {
     '*': '*', '×': '*', '·': '*', '/': '/', '^': '^'
   } as const;
 
-  private static readonly DIGIT_MAP = [ '.', 'e', '-', '+', '/' ];
+  private static readonly NUM_MAP = [ '.', 'e', '-', '+' ];
 
   private static readonly NATURAL_MAP = {
     'per': '/', 'over': '/', 'square': '^2', 'squared': '^2',
@@ -93,17 +93,11 @@ export class Parser implements IParser {
       if ( c === ')' ) { tokens.push( { type: 'rparen' } ); i++; continue }
 
       if ( this.isDigit( c ) || c === '.' ) {
-        let start = i, hasSlash = false;
+        let start = i;
 
-        while ( i < input.length ) {
-          const ch = input[ i ];
-          if ( ! this.isDigit( ch ) && ! Parser.DIGIT_MAP.includes( ch ) ) break;
-          if ( ch === '/' ) hasSlash = true;
-          i++;
-        }
+        while ( i < input.length && ( this.isDigit( input[ i ] ) || Parser.NUM_MAP.includes( input[ i ] ) ) ) i++;
+        tokens.push( { type: 'number', value: this.parseNumber( input.slice( start, i ) ) } );
 
-        const raw = input.slice( start, i );
-        tokens.push( { type: 'number', value: this.parseNumber( raw ) } );
         continue;
       }
 
@@ -111,10 +105,11 @@ export class Parser implements IParser {
         let start = i;
 
         while ( i < input.length && this.isAlpha( input[ i ] ) ) i++;
-        let raw = input.slice( start, i ).toLowerCase();
+        const raw = input.slice( start, i ).toLowerCase();
 
         if ( raw in Parser.NATURAL_MAP ) pushNatural( raw );
         else tokens.push( { type: 'identifier', value: raw } );
+
         continue;
       }
 
