@@ -10,21 +10,34 @@ export class StructureParser {
     private readonly tokens: ParserToken[]
   ) {}
 
+  private throwErr ( msg: string ) : never {
+    throw new ParserError( msg, { context: { position: this.pos } } );
+  }
+
   private current () : ParserToken | undefined {
     return this.tokens[ this.pos ];
   }
 
   private consume () : ParserToken {
     const token = this.tokens[ this.pos++ ];
-
-    if ( ! token ) throw new ParserError( 'unexpected end of input',
-      { context: { parserToken: token, position: this.pos } }
-    );
+    if ( ! token ) this.throwErr( 'unexpected end of input' );
 
     return token;
   }
 
-  private parseFactor ( divide: boolean ) : ParsedFactor[] {}
+  private parseFactor ( divide: boolean ) : ParsedFactor[] {
+    const token = this.current();
+    if ( ! token ) this.throwErr( 'unexpected end of input' );
+
+    if ( token.type === 'lparen' )
+      return this.parseGroup( divide );
+
+    if ( token.type !== 'identifier' && token.type !== 'number' )
+      this.throwErr( 'expected identifier or number' );
+
+    this.consume();
+    return [ { divide, exp: this.parseExponent(), token } ];
+  }
 
   private parseExpression ( divide: boolean ) : ParsedFactor[] {
     const factors = [ ...this.parseFactor( divide ) ];
