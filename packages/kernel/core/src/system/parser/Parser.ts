@@ -2,16 +2,19 @@ import type { IParser, ParserResult } from '@unitra/types/core/parser';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
+import { Factorize } from './Factorize';
 import { Grammar } from './Grammar';
-import { StructureParser } from './StructureParser';
 import { Tokenize } from './Tokenize';
 
 export class Parser implements IParser {
   private static readonly log = Logging.createSource( 'parser' );
+
+  private readonly factorize: Factorize;
   private readonly grammar: Grammar;
   private readonly tokenize: Tokenize;
 
   constructor ( private readonly ctx: UnitraContext ) {
+    this.factorize = new Factorize( ctx );
     this.grammar = new Grammar( ctx );
     this.tokenize = new Tokenize( ctx );
   }
@@ -19,8 +22,9 @@ export class Parser implements IParser {
   private parseInput ( result: ParserResult, input: string ) : void {
     try {
       Parser.log.debug( `parsing "${ input }" ...` );
+
       const tokens = this.tokenize.run( input );
-      const structure = new StructureParser( this.ctx, tokens ).run();
+      const factors = this.factorize.run( tokens );
     }
 
     catch ( err ) {
