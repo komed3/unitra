@@ -4,6 +4,7 @@ import type { IUnitraError } from '../utils/error';
 
 export type ParserResult = {
   state: ReferenceState;
+  input: unknown;
   error?: IUnitraError< ErrorCode.PARSER_ERROR >;
 };
 
