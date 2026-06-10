@@ -21,8 +21,20 @@ export class StructureParser {
   private consume () : ParserToken {
     const token = this.tokens[ this.pos++ ];
     if ( ! token ) this.throwErr( 'unexpected end of input' );
-
     return token;
+  }
+
+  private parseExponent () : number {
+    const token = this.current();
+
+    if ( ! token || token.type !== 'operator' || token.value !== '^' ) return 1;
+
+    this.consume();
+    const value = this.consume();
+
+    if ( value.type !== 'number' ) this.throwErr( 'expected exponent' );
+
+    return value.value;
   }
 
   private parseGroup ( divide: boolean ) : ParsedFactor[] {
@@ -45,6 +57,7 @@ export class StructureParser {
 
   private parseFactor ( divide: boolean ) : ParsedFactor[] {
     const token = this.current();
+
     if ( ! token ) this.throwErr( 'unexpected end of input' );
 
     if ( token.type === 'lparen' )
