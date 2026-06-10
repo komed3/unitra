@@ -75,6 +75,18 @@ export class Parser implements IParser {
       if ( mapped ) tokens.push( { type: 'operator', value: mapped } );
     };
 
+    const pushNatural = ( nat: string ) => {
+      const mapped = Parser.NATURAL_MAP[ nat as keyof typeof Parser.NATURAL_MAP ];
+      if ( mapped ) {
+        if ( mapped === '^2' || mapped === '^3' ) {
+          tokens.push( { type: 'operator', value: '^' } );
+          tokens.push( { type: 'number', value: Number( mapped.slice( 1 ) ) } );
+        }
+
+        else tokens.push( { type: 'operator', value: mapped } );
+      }
+    };
+
     while ( i < input.length ) {
       let c = peek();
 
@@ -95,6 +107,17 @@ export class Parser implements IParser {
 
         const raw = input.slice( start, i );
         tokens.push( { type: 'number', value: this.parseNumber( raw ) } );
+        continue;
+      }
+
+      if ( this.isAlpha( c ) ) {
+        let start = i;
+
+        while ( i < input.length && this.isAlpha( input[ i ] ) ) i++;
+        let raw = input.slice( start, i ).toLowerCase();
+
+        if ( raw in Parser.NATURAL_MAP ) pushNatural( raw );
+        else tokens.push( { type: 'identifier', value: raw } );
         continue;
       }
     }
