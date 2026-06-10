@@ -28,7 +28,7 @@ export class PluginRegistry {
       const exists = versions.get( plugin.version );
 
       if ( plugin === exists ) {
-        this.log.debug( `skip "${ plugin.id }@${ plugin.version }" plugin: already registered` );
+        this.log.warn( `skip "${ plugin.id }@${ plugin.version }" plugin: already registered` );
         continue;
       }
 
@@ -48,7 +48,7 @@ export class PluginRegistry {
       ? ( versions.delete( version ) && versions.size === 0 && this.registry.delete( id ) )
       : ( this.registry.delete( id ) );
 
-    this.log.debug( `deregistered plugin "${ id }": ${ ok ? 'success' : 'failed' }` );
+    this.log.warn( `deregistered plugin "${ id }": ${ ok ? 'success' : 'failed' }` );
     ( ok && this.revId++ );
   }
 
