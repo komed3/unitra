@@ -1,7 +1,7 @@
+import type { ParserToken } from '@unitra/types/core/parser';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
-import { ParserToken } from '@unitra/types/core/parser';
 
 export class Tokenize {
   private static readonly log = Logging.createSource( 'parser::tokenize' );
@@ -91,5 +91,24 @@ export class Tokenize {
     }
 
     return true;
+  }
+
+  private validateParentheses ( tokens: ParserToken[], input: string ) : void {
+    let depth = 0;
+
+    for ( const token of tokens ) {
+      if ( token.type === 'lparen' ) depth++;
+      else if ( token.type === 'rparen' ) {
+        depth--;
+
+        if ( depth < 0 ) throw new ParserError(
+          'unexpected closing parenthesis', { context: { input } }
+        );
+      }
+    }
+
+    if ( depth !== 0 ) throw new ParserError(
+      'unbalanced parentheses', { context: { input } }
+    );
   }
 }
