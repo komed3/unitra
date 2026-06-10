@@ -1,13 +1,15 @@
 import type { ReferenceState } from '../node';
 import type { FactoryContainer, IUnitFactory } from './factory';
 import type { HookAccessor } from './hook';
+import type { ParserAccessor, ParserResult } from './parser';
 import type { IRegistry, RefOf, RegistryContainer, RegistryKey } from './registry';
-import type { IAssert, IResolve, ParserResult, ServiceContainer } from './service';
+import type { IAssert, IResolve, ServiceContainer } from './service';
 
 export type UnitraContext = {
   readonly VERSION: 1;
   readonly REVISION: number;
   hook: HookAccessor;
+  parser: ParserAccessor;
   registry: RegistryContainer;
   service: ServiceContainer;
   factory: FactoryContainer;
