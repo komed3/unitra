@@ -119,7 +119,7 @@ export class Parser implements IParser {
       }
 
       throw new ParserError(
-        `unexpected character: ${ c } at position ${ i }`,
+        `unexpected character "${ c }" at position ${ i }`,
         { context: { input, position: i } }
       );
     }
@@ -128,7 +128,14 @@ export class Parser implements IParser {
     return tokens;
   }
 
-  private parseInput ( result: ParserResult, input: string ) : void {}
+  private parseInput ( result: ParserResult, input: string ) : void {
+    try {
+      const tokens = this.tokenize( input );
+    } catch ( err ) {
+      if ( err instanceof ParserError ) result.error = err;
+      else result.error = new ParserError( 'failed to parse input', { context: { input }, cause: err } );
+    }
+  }
 
   public parse ( input: unknown ) : ParserResult {
     input = this.ctx.hook().run( 'core.service.parser.before', {}, input );
