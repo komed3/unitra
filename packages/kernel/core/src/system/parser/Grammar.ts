@@ -20,11 +20,11 @@ export class Grammar {
 
       for ( const item of reg().values() ) {
         const prefixable = 'prefixable' in item && item.prefixable;
-        map.set( item.id, [ item.id, prefixable ] );
+        map.set( item.id, { ref: item.id, prefixable } );
 
         if ( 'aliases' in item && item.aliases?.length )
           for ( const alias of item.aliases )
-            map.set( alias, [ item.id, prefixable ] );
+            map.set( alias, { ref: item.id, prefixable } );
       }
 
       grammar.set( key as RegistryKey, map );
