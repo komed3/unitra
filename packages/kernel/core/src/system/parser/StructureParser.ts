@@ -24,8 +24,22 @@ export class StructureParser {
     return token;
   }
 
+  private parseFactor ( divide: boolean ) : ParsedFactor[] {}
+
   private parseExpression ( divide: boolean ) : ParsedFactor[] {
-    return [];
+    const factors = [ ...this.parseFactor( divide ) ];
+
+    while ( true ) {
+      const token = this.current();
+
+      if ( ! token || token.type === 'rparen' ) break;
+      if ( token.type !== 'operator' || ( token.value !== '*' && token.value !== '/' ) ) break;
+
+      this.consume();
+      factors.push( ...this.parseFactor( token.value === '/' ) );
+    }
+
+    return factors;
   }
 
   public run () : ParsedExpression {
