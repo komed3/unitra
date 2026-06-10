@@ -1,8 +1,10 @@
 import type { ParserToken } from '@unitra/types/core/parser';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { ParserError } from '../../utils/error';
+import { Logging } from '../../utils/logging';
 
 export class Tokenize {
+  private static readonly log = Logging.createSource( 'parser::tokenize' );
   private static readonly ALPHA = /^\p{L}$/u;
   private static readonly SUPER = /[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+/g;
 
@@ -185,6 +187,8 @@ export class Tokenize {
     this.insertImplicitMultiplication( tokens );
 
     this.ctx.hook().run( 'core.parser.tokenize', { input, tokens } );
+    Tokenize.log.debug( `tokenized input into ${ tokens.length } tokens`, { tokens } );
+
     return tokens;
   }
 }
