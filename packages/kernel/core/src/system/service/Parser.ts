@@ -155,7 +155,6 @@ export class Parser implements IParser {
   private parseInput ( result: ParserResult, input: string ) : void {
     try {
       const tokens = this.tokenize( input );
-      console.log( tokens );
     } catch ( err ) {
       if ( err instanceof ParserError ) result.error = err;
       else result.error = new ParserError( 'failed to parse input', { context: { input }, cause: err } );
