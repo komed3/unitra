@@ -1,9 +1,7 @@
-import type { ErrorCode } from '@unitra/dict/utils';
 import type { CompoundStruct, UnitStruct } from '../def/unit';
 import type { Node, ReferenceState, SerializedState } from '../node';
 import type { Container, ContainerFactoryMap } from '../utils/container';
-import type { IUnitraError } from '../utils/error';
-import type { AnyRef, DefOf, InputOf, RefOf, RegistryKey } from './registry';
+import type { DefOf, InputOf, RefOf, RegistryKey } from './registry';
 
 export interface IAssert {
   isRef < K extends RegistryKey > ( key: K, value: unknown ) : value is RefOf< K >;
@@ -31,30 +29,11 @@ export interface ISerialize {
   fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string;
 }
 
-export type TokenCache = Map< RegistryKey, Map< string, [ AnyRef, boolean ] > >;
-
-export type ParserToken =
-  | { type: 'number'; value: number | string }
-  | { type: 'identifier'; value: string }
-  | { type: 'operator'; value: '*' | '/' | '^' }
-  | { type: 'lparen' }
-  | { type: 'rparen' };
-
-export type ParserResult = {
-  state: ReferenceState;
-  error?: IUnitraError< ErrorCode.PARSER_ERROR >;
-};
-
-export interface IParser {
-  parse ( input: unknown ) : ParserResult;
-}
-
 export interface IFormatter {}
 
 export type ServiceInstanceMap = {
   assert: IAssert;
   formatter: IFormatter;
-  parser: IParser;
   resolve: IResolve;
   serialize: ISerialize;
 };
