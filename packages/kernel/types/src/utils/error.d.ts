@@ -39,10 +39,9 @@ export interface ErrorRegistry {
   };
   [ ErrorCode.PARSER_ERROR ]: {
     input?: unknown;
-    token?: string;
+    state?: ReferenceState;
     position?: number;
     tokens?: string[];
-    state?: ReferenceState;
   };
   [ ErrorCode.VERSION_ERROR ]: {
     version: number;
