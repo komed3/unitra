@@ -20,7 +20,7 @@ export class Parser implements IParser {
     this.grammar = new Grammar( ctx );
 
     this.tokenize = new Tokenize( ctx );
-    this.resolve = new Resolve( ctx );
+    this.resolve = new Resolve( ctx, this.grammar );
     this.factorize = new Factorize( ctx );
   }
 
