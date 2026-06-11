@@ -6,6 +6,7 @@ import type { Grammar } from './Grammar';
 
 export class Resolve {
   private static readonly log = Logging.createSource( 'parser::resolve' );
+  private static readonly SEP = /^([a-z]+)(?:[-_\.])([a-z]+)$/i;
 
   constructor (
     private readonly ctx: UnitraContext,
@@ -35,19 +36,20 @@ export class Resolve {
       return this.compound( prefix, unit );
     }
 
-    const match = value.match( /^([a-z]+)(?:[-_\.])([a-z]+)$/i );
+    const match = value.match( Resolve.SEP );
     if ( match ) {
       const [ , prefixPart, unitPart ] = match;
 
       const prefix = this.grammar.find( 'prefix', prefixPart );
-      if ( prefix ) {
-        const unit = this.grammar.find( 'unit', unitPart );
-        if ( unit ) {
-          Resolve.log.debug(
-            `  found as prefix+unit (with separator): ${ prefixPart } + ${ unitPart }`
-          );
-          return [ prefix, unit ] as GrammarToken[];
-        }
+      const unit = this.grammar.find( 'unit', unitPart );
+
+      if ( prefix && unit ) {
+        if ( ! unit.prefixable ) throw new ParserError(
+          `unit "${ unit.ref }" cannot be prefixed with "${ prefix.ref }"`,
+          { context: {} }
+        );
+
+        return this.compound( prefix, unit );
       }
     }
 
@@ -57,11 +59,16 @@ export class Resolve {
   private resolveIdentifier ( value: string, tokens: ParserToken[], index: number ) : ParserCompoundToken {
     Resolve.log.debug( `resolving identifier "${ value }" ...` );
 
-    const u = this.grammar.find( 'unit', value );
-    if ( u ) return { type: 'compound', value: [ u ] };
+    const unit = this.grammar.find( 'unit', value );
+    if ( unit ) return this.compound( unit );
 
-    const c = this.grammar.find( 'constant', value );
-    if ( c ) return { type: 'compound', value: [ c ] };
+    const constant = this.grammar.find( 'constant', value );
+    if ( constant ) return this.compound( constant );
+
+    const prefixResolve = this.resolvePrefixedUnit( value );
+    if ( prefixResolve ) return prefixResolve;
+
+    throw new ParserError( '', { context: {} } );
   }
 
   public run ( tokens: ParserToken[] ) : ResolvedToken[] {}
