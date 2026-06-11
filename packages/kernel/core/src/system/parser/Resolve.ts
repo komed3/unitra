@@ -79,7 +79,10 @@ export class Resolve {
     const splitResolve = this.resolveSplitTokens( value, tokens, index );
     if ( splitResolve ) return [ splitResolve, index + 3 ];
 
-    throw new ParserError( `cannot resolve identifier "${ value }"`, { context: {} } );
+    throw new ParserError(
+      `cannot resolve identifier "${ value }"`,
+      { context: { tokens, position: index } }
+    );
   }
 
   public run ( tokens: ParserToken[] ) : ResolvedToken[] {
