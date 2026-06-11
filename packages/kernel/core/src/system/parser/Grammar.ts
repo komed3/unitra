@@ -1,6 +1,7 @@
 import type { GrammarToken, ParserGrammar, ParserGrammarMap } from '@unitra/types/core/parser';
-import type { RegistryKey } from '@unitra/types/core/registry';
+import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
+import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
 
 export class Grammar {
@@ -8,6 +9,18 @@ export class Grammar {
   private cache: ParserGrammar | undefined;
 
   constructor ( private readonly ctx: UnitraContext ) {}
+
+  private setOrThrow < K extends RegistryKey > (
+    key: K, map: ParserGrammarMap< K >, ref: RefOf< K >,
+    value: string, prefixable: boolean
+  ) : void {
+    if ( map.has( value ) ) throw new ParserError(
+      `duplicate reference "${ value }" for ${ key } "${ ref }"`,
+      { context: {} }
+    );
+
+    map.set( value, { ref, key, prefixable } );
+  }
 
   private populateGrammarCache () : ParserGrammar {
     Grammar.log.debug( 'populate cache ...' );
@@ -21,11 +34,11 @@ export class Grammar {
 
       for ( const item of reg().values() ) {
         const prefixable = 'prefixable' in item && item.prefixable;
-        map.set( item.id, { ref: item.id, key, prefixable } );
+        this.setOrThrow( key, map, item.id, item.id, prefixable );
 
         if ( 'aliases' in item && item.aliases?.length )
           for ( const alias of item.aliases )
-            map.set( alias, { ref: item.id, key, prefixable } );
+            this.setOrThrow( key, map, item.id, alias, prefixable );
       }
 
       grammar[ key ] = map;
