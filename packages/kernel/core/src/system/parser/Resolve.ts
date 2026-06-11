@@ -17,13 +17,13 @@ export class Resolve {
     return { type: 'compound', value: [ ...tokens ] };
   }
 
-  private resolveCompound ( unitPart: string, prefixPart?: string ) : ParserCompoundToken | null {
-    const unit = this.grammar.find( 'unit', unitPart );
+  private resolveCompound ( unitLike: string, prefixLike?: string ) : ParserCompoundToken | null {
+    const unit = this.grammar.find( 'unit', unitLike );
     if ( ! unit ) return null;
 
-    if ( ! prefixPart ) return this.compound( unit );
+    if ( ! prefixLike ) return this.compound( unit );
 
-    const prefix = this.grammar.find( 'prefix', prefixPart );
+    const prefix = this.grammar.find( 'prefix', prefixLike );
     if ( ! prefix ) return null;
 
     if ( ! unit.prefixable ) throw new ParserError(
