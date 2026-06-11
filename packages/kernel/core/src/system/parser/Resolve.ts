@@ -61,10 +61,10 @@ export class Resolve {
     const prefix = this.grammar.find( 'prefix', value );
     if ( ! prefix ) return null;
 
-    const operator = tokens[ index + 1 ];
+    const op = tokens[ index + 1 ];
     const unit = tokens[ index + 2 ];
 
-    if ( ! operator || operator.type !== 'operator' || operator.value !== '*' || ! unit || unit.type !== 'identifier' )
+    if ( ! op || op.type !== 'operator' || op.value !== '*' || ! unit || unit.type !== 'identifier' )
       throw new ParserError(
         `prefix "${ prefix.ref }" cannot stand alone - must be followed by a unit`,
         { context: { tokens, position: index } }
