@@ -92,16 +92,17 @@ export class Resolve {
     while ( pos < tokens.length ) {
       const token = tokens[ pos ];
 
-      if ( token.type !== 'identifier' ) {
-        resolved.push( token );
+      if ( token.type === 'identifier' ) {
+        const [ result, next ] = this.resolveIdentifier( token.value, tokens, pos );
 
-        pos++;
-        continue;
+        resolved.push( result );
+        pos = next;
       }
 
-      const [ res, next ] = this.resolveIdentifier( token.value, tokens, pos );
-      resolved.push( res );
-      pos = next;
+      else {
+        resolved.push( token );
+        pos++;
+      }
     }
 
     return resolved;
