@@ -28,4 +28,10 @@ export class FactorNodeBuilder {
       prefix: prefix ? prefix.ref as PrefixRef : undefined
     };
   }
+
+  public static toNodes ( factors: ParsedFactor[] ) : Node[] {
+    const out: Node[] = [];
+    for ( const f of factors ) out.push( this.toNode( f ) );
+    return out;
+  }
 }
