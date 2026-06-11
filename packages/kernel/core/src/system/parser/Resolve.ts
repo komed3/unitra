@@ -74,10 +74,10 @@ export class Resolve {
   private resolveIdentifier ( value: string, tokens: ParserToken[], index: number ) : [ ParserCompoundToken, number ] {
     Resolve.log.debug( `resolving identifier "${ value }" ...` );
 
-    const unit = this.grammar.find( 'unit', value );
+    const unit = this.resolveToken( 'unit', value );
     if ( unit ) return [ this.compound( unit ), index + 1 ];
 
-    const constant = this.grammar.find( 'constant', value );
+    const constant = this.resolveToken( 'constant', value );
     if ( constant ) return [ this.compound( constant ), index + 1 ];
 
     const prefixResolve = this.resolvePrefixedUnit( value );
