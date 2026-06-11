@@ -30,6 +30,7 @@ export class Parser implements IParser {
 
       const tokens = this.tokenize.run( input );
       const resolved = this.resolve.run( tokens );
+      const factors = this.factorize.run( resolved );
     }
 
     catch ( err ) {
