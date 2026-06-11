@@ -64,23 +64,43 @@ export class Resolve {
     return this.resolveCompound( next.value, prefix );
   }
 
-  private resolveIdentifier ( value: string, tokens: ParserToken[], index: number ) : ParserCompoundToken {
+  private resolveIdentifier ( value: string, tokens: ParserToken[], index: number ) : [ ParserCompoundToken, number ] {
     Resolve.log.debug( `resolving identifier "${ value }" ...` );
 
     const unit = this.grammar.find( 'unit', value );
-    if ( unit ) return this.compound( unit );
+    if ( unit ) return [ this.compound( unit ), index + 1 ];
 
     const constant = this.grammar.find( 'constant', value );
-    if ( constant ) return this.compound( constant );
+    if ( constant ) return [ this.compound( constant ), index + 1 ];
 
     const prefixResolve = this.resolvePrefixedUnit( value );
-    if ( prefixResolve ) return prefixResolve;
+    if ( prefixResolve ) return [ prefixResolve, index + 1 ];
 
     const splitResolve = this.resolveSplitTokens( value, tokens, index );
-    if ( splitResolve ) return splitResolve;
+    if ( splitResolve ) return [ splitResolve, index + 3 ];
 
     throw new ParserError( `cannot resolve identifier "${ value }"`, { context: {} } );
   }
 
-  public run ( tokens: ParserToken[] ) : ResolvedToken[] {}
+  public run ( tokens: ParserToken[] ) : ResolvedToken[] {
+    const resolved: ResolvedToken[] = [];
+    let pos = 0;
+
+    while ( pos < tokens.length ) {
+      const token = tokens[ pos ];
+
+      if ( token.type !== 'identifier' ) {
+        resolved.push( token );
+
+        pos++;
+        continue;
+      }
+
+      const [ res, next ] = this.resolveIdentifier( token.value, tokens, pos );
+      resolved.push( res );
+      pos = next;
+    }
+
+    return resolved;
+  }
 }
