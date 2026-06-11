@@ -16,7 +16,8 @@ export class Factorize {
     const value = tokens[ pos ];
 
     if ( ! value || value.type !== 'number' ) throw new ParserError(
-      'expected exponent', { context: { position: pos } }
+      `expected exponent after "^" operator, got "${ value ? value.type : 'end of input' }"`,
+      { context: { tokens, position: pos } }
     );
 
     return [ value.value, pos + 1 ];
@@ -29,7 +30,8 @@ export class Factorize {
     const end = tokens[ pos = next ];
 
     if ( ! end || end.type !== 'rparen' ) throw new ParserError(
-      'expected closing parenthesis', { context: { position: pos } }
+      `expected closing parenthesis, got "${ end ? end.type : 'end of input' }"`,
+      { context: { tokens, position: pos } }
     );
 
     pos++;
@@ -41,13 +43,17 @@ export class Factorize {
 
   private parseFactor ( tokens: AnyToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {
     const token = tokens[ pos ];
-    if ( ! token ) throw new ParserError( 'unexpected end of input', { context: { position: pos } } );
 
-    if ( token.type === 'lparen' )
-      return this.parseGroup( tokens, pos, sign );
+    if ( ! token ) throw new ParserError(
+      'unexpected end of input, expected factor',
+      { context: { tokens, position: pos } }
+    );
 
-    if ( token.type !== 'identifier' && token.type !== 'compound' && token.type !== 'number' )
-      throw new ParserError( 'expected identifier or number', { context: { position: pos } } );
+    if ( token.type === 'lparen' ) return this.parseGroup( tokens, pos, sign );
+    if ( token.type !== 'identifier' && token.type !== 'compound' && token.type !== 'number' ) throw new ParserError(
+      `expected identifier or number, got "${ token.type }"`,
+      { context: { tokens, position: pos } }
+    );
 
     const [ exp, next ] = this.parseExponent( tokens, pos + 1 );
     return [ [ { token, exp: exp * sign } ], next ];
@@ -56,9 +62,9 @@ export class Factorize {
   private parseExpression ( tokens: AnyToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {
     const factors: ParsedFactor[] = [];
 
-    let result = this.parseFactor( tokens, pos, sign );
-    factors.push( ...result[ 0 ] );
-    pos = result[ 1 ];
+    let [ parsed, next ] = this.parseFactor( tokens, pos, sign );
+    factors.push( ...parsed );
+    pos = next;
 
     while ( pos < tokens.length ) {
       const token = tokens[ pos ];
@@ -67,10 +73,9 @@ export class Factorize {
       if ( token.type !== 'operator' || ( token.value !== '*' && token.value !== '/' ) ) break;
 
       const nextSign = token.value === '/' ? -sign : sign;
-      result = this.parseFactor( tokens, pos + 1, nextSign );
-
-      factors.push( ...result[ 0 ] );
-      pos = result[ 1 ];
+      const [ parsed, next ] = this.parseFactor( tokens, pos + 1, nextSign );
+      factors.push( ...parsed );
+      pos = next;
     }
 
     return [ factors, pos ];
@@ -80,7 +85,8 @@ export class Factorize {
     const [ factors, pos ] = this.parseExpression( tokens, 0, 1 );
 
     if ( pos !== tokens.length ) throw new ParserError(
-      'unexpected trailing tokens', { context: { position: pos } }
+      `unexpected trailing tokens after position ${ pos + 1 }`,
+      { context: { tokens, position: pos } }
     );
 
     this.ctx.hook().run( 'core.parser.factorize', { tokens, factors } );
