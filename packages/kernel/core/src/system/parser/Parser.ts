@@ -29,7 +29,7 @@ export class Parser implements IParser {
       Parser.log.debug( `parsing "${ input }" ...` );
 
       const tokens = this.tokenize.run( input );
-      const factors = this.factorize.run( tokens );
+      const resolved = this.resolve.run( tokens );
     }
 
     catch ( err ) {
