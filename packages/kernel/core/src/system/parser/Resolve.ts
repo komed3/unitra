@@ -52,16 +52,16 @@ export class Resolve {
     const prefix = this.grammar.find( 'prefix', value );
     if ( ! prefix ) return null;
 
-    let next: ParserToken;
-    if (
-      ! ( next = tokens[ index + 1 ] ) || next.type !== 'operator' || next.value !== '*' ||
-      ! ( next = tokens[ index + 2 ] ) || next.type !== 'identifier'
-    ) throw new ParserError(
-      `prefix "${ prefix.ref }" cannot stand alone - must be followed by a unit`,
-      { context: {} }
-    );
+    const operator = tokens[ index + 1 ];
+    const unit = tokens[ index + 2 ];
 
-    return this.resolveCompound( next.value, prefix );
+    if ( ! operator || operator.type !== 'operator' || operator.value !== '*' || ! unit || unit.type !== 'identifier' )
+      throw new ParserError(
+        `prefix "${ prefix.ref }" cannot stand alone - must be followed by a unit`,
+        { context: { tokens, position: index } }
+      );
+
+    return this.resolveCompound( unit.value, prefix );
   }
 
   private resolveIdentifier ( value: string, tokens: ParserToken[], index: number ) : [ ParserCompoundToken, number ] {
