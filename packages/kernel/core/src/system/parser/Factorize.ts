@@ -1,4 +1,4 @@
-import type { AnyToken, ParsedExpression, ParsedFactor } from '@unitra/types/core/parser';
+import type { AnyToken, ParsedFactor } from '@unitra/types/core/parser';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
@@ -76,17 +76,16 @@ export class Factorize {
     return [ factors, pos ];
   }
 
-  public run ( tokens: AnyToken[] ) : ParsedExpression {
+  public run ( tokens: AnyToken[] ) : ParsedFactor[] {
     const [ factors, pos ] = this.parseExpression( tokens, 0, 1 );
-    const result: ParsedExpression = { factors };
 
     if ( pos !== tokens.length ) throw new ParserError(
       'unexpected trailing tokens', { context: { position: pos } }
     );
 
-    this.ctx.hook().run( 'core.parser.factorize', { tokens, result } );
-    Factorize.log.debug( `factorized ${ tokens.length } tokens into ${ factors.length } factors`, { result } );
+    this.ctx.hook().run( 'core.parser.factorize', { tokens, factors } );
+    Factorize.log.debug( `factorized ${ tokens.length } tokens into ${ factors.length } factors`, { factors } );
 
-    return result;
+    return factors;
   }
 }
