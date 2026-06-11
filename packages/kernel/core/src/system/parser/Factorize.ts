@@ -1,4 +1,4 @@
-import type { ParsedExpression, ParsedFactor, ParserToken } from '@unitra/types/core/parser';
+import type { AnyToken, ParsedExpression, ParsedFactor } from '@unitra/types/core/parser';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
@@ -8,7 +8,7 @@ export class Factorize {
 
   constructor ( private readonly ctx: UnitraContext ) {}
 
-  private parseExponent ( tokens: ParserToken[], pos: number ) : [ number, number ] {
+  private parseExponent ( tokens: AnyToken[], pos: number ) : [ number, number ] {
     const token = tokens[ pos ];
     if ( ! token || token.type !== 'operator' || token.value !== '^' ) return [ 1, pos ];
 
@@ -22,7 +22,7 @@ export class Factorize {
     return [ value.value, pos + 1 ];
   }
 
-  private parseGroup ( tokens: ParserToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {
+  private parseGroup ( tokens: AnyToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {
     pos++;
 
     const [ factors, next ] = this.parseExpression( tokens, pos, sign );
@@ -39,20 +39,21 @@ export class Factorize {
     return [ factors, nextPos ];
   }
 
-  private parseFactor ( tokens: ParserToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {
+  private parseFactor ( tokens: AnyToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {
     const token = tokens[ pos ];
     if ( ! token ) throw new ParserError( 'unexpected end of input', { context: { position: pos } } );
 
-    if ( token.type === 'lparen' ) return this.parseGroup( tokens, pos, sign );
-    if ( token.type !== 'identifier' && token.type !== 'number' ) throw new ParserError(
-      'expected identifier or number', { context: { position: pos } }
-    );
+    if ( token.type === 'lparen' )
+      return this.parseGroup( tokens, pos, sign );
+
+    if ( token.type !== 'identifier' && token.type !== 'compound' && token.type !== 'number' )
+      throw new ParserError( 'expected identifier or number', { context: { position: pos } } );
 
     const [ exp, next ] = this.parseExponent( tokens, pos + 1 );
     return [ [ { token, exp: exp * sign } ], next ];
   }
 
-  private parseExpression ( tokens: ParserToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {
+  private parseExpression ( tokens: AnyToken[], pos: number, sign: number ) : [ ParsedFactor[], number ] {
     const factors: ParsedFactor[] = [];
 
     let result = this.parseFactor( tokens, pos, sign );
@@ -75,7 +76,7 @@ export class Factorize {
     return [ factors, pos ];
   }
 
-  public run ( tokens: ParserToken[] ) : ParsedExpression {
+  public run ( tokens: AnyToken[] ) : ParsedExpression {
     const [ factors, pos ] = this.parseExpression( tokens, 0, 1 );
     const result: ParsedExpression = { factors };
 
