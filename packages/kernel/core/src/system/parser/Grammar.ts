@@ -55,15 +55,15 @@ export class Grammar {
     return this.cache ??= this.populateGrammarCache();
   }
 
-  public keys () : RegistryKey[] {
-    return Object.keys( this.grammar ) as RegistryKey[];
-  }
-
   public get < K extends RegistryKey > ( key: K ) : ParserGrammarMap< K > | undefined {
     return this.grammar[ key ];
   }
 
   public find < K extends RegistryKey > ( key: K, input: string ) : GrammarToken< K > | undefined {
     return this.grammar[ key ]?.get( input );
+  }
+
+  public keys () : RegistryKey[] {
+    return Object.keys( this.grammar ) as RegistryKey[];
   }
 }
