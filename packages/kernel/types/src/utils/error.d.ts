@@ -1,9 +1,9 @@
 import type { ErrorCode } from '@unitra/dict/utils';
 import type { HookId } from '../core/hook';
-import type { AnyToken, ParserToken } from '../core/parser';
+import type { AnyToken } from '../core/parser';
 import type { PluginResolveGraph } from '../core/plugin';
 import type { InputOf, RegistryKey } from '../core/registry';
-import type { NodeType, ReferenceState } from '../node';
+import type { NodeType } from '../node';
 import type { SemverVersion } from './semver';
 
 export interface ErrorRegistry {
