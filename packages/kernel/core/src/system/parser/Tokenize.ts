@@ -52,8 +52,7 @@ export class Tokenize {
     let pos = start;
 
     while ( pos < input.length && (
-      this.isAlpha( input[ pos ] ) ||
-      this.isDigit( input[ pos ] ) ||
+      this.isAlpha( input[ pos ] ) || this.isDigit( input[ pos ] ) ||
       input[ pos ] === '-'
     ) ) pos++;
 
@@ -74,7 +73,8 @@ export class Tokenize {
     const value = Number( raw );
 
     if ( Number.isNaN( value ) ) throw new ParserError(
-      `invalid number "${ raw }"`, { context: { input, position: start } }
+      `invalid number "${ raw }"`,
+      { context: { input, position: start } }
     );
 
     return [ value, pos ];
@@ -84,12 +84,14 @@ export class Tokenize {
     const mapped = Tokenize.NATURAL_MAP[ value.toLowerCase() as keyof typeof Tokenize.NATURAL_MAP ];
     if ( ! mapped ) return false;
 
-    if ( mapped.startsWith( '^' ) ) {
-      tokens.push( { type: 'operator', value: '^' } );
-      tokens.push( { type: 'number', value: Number( mapped.slice( 1 ) ) } );
-    } else {
-      tokens.push( { type: 'operator', value: mapped as '*' | '/' | '^' } );
-    }
+    if ( mapped.startsWith( '^' ) ) tokens.push(
+      { type: 'operator', value: '^' },
+      { type: 'number', value: Number( mapped.slice( 1 ) ) }
+    );
+
+    else tokens.push(
+      { type: 'operator', value: mapped as '*' | '/' | '^' }
+    );
 
     return true;
   }
@@ -103,13 +105,15 @@ export class Tokenize {
         depth--;
 
         if ( depth < 0 ) throw new ParserError(
-          'unexpected closing parenthesis', { context: { input } }
+          'unexpected closing parenthesis',
+          { context: { input } }
         );
       }
     }
 
     if ( depth !== 0 ) throw new ParserError(
-      'unbalanced parentheses', { context: { input } }
+      'unbalanced parentheses',
+      { context: { input } }
     );
   }
 
