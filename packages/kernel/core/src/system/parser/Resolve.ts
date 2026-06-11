@@ -4,6 +4,9 @@ import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
 import type { Grammar } from './Grammar';
 
+type UnitTokenLike = GrammarToken< 'unit' > | string;
+type PrefixTokenLike = GrammarToken< 'prefix' > | string;
+
 export class Resolve {
   private static readonly log = Logging.createSource( 'parser::resolve' );
   private static readonly SEP = /^([a-z]+)(?:[-_\.])([a-z]+)$/i;
@@ -18,10 +21,7 @@ export class Resolve {
     return { type: 'compound', value: [ ...tokens ] };
   }
 
-  private resolveCompound (
-    unitLike: string | GrammarToken< 'unit' >,
-    prefixLike?: string | GrammarToken< 'prefix' >
-  ) : ParserCompoundToken | null {
+  private resolveCompound ( unitLike: UnitTokenLike, prefixLike?: PrefixTokenLike ) : ParserCompoundToken | null {
     const unit = typeof unitLike === 'string' ? this.grammar.find( 'unit', unitLike ) : unitLike;
     if ( ! unit ) return null;
 
