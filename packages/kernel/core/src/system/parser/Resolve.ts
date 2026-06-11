@@ -18,7 +18,9 @@ export class Resolve {
 
   private compound ( ...tokens: GrammarToken[] ) : ParserCompoundToken {
     Resolve.log.debug( `resolved as [ ${ tokens.map( t => `"${ t.ref }"` ).join( ', ' ) } ]` );
-    return { type: 'compound', value: [ ...tokens ] };
+
+    this.ctx.hook().run( 'core.parser.compound', { tokens } );
+    return { type: 'compound', value: tokens };
   }
 
   private resolveCompound ( unitLike: UnitTokenLike, prefixLike?: PrefixTokenLike ) : ParserCompoundToken | null {
@@ -105,6 +107,7 @@ export class Resolve {
       }
     }
 
+    this.ctx.hook().run( 'core.parser.resolve', { tokens: resolved } );
     return resolved;
   }
 }
