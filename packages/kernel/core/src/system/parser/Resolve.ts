@@ -17,43 +17,31 @@ export class Resolve {
     return { type: 'compound', value: [ ...tokens ] };
   }
 
+  private resolveCompound ( unitPart: string, prefixPart?: string ) : ParserCompoundToken | null {
+    const unit = this.grammar.find( 'unit', unitPart );
+    if ( ! unit ) return null;
+
+    if ( ! prefixPart ) return this.compound( unit );
+
+    const prefix = this.grammar.find( 'prefix', prefixPart );
+    if ( ! prefix ) return null;
+
+    if ( ! unit.prefixable ) throw new ParserError(
+      `unit "${ unit.ref }" cannot be prefixed with "${ prefix.ref }"`,
+      { context: {} }
+    );
+
+    return this.compound( prefix, unit );
+  }
+
   private resolvePrefixedUnit ( value: string ) : ParserCompoundToken | null {
-    for ( let prefixLen = value.length - 1; prefixLen >= 1; prefixLen-- ) {
-      const prefixPart = value.slice( 0, prefixLen );
-      const unitPart = value.slice( prefixLen );
-
-      const prefix = this.grammar.find( 'prefix', prefixPart );
-      if ( ! prefix ) continue;
-
-      const unit = this.grammar.find( 'unit', unitPart );
-      if ( ! unit ) continue;
-
-      if ( ! unit.prefixable ) throw new ParserError(
-        `unit "${ unit.ref }" cannot be prefixed with "${ prefix.ref }"`,
-        { context: {} }
-      );
-
-      return this.compound( prefix, unit );
+    for ( let len = value.length - 1; len >= 1; len-- ) {
+      const result = this.resolveCompound( value.slice( len ), value.slice( 0, len ) );
+      if ( result ) return result;
     }
 
     const match = value.match( Resolve.SEP );
-    if ( match ) {
-      const [ , prefixPart, unitPart ] = match;
-
-      const prefix = this.grammar.find( 'prefix', prefixPart );
-      const unit = this.grammar.find( 'unit', unitPart );
-
-      if ( prefix && unit ) {
-        if ( ! unit.prefixable ) throw new ParserError(
-          `unit "${ unit.ref }" cannot be prefixed with "${ prefix.ref }"`,
-          { context: {} }
-        );
-
-        return this.compound( prefix, unit );
-      }
-    }
-
-    return null;
+    return match ? this.resolveCompound( match[ 2 ], match[ 1 ] ) : null;
   }
 
   private resolveIdentifier ( value: string, tokens: ParserToken[], index: number ) : ParserCompoundToken {
