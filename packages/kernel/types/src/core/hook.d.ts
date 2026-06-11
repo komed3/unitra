@@ -1,5 +1,5 @@
 import type { ReferenceState } from '../node';
-import type { AnyToken, ParsedExpression, ParserGrammar, ParserResult, ParserToken } from './parser';
+import type { AnyToken, ParsedFactor, ParserGrammar, ParserResult, ParserToken } from './parser';
 import type { IUnitra, UnitraContext } from './unitra';
 
 export interface HookRegistry {
@@ -20,7 +20,7 @@ export interface HookRegistry {
   'core.parser.factorize': {
     ctx: {
       tokens: AnyToken[];
-      result: ParsedExpression;
+      factors: ParsedFactor[];
     };
   };
   'core.parser.input': {
