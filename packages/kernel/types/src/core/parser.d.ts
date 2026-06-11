@@ -42,10 +42,6 @@ export type ParsedFactor = {
   exp: number;
 };
 
-export type ParsedExpression = {
-  factors: ParsedFactor[];
-};
-
 export type ParserResult = {
   state: ReferenceState;
   input: unknown;
