@@ -89,31 +89,30 @@ export class Tokenize {
       { type: 'number', value: Number( mapped.slice( 1 ) ) }
     );
 
-    else tokens.push(
-      { type: 'operator', value: mapped as '*' | '/' | '^' }
-    );
-
+    else tokens.push( { type: 'operator', value: mapped as '*' | '/' | '^' } );
     return true;
   }
 
   private validateParentheses ( tokens: ParserToken[], input: string ) : void {
     let depth = 0;
 
-    for ( const token of tokens ) {
+    for ( let i = 0; i < tokens.length; i++ ) {
+      const token = tokens[ i ];
+
       if ( token.type === 'lparen' ) depth++;
       else if ( token.type === 'rparen' ) {
         depth--;
 
         if ( depth < 0 ) throw new ParserError(
-          'unexpected closing parenthesis',
-          { context: { input } }
+          `unexpected closing parenthesis at position ${ i + 1 }`,
+          { context: { input, tokens, position: i } }
         );
       }
     }
 
     if ( depth !== 0 ) throw new ParserError(
       'unbalanced parentheses',
-      { context: { input } }
+      { context: { input, tokens } }
     );
   }
 
@@ -161,8 +160,7 @@ export class Tokenize {
       }
 
       if ( this.isDigit( c ) || (
-        ( c === '+' || c === '-' || c === '.' ) &&
-        pos + 1 < input.length &&
+        ( c === '+' || c === '-' || c === '.' ) && pos + 1 < input.length &&
         this.isDigit( input[ pos + 1 ] )
       ) ) {
         const [ value, next ] = this.readNumber( input, pos );
