@@ -5,7 +5,7 @@ import type { UnitRef } from '@unitra/types/def/unit';
 import type { Node } from '@unitra/types/node';
 import { ParserError } from '../../utils/error';
 
-export class FactorNodeBuilder {
+export class NodeBuilder {
   public static toNode ( term: ParsedFactor ) : Node {
     const { token, exp } = term;
 
