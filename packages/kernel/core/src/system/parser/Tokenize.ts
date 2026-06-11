@@ -6,7 +6,8 @@ import { Logging } from '../../utils/logging';
 export class Tokenize {
   private static readonly log = Logging.createSource( 'parser::tokenize' );
   private static readonly ALPHA = /^\p{L}$/u;
-  private static readonly SUPER = /[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+/g;
+  private static readonly SUPER = /\^?[⁰¹²³⁴⁵⁶⁷⁸⁹⁻⁺]+/g;
+  private static readonly NUM = /^[+-]?(?:\d|\.\d)/;
 
   private static readonly SUPER_MAP = {
     '⁰': '0', '¹': '1', '²': '2', '³': '3', '⁴': '4', '⁵': '5',
@@ -42,9 +43,9 @@ export class Tokenize {
 
   private normalizeSuperscript ( input: string ) : string {
     return input.replace( Tokenize.SUPER, match =>
-      '^' + [ ...match ].map( c =>
-        Tokenize.SUPER_MAP[ c as keyof typeof Tokenize.SUPER_MAP ]
-      ).join( '' )
+      '^' + [ ...match.replace( '^', '' ) ]
+        .map( c => Tokenize.SUPER_MAP[ c as keyof typeof Tokenize.SUPER_MAP ] )
+        .join( '' )
     );
   }
 
@@ -159,10 +160,7 @@ export class Tokenize {
         continue;
       }
 
-      if ( this.isDigit( c ) || (
-        ( c === '+' || c === '-' || c === '.' ) && pos + 1 < input.length &&
-        this.isDigit( input[ pos + 1 ] )
-      ) ) {
+      if ( Tokenize.NUM.test( input.slice( pos ) ) ) {
         const [ value, next ] = this.readNumber( input, pos );
         tokens.push( { type: 'number', value } );
 
