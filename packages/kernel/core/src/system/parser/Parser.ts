@@ -1,12 +1,15 @@
 import type { IParser, ParsedFactor, ParserResult } from '@unitra/types/core/parser';
 import type { UnitraContext } from '@unitra/types/core/unitra';
+import type { ConstantRef } from '@unitra/types/def/constant';
+import type { PrefixRef } from '@unitra/types/def/prefix';
+import type { UnitRef } from '@unitra/types/def/unit';
+import type { Node } from '@unitra/types/node';
 import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
 import { Factorize } from './Factorize';
 import { Grammar } from './Grammar';
 import { Resolve } from './Resolve';
 import { Tokenize } from './Tokenize';
-import { Node } from '@unitra/types/node';
 
 export class Parser implements IParser {
   private static readonly log = Logging.createSource( 'parser' );
@@ -25,23 +28,33 @@ export class Parser implements IParser {
     this.factorize = new Factorize( ctx );
   }
 
-  private getNodes ( factors: ParsedFactor[] ) : Node[] {
-    const nodes: Node[] = [];
+  private getNode ( term: ParsedFactor ) : Node {
+    if ( term.token.type === 'number' ) return {
+      type: 'factor', value: term.token.value, exp: term.exp
+    };
 
-    for ( const term of factors ) {
-      switch ( term.token.type ) {
-        case 'number':
-          nodes.push( { type: 'factor', value: term.token.value, exp: term.exp } );
+    else if ( term.token.type === 'compound' ) {
+      const [ ref, prefix ] = term.token.value.reverse();
 
-        case 'compound':
+      if ( ref.key === 'constant' ) return {
+        type: 'constant', constant: ref.ref as ConstantRef, exp: term.exp
+      };
 
-        default:
-          throw new ParserError( `unresolved identifier "${ term.token.value }"`,
-            { context: {} }
-          );
-      }
+      else return {
+        type: 'unit', unit: ref.ref as UnitRef, exp: term.exp,
+        prefix: prefix ? prefix.ref as PrefixRef : undefined
+      };
     }
 
+    throw new ParserError(
+      `unresolved identifier "${ term.token.value }"`,
+      { context: {} }
+    );
+  }
+
+  private getNodes ( factors: ParsedFactor[] ) : Node[] {
+    const nodes: Node[] = [];
+    for ( const term of factors ) nodes.push( this.getNode( term ) );
     return nodes;
   }
 
