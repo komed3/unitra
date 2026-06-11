@@ -32,6 +32,13 @@ export class Parser implements IParser {
       switch ( term.token.type ) {
         case 'number':
           nodes.push( { type: 'factor', value: term.token.value, exp: term.exp } );
+
+        case 'compound':
+
+        default:
+          throw new ParserError( `unresolved identifier "${ term.token.value }"`,
+            { context: {} }
+          );
       }
     }
 
