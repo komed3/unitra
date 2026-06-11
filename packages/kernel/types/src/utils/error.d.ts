@@ -1,6 +1,6 @@
 import type { ErrorCode } from '@unitra/dict/utils';
 import type { HookId } from '../core/hook';
-import type { ParserToken } from '../core/parser';
+import type { AnyToken, ParserToken } from '../core/parser';
 import type { PluginResolveGraph } from '../core/plugin';
 import type { InputOf, RegistryKey } from '../core/registry';
 import type { NodeType, ReferenceState } from '../node';
@@ -41,7 +41,7 @@ export interface ErrorRegistry {
   [ ErrorCode.PARSER_ERROR ]: {
     input?: unknown;
     position?: number;
-    tokens?: string[];
+    tokens?: AnyToken[];
   };
   [ ErrorCode.VERSION_ERROR ]: {
     version: number;
