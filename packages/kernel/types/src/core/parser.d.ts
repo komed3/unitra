@@ -38,7 +38,7 @@ export type AnyToken =
   | ResolvedToken;
 
 export type ParsedFactor = {
-  token: ParserIDToken | ParserNumberToken;
+  token: ParserIDToken | ParserCompoundToken | ParserNumberToken;
   exp: number;
 };
 
