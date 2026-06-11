@@ -52,7 +52,9 @@ export class Resolve {
     }
 
     const match = value.match( Resolve.SEP );
-    return match ? this.resolveCompound( match[ 2 ], match[ 1 ] ) : null;
+    if ( ! match ) return null;
+
+    return this.resolveCompound( match[ 2 ], match[ 1 ] );
   }
 
   private resolveSplitTokens ( value: string, tokens: ParserToken[], index: number ) : ParserCompoundToken | null {
