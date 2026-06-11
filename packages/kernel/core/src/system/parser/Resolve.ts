@@ -14,6 +14,7 @@ export class Resolve {
   ) {}
 
   private compound ( ...tokens: GrammarToken[] ) : ParserCompoundToken {
+    Resolve.log.debug( `resolved as [ ${ tokens.map( t => `"${ t.ref }"` ).join( ', ' ) } ]` );
     return { type: 'compound', value: [ ...tokens ] };
   }
 
