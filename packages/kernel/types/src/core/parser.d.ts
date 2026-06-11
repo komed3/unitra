@@ -13,6 +13,7 @@ export type ParserGrammarMap< K extends RegistryKey = RegistryKey > = Map< strin
 export type ParserGrammar = { [ K in RegistryKey ]?: ParserGrammarMap< K > };
 
 export type ParserIDToken = { type: 'identifier', value: string };
+export type ParserCompoundToken = { type: 'compound', value: GrammarToken[] };
 export type ParserOPToken = { type: 'operator', value: '*' | '/' | '^' };
 export type ParserNumberToken = { type: 'number', value: number };
 export type ParserLParenToken = { type: 'lparen' };
@@ -20,6 +21,13 @@ export type ParserRParenToken = { type: 'rparen' };
 
 export type ParserToken =
   | ParserIDToken
+  | ParserOPToken
+  | ParserNumberToken
+  | ParserLParenToken
+  | ParserRParenToken;
+
+export type ResolvedToken =
+  | ParserCompoundToken
   | ParserOPToken
   | ParserNumberToken
   | ParserLParenToken
