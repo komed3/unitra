@@ -1,4 +1,5 @@
 import type { GrammarToken, ParserCompoundToken, ParserToken, ResolvedToken } from '@unitra/types/core/parser';
+import type { RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
@@ -23,13 +24,17 @@ export class Resolve {
     return { type: 'compound', value: tokens };
   }
 
+  private resolveToken < K extends RegistryKey > ( key: K, value: GrammarToken< K > | string ) : GrammarToken< K > | undefined {
+    return typeof value === 'string' ? this.grammar.find( key, value ) : value;
+  }
+
   private resolveCompound ( unitLike: UnitTokenLike, prefixLike?: PrefixTokenLike ) : ParserCompoundToken | null {
-    const unit = typeof unitLike === 'string' ? this.grammar.find( 'unit', unitLike ) : unitLike;
+    const unit = this.resolveToken( 'unit', unitLike );
     if ( ! unit ) return null;
 
     if ( ! prefixLike ) return this.compound( unit );
 
-    const prefix = typeof prefixLike === 'string' ? this.grammar.find( 'prefix', prefixLike ) : prefixLike;
+    const prefix = this.resolveToken( 'prefix', prefixLike );
     if ( ! prefix ) return null;
 
     if ( ! unit.prefixable ) throw new ParserError(
