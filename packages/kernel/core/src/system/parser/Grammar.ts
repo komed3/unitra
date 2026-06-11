@@ -10,49 +10,38 @@ export class Grammar {
 
   constructor ( private readonly ctx: UnitraContext ) {}
 
-  private setOrThrow < K extends RegistryKey > (
-    key: K, map: ParserGrammarMap< K >, ref: RefOf< K >,
-    value: string, prefixable: boolean
-  ) : void {
-    if ( map.has( value ) ) throw new ParserError(
-      `duplicate reference "${ value }" for ${ key } "${ ref }"`,
-      { context: {} }
-    );
+  private setOrThrow < K extends RegistryKey > ( key: K, ref: RefOf< K >, value: string, prefixable: boolean ) : number {
+    if ( this.cache && key in this.cache && this.cache[ key ]?.has( value ) )
+      throw new ParserError( `duplicate reference "${ value }" for ${ key } "${ ref }"`, { context: {} } );
 
-    map.set( value, { ref, key, prefixable } );
+    ( ( this.cache ??= {} )[ key ] ??= new Map() ).set( value, { ref, key, prefixable } );
+    return 1;
   }
 
-  private populateGrammarCache () : ParserGrammar {
+  private populateGrammarCache () : void {
     Grammar.log.debug( 'populate cache ...' );
-
-    const grammar: ParserGrammar = {};
     let size = 0;
 
     for ( const [ k, reg ] of Object.entries( this.ctx.registry ) ) {
       const key = k as RegistryKey;
-      const map = new Map();
 
       for ( const item of reg().values() ) {
         const prefixable = 'prefixable' in item && item.prefixable;
-        this.setOrThrow( key, map, item.id, item.id, prefixable );
+        size += this.setOrThrow( key, item.id, item.id, prefixable );
 
         if ( 'aliases' in item && item.aliases?.length )
           for ( const alias of item.aliases )
-            this.setOrThrow( key, map, item.id, alias, prefixable );
+            size += this.setOrThrow( key, item.id, alias, prefixable );
       }
-
-      grammar[ key ] = map;
-      size += map.size;
     }
 
     Grammar.log.debug( `cache populated with ${ size } entries` );
-    this.ctx.hook().run( 'core.parser.grammar', { grammar, size } );
-
-    return grammar;
+    this.ctx.hook().run( 'core.parser.grammar', { grammar: this.cache!, size } );
   }
 
   public get grammar () : ParserGrammar {
-    return this.cache ??= this.populateGrammarCache();
+    if ( ! this.cache ) this.populateGrammarCache();
+    return this.cache!;
   }
 
   public get < K extends RegistryKey > ( key: K ) : ParserGrammarMap< K > | undefined {
