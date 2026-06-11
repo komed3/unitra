@@ -18,13 +18,16 @@ export class Resolve {
     return { type: 'compound', value: [ ...tokens ] };
   }
 
-  private resolveCompound ( unitLike: string, prefixLike?: string ) : ParserCompoundToken | null {
-    const unit = this.grammar.find( 'unit', unitLike );
+  private resolveCompound (
+    unitLike: string | GrammarToken< 'unit' >,
+    prefixLike?: string | GrammarToken< 'prefix' >
+  ) : ParserCompoundToken | null {
+    const unit = typeof unitLike === 'string' ? this.grammar.find( 'unit', unitLike ) : unitLike;
     if ( ! unit ) return null;
 
     if ( ! prefixLike ) return this.compound( unit );
 
-    const prefix = this.grammar.find( 'prefix', prefixLike );
+    const prefix = typeof prefixLike === 'string' ? this.grammar.find( 'prefix', prefixLike ) : prefixLike;
     if ( ! prefix ) return null;
 
     if ( ! unit.prefixable ) throw new ParserError(
@@ -45,6 +48,22 @@ export class Resolve {
     return match ? this.resolveCompound( match[ 2 ], match[ 1 ] ) : null;
   }
 
+  private resolveSplitTokens ( value: string, tokens: ParserToken[], index: number ) : ParserCompoundToken | null {
+    const prefix = this.grammar.find( 'prefix', value );
+    if ( ! prefix ) return null;
+
+    let next: ParserToken;
+    if (
+      ! ( next = tokens[ index + 1 ] ) || next.type !== 'operator' || next.value !== '*' ||
+      ! ( next = tokens[ index + 2 ] ) || next.type !== 'identifier'
+    ) throw new ParserError(
+      `prefix "${ prefix.ref }" cannot stand alone - must be followed by a unit`,
+      { context: {} }
+    );
+
+    return this.resolveCompound( next.value, prefix );
+  }
+
   private resolveIdentifier ( value: string, tokens: ParserToken[], index: number ) : ParserCompoundToken {
     Resolve.log.debug( `resolving identifier "${ value }" ...` );
 
@@ -57,7 +76,10 @@ export class Resolve {
     const prefixResolve = this.resolvePrefixedUnit( value );
     if ( prefixResolve ) return prefixResolve;
 
-    throw new ParserError( '', { context: {} } );
+    const splitResolve = this.resolveSplitTokens( value, tokens, index );
+    if ( splitResolve ) return splitResolve;
+
+    throw new ParserError( `cannot resolve identifier "${ value }"`, { context: {} } );
   }
 
   public run ( tokens: ParserToken[] ) : ResolvedToken[] {}
