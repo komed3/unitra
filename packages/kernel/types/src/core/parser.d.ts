@@ -33,6 +33,10 @@ export type ResolvedToken =
   | ParserLParenToken
   | ParserRParenToken;
 
+export type AnyToken =
+  | ParserToken
+  | ResolvedToken;
+
 export type ParsedFactor = {
   token: ParserIDToken | ParserNumberToken;
   exp: number;
