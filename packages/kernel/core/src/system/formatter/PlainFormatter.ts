@@ -10,6 +10,6 @@ export type PlainFormatterOptions = {
 
 export class PlainFormatter extends Formatter implements IFormatter {
   public format ( state: ReferenceState, options?: PlainFormatterOptions ) : string {
-    return '';
+    return this.ctx.hook().run( 'core.formatter.format', { state, options }, '' );
   }
 }

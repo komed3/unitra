@@ -11,6 +11,13 @@ export interface HookRegistry {
       state: ReferenceState;
     };
   };
+  'core.formatter.format': {
+    ctx: {
+      state: ReferenceState;
+      options?: object;
+    };
+    value: string;
+  };
   'core.parser.compound': {
     ctx: {
       tokens: GrammarToken[];
