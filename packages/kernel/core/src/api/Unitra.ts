@@ -1,4 +1,5 @@
 import type { IUnitFactory } from '@unitra/types/core/factory';
+import type { FormatterOptions, FormatterType } from '@unitra/types/core/formatter';
 import type { ParserResult } from '@unitra/types/core/parser';
 import type { IRegistry, RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { IAssert, IResolve } from '@unitra/types/core/service';
@@ -48,6 +49,10 @@ export class Unitra implements IUnitra {
 
   public parse ( input: unknown ) : ParserResult {
     return this.ctx.parser().parse( input );
+  }
+
+  public format ( as: FormatterType, state: ReferenceState, options?: FormatterOptions ) : string {
+    return this.ctx.formatter[ as ]().out( state, options );
   }
 
   public unit () : IUnitFactory {
