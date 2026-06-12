@@ -64,16 +64,10 @@ export abstract class Formatter implements IFormatter {
   protected resolveNode ( node: Node, opt: FormatterOptions = {} ) : FormatterNode {
     const res = { exp: node.exp } as FormatterNode;
 
-    if ( 'constant' in node )
-      res.symbol = this.resolveSymbol( 'constant', node.constant, opt );
-    else if ( 'unit' in node )
-      res.symbol = this.resolveSymbol( 'unit', node.unit, opt );
-
-    if ( 'prefix' in node && node.prefix )
-      res.prefix = this.resolveSymbol( 'prefix', node.prefix, opt );
-
-    if ( node.type === 'factor' )
-      res.factor = this.resolveFactor( node.value, opt.numeric );
+    if ( 'constant' in node ) res.symbol = this.resolveSymbol( 'constant', node.constant, opt );
+    if ( 'unit' in node ) res.symbol = this.resolveSymbol( 'unit', node.unit, opt );
+    if ( 'prefix' in node && node.prefix ) res.prefix = this.resolveSymbol( 'prefix', node.prefix, opt );
+    if ( node.type === 'factor' ) res.factor = this.resolveFactor( node.value, opt.numeric );
 
     return res;
   }
