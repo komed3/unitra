@@ -2,7 +2,7 @@ import type { ErrorCode } from '@unitra/dict/utils';
 import type { HookId } from '../core/hook';
 import type { AnyToken } from '../core/parser';
 import type { PluginResolveGraph } from '../core/plugin';
-import type { InputOf, RegistryKey } from '../core/registry';
+import type { AnyRef, InputOf, RegistryKey } from '../core/registry';
 import type { NodeType } from '../node';
 import type { SemverVersion } from './semver';
 
@@ -27,6 +27,10 @@ export interface ErrorRegistry {
     cycles: ReadonlyArray< string >;
     overrides: ReadonlyArray< string >;
     errCount: number;
+  };
+  [ ErrorCode.REGISTRY_ERROR ]: {
+    key: RegistryKey;
+    ref: AnyRef;
   };
   [ ErrorCode.RESOLVE_ERROR ]: {
     key: RegistryKey;
