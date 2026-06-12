@@ -1,6 +1,6 @@
 import { Format } from '@unitra/dict/common';
 import type { Meta } from '@unitra/types/common';
-import type { FilterOptions, FormatterNode, FormatterOptions, IFormatter } from '@unitra/types/core/formatter';
+import type { FilterOptions, FormatterNode, FormatterOptions, IFormatter, NumericOptions } from '@unitra/types/core/formatter';
 import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { Node, ReferenceState } from '@unitra/types/node';
@@ -43,7 +43,7 @@ export abstract class Formatter implements IFormatter {
     return symbol.format[ this.format ] ?? symbol.format.plain;
   }
 
-  protected resolveFactor ( val: number ) : string {
+  protected resolveFactor ( val: number, opt: NumericOptions = {} ) : string {
     return String( val );
   }
 
@@ -59,12 +59,10 @@ export abstract class Formatter implements IFormatter {
       res.prefix = this.resolveSymbol( 'prefix', node.prefix, opt.filter );
 
     if ( node.type === 'factor' )
-      res.factor = this.resolveFactor( node.value );
+      res.factor = this.resolveFactor( node.value, opt.numeric );
 
     return res;
   }
 
-  public out ( state: ReferenceState, options?: FormatterOptions ) : string {
-    return this.ctx.hook().run( 'core.formatter.format', { state, options }, '' );
-  }
+  public abstract out ( state: ReferenceState ) : string;
 }
