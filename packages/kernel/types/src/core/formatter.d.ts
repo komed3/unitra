@@ -1,22 +1,22 @@
 import type { Lang, System } from '@unitra/dict/common';
-import type { NodeType, ReferenceState } from '../node';
+import type { ReferenceState } from '../node';
 import type { RefOf, RegistryKey } from './registry';
 
-export type SymbolIDFilter = {
+export type SymbolFilter = {
   [ K in RegistryKey ]?: {
     [ R in RefOf< K > ]?: string;
   };
 };
 
 export type NumericOptions = {
-  format?: 'decimal' | 'scientific' | 'engineering' | 'compact';
+  format?: Intl.NumberFormatOptions[ 'notation' ];
   precision?: number;
 };
 
 export type FilterOptions = {
   system?: System;
   lang?: Lang;
-  symbols?: SymbolIDFilter;
+  symbols?: SymbolFilter;
 };
 
 export type FormatterOptions = {
@@ -24,14 +24,6 @@ export type FormatterOptions = {
   filter?: FilterOptions;
   deprecated?: 'warn' | 'throw' | 'ignore';
   fraction?: boolean;
-};
-
-export type FormatterNode = {
-  type: NodeType;
-  symbol: string;
-  exp: number;
-  factor?: string;
-  prefix?: string;
 };
 
 export interface IFormatter {
