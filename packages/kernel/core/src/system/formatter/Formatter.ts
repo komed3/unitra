@@ -1,4 +1,5 @@
 import { Format } from '@unitra/dict/common';
+import type { Meta } from '@unitra/types/common';
 import type { FilterOptions, IFormatter } from '@unitra/types/core/formatter';
 import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
@@ -11,15 +12,19 @@ export abstract class Formatter implements IFormatter {
 
   constructor ( protected readonly ctx: UnitraContext ) {}
 
-  protected resolveMeta 
-
-  protected resolveSymbol < K extends RegistryKey > ( key: K, ref: RefOf< K >, opt: FilterOptions = {} ) : string {
+  protected resolveMeta < K extends RegistryKey > ( key: K, ref: RefOf< K > ) : Meta {
     const meta = getTypedRegistry( this.ctx, key ).get( ref )?.meta;
 
     if ( ! meta ) throw new FormatterError(
       `failed to resolve ${ key } reference "${ ref }"`,
       { context: { key, ref } }
     );
+
+    return meta;
+  }
+
+  protected resolveSymbol < K extends RegistryKey > ( key: K, ref: RefOf< K >, opt: FilterOptions = {} ) : string {
+    const meta = this.resolveMeta( key, ref );
 
     if ( ! meta.symbol.length ) throw new FormatterError(
       `no symbol defined for ${ key } reference "${ ref }"`,
