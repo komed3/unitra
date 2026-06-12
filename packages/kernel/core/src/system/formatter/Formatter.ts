@@ -64,5 +64,7 @@ export abstract class Formatter implements IFormatter {
     return res;
   }
 
-  public abstract out ( state: ReferenceState ) : string;
+  public out ( state: ReferenceState, options?: FormatterOptions ) : string {
+    return this.ctx.hook().run( 'core.formatter.format', { state, options }, '' );
+  }
 }
