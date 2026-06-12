@@ -38,6 +38,8 @@ export class Parser implements IParser {
 
       Parser.log.debug( `building nodes ...` );
       result.state.nodes = NodeBuilder.toNodes( factors );
+
+      Parser.log.debug( `successfully parsed` );
     }
 
     catch ( err ) {
