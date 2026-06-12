@@ -15,12 +15,12 @@ export abstract class Formatter implements IFormatter {
     const meta = getTypedRegistry( this.ctx, key ).get( ref )?.meta;
 
     if ( ! meta ) throw new FormatterError(
-      `failed to resolve symbol: ${ key }/${ ref }`,
+      `failed to resolve ${ key } reference "${ ref }"`,
       { context: { key, ref } }
     );
 
     if ( ! meta.symbol.length ) throw new FormatterError(
-      `no symbol defined for: ${ key }/${ ref }`,
+      `no symbol defined for ${ key } reference "${ ref }"`,
       { context: { key, ref } }
     );
 
