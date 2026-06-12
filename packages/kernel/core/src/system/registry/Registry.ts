@@ -11,6 +11,10 @@ export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
     return this.items.size;
   }
 
+  public get revision () : number {
+    return this.items.revision;
+  }
+
   public get < R extends Ref > ( ref: R ) : RegistryDef< R > | undefined {
     return this.items.get( ref );
   }
