@@ -40,6 +40,3 @@ export type FormatterType =
 export type FormatterInstanceMap = { [ F in FormatterType ]: IFormatter };
 export type FormatterFactoryMap = ContainerFactoryMap< FormatterInstanceMap >;
 export type FormatterContainer = Container< FormatterInstanceMap >;
-
-export type FormatFn< F extends FormatterType > =
-  ( format: F, state: ReferenceState, options?: FormatterOptions ) => string;

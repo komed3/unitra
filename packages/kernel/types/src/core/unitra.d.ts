@@ -1,6 +1,6 @@
 import type { ReferenceState } from '../node';
 import type { FactoryContainer, IUnitFactory } from './factory';
-import type { FormatFn, FormatterContainer, FormatterType } from './formatter';
+import type { FormatterContainer } from './formatter';
 import type { HookAccessor } from './hook';
 import type { ParserAccessor, ParserResult } from './parser';
 import type { IRegistry, RefOf, RegistryContainer, RegistryKey } from './registry';
@@ -15,7 +15,6 @@ export type UnitraContext = {
   service: ServiceContainer;
   parser: ParserAccessor;
   formatter: FormatterContainer;
-  format: FormatFn< FormatterType >;
   factory: FactoryContainer;
 };
 
