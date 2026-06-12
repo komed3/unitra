@@ -14,6 +14,7 @@ export interface ErrorRegistry {
     value: unknown;
     type?: NodeType;
   };
+  [ ErrorCode.FORMATTER_ERROR ]: {};
   [ ErrorCode.HOOK_ERROR ]: {
     id: HookId;
     hookCtx: unknown;
