@@ -1,5 +1,6 @@
 import type { Lang, System } from '@unitra/dict/common';
 import type { ReferenceState } from '../node';
+import type { Container, ContainerFactoryMap } from '../utils/container';
 import type { RefOf, RegistryKey } from './registry';
 
 export type SymbolFilter = {
@@ -29,3 +30,13 @@ export type FormatterOptions = {
 export interface IFormatter {
   out ( state: ReferenceState, options?: FormatterOptions ) : string;
 }
+
+export type FormatterType =
+  | 'plain'
+  | 'unicode'
+  | 'latex'
+  | 'text';
+
+export type FormatterInstanceMap = { [ K in FormatterType ]: IFormatter };
+export type FormatterFactoryMap = ContainerFactoryMap< FormatterInstanceMap >;
+export type FormatterContainer = Container< FormatterInstanceMap >;
