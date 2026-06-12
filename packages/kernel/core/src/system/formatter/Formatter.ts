@@ -19,4 +19,8 @@ export abstract class Formatter implements IFormatter {
   protected pickLang < T > ( group: LangGroup< T >, lang: Lang ) : T {
     return ( group[ lang ] ?? group[ Lang.EN ] ?? Object.values( group )[ 0 ] );
   }
+
+  protected plural ( text: [ string, string? ] | string, count: number ) : string {
+    return typeof text === 'string' ? text : count === 1 ? text[ 0 ] : text[ 1 ] || text[ 0 ];
+  }
 }
