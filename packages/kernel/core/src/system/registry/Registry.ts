@@ -3,9 +3,11 @@ import type { UnitraContext } from '@unitra/types/core/unitra';
 import { RegistryStorage } from './RegistryStorage';
 
 export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
-  private readonly items = new RegistryStorage< Ref >();
+  private readonly items: RegistryStorage< Ref >;
 
-  constructor ( private readonly ctx: UnitraContext ) {}
+  constructor ( private readonly ctx: UnitraContext ) {
+    this.items = new RegistryStorage< Ref >( ctx );
+  }
 
   public get size () : number {
     return this.items.size;

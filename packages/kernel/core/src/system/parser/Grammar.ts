@@ -1,10 +1,10 @@
-import type { GrammarToken, ParserGrammar, ParserGrammarMap } from '@unitra/types/core/parser';
+import type { GrammarToken, IGrammar, ParserGrammar, ParserGrammarMap } from '@unitra/types/core/parser';
 import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import { ParserError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
 
-export class Grammar {
+export class Grammar implements IGrammar {
   private static readonly log = Logging.createSource( 'parser::grammar' );
   private cache: ParserGrammar | null = null;
 

@@ -1,8 +1,13 @@
 import type { AnyRef, RegistryDef } from '@unitra/types/core/registry';
+import type { UnitraContext } from '@unitra/types/core/unitra';
 import { RegistryError } from '../../utils/error';
 
 export class RegistryStorage< Ref extends AnyRef > extends Map< Ref, RegistryDef< Ref > > {
   private revId: number = 0;
+
+  constructor ( private readonly ctx: UnitraContext ) {
+    super();
+  }
 
   public get revision () : number {
     return this.revId;
@@ -15,6 +20,8 @@ export class RegistryStorage< Ref extends AnyRef > extends Map< Ref, RegistryDef
     );
 
     this.revId++;
+    this.ctx.parser().grammar.invalidate();
+
     return super.set( key, value );
   }
 
