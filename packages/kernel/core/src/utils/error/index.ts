@@ -5,6 +5,7 @@ export * from './ErrorFormatter';
 export * from './serializeError';
 
 export * from './errors/AssertError';
+export * from './errors/FormatterError';
 export * from './errors/HookError';
 export * from './errors/InitError';
 export * from './errors/ParserError';
