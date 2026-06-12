@@ -62,7 +62,7 @@ export abstract class Formatter implements IFormatter {
   }
 
   protected resolveNode ( node: Node, opt: FormatterOptions = {} ) : FormatterNode {
-    const res = { exp: node.exp } as FormatterNode;
+    const res = { type: node.type, exp: node.exp } as FormatterNode;
 
     if ( 'constant' in node ) res.symbol = this.resolveSymbol( 'constant', node.constant, opt );
     if ( 'unit' in node ) res.symbol = this.resolveSymbol( 'unit', node.unit, opt );
