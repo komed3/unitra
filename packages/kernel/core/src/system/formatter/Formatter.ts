@@ -1,6 +1,6 @@
 import { Format } from '@unitra/dict/common';
 import type { Meta } from '@unitra/types/common';
-import type { FilterOptions, IFormatter } from '@unitra/types/core/formatter';
+import type { FilterOptions, FormatterOptions, IFormatter } from '@unitra/types/core/formatter';
 import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { Node, ReferenceState } from '@unitra/types/node';
@@ -16,7 +16,7 @@ export abstract class Formatter implements IFormatter {
     const meta = getTypedRegistry( this.ctx, key ).get( ref )?.meta;
 
     if ( ! meta ) throw new FormatterError(
-      `failed to resolve ${ key } reference "${ ref }"`,
+      `failed to resolve meta for ${ key } reference "${ ref }"`,
       { context: { key, ref } }
     );
 
@@ -43,11 +43,11 @@ export abstract class Formatter implements IFormatter {
     return symbol.format[ this.format ] ?? symbol.format.plain;
   }
 
-  protected resolveNode ( node: Node ) {
+  protected resolveNode ( node: Node, opt: FormatterOptions = {} ) {
     const res: any = {};
 
     for ( const [ k, val ] of Object.entries( node ) ) {
-      if ( k in this.ctx.registry ) res[ k ] = this.resolveSymbol( k as RegistryKey, val );
+      if ( k in this.ctx.registry ) res[ k ] = this.resolveSymbol( k as RegistryKey, val, opt.filter );
     }
   }
 
