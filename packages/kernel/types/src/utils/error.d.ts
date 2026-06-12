@@ -1,4 +1,5 @@
 import type { ErrorCode } from '@unitra/dict/utils';
+import type { Symbol } from '../common';
 import type { HookId } from '../core/hook';
 import type { AnyToken } from '../core/parser';
 import type { PluginResolveGraph } from '../core/plugin';
@@ -17,6 +18,7 @@ export interface ErrorRegistry {
   [ ErrorCode.FORMATTER_ERROR ]: {
     key?: RegistryKey;
     ref?: AnyRef;
+    symbol?: Symbol;
   };
   [ ErrorCode.HOOK_ERROR ]: {
     id: HookId;
