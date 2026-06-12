@@ -4,9 +4,9 @@ import type { ReferenceState } from '@unitra/types/node';
 import { Formatter } from './Formatter';
 
 export class PlainFormatter extends Formatter implements IFormatter {
-  protected override readonly _format = Format.PLAIN;
+  protected override readonly format = Format.PLAIN;
 
-  public format ( state: ReferenceState, options?: FormatterOptions ) : string {
+  public out ( state: ReferenceState, options?: FormatterOptions ) : string {
     return this.ctx.hook().run( 'core.formatter.format', { state, options }, '' );
   }
 }

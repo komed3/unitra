@@ -3,7 +3,7 @@ import type { ReferenceState } from '@unitra/types/node';
 import { Formatter } from './Formatter';
 
 export class LatexFormatter extends Formatter implements IFormatter {
-  public format ( state: ReferenceState ) : string {
+  public out ( state: ReferenceState ) : string {
     return '';
   }
 }

@@ -7,9 +7,11 @@ import { FormatterError } from '../../utils/error';
 import { getTypedRegistry } from '../registry';
 
 export abstract class Formatter implements IFormatter {
-  protected readonly _format: Format = Format.PLAIN;
+  protected readonly format: Format = Format.PLAIN;
 
   constructor ( protected readonly ctx: UnitraContext ) {}
+
+  protected resolveMeta 
 
   protected resolveSymbol < K extends RegistryKey > ( key: K, ref: RefOf< K >, opt: FilterOptions = {} ) : string {
     const meta = getTypedRegistry( this.ctx, key ).get( ref )?.meta;
@@ -33,7 +35,7 @@ export abstract class Formatter implements IFormatter {
     const symbol = filtered.find( s => s.canonical ) ?? filtered[ 0 ] ??
       meta.symbol.find( s => s.canonical ) ?? meta.symbol[ 0 ];
 
-    return symbol.format[ this._format ] ?? symbol.format.plain;
+    return symbol.format[ this.format ] ?? symbol.format.plain;
   }
 
   protected resolveNode ( node: Node ) {
@@ -44,5 +46,5 @@ export abstract class Formatter implements IFormatter {
     }
   }
 
-  public abstract format ( state: ReferenceState ) : string;
+  public abstract out ( state: ReferenceState ) : string;
 }

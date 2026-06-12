@@ -27,5 +27,5 @@ export type FormatterOptions = {
 };
 
 export interface IFormatter {
-  format ( state: ReferenceState, options?: FormatterOptions ) : string;
+  out ( state: ReferenceState, options?: FormatterOptions ) : string;
 }
