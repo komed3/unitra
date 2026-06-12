@@ -1,5 +1,5 @@
 import type { Lang, System } from '@unitra/dict/common';
-import type { ReferenceState } from '../node';
+import type { NodeType, ReferenceState } from '../node';
 import type { RefOf, RegistryKey } from './registry';
 
 export type SymbolIDFilter = {
@@ -24,6 +24,14 @@ export type FormatterOptions = {
   filter?: FilterOptions;
   deprecated?: 'warn' | 'throw' | 'ignore';
   fraction?: boolean;
+};
+
+export type FormatterNode = {
+  type: NodeType;
+  symbol: string;
+  exp: number;
+  value?: number;
+  prefix?: string;
 };
 
 export interface IFormatter {
