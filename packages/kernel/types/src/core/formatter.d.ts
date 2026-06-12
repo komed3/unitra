@@ -30,7 +30,7 @@ export type FormatterNode = {
   type: NodeType;
   symbol: string;
   exp: number;
-  value?: number;
+  factor?: string;
   prefix?: string;
 };
 
