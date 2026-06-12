@@ -1,6 +1,6 @@
-import { Format, Lang, type System } from '@unitra/dict/common';
+import { Format, Lang } from '@unitra/dict/common';
 import type { FormatGroup, LangGroup, Name, Symbol } from '@unitra/types/common';
-import type { IFormatter } from '@unitra/types/core/formatter';
+import type { IFormatter, SymbolOptions } from '@unitra/types/core/formatter';
 import type { RefOf, RegistryDef, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ReferenceState } from '@unitra/types/node';
@@ -25,10 +25,11 @@ export abstract class Formatter implements IFormatter {
     return typeof text === 'string' ? text : count === 1 ? text[ 0 ] : text[ 1 ] || text[ 0 ];
   }
 
-  protected pickSymbol ( symbols: readonly Symbol[], opt: { system?: System, lang?: Lang } = {} ) : Symbol | undefined {
+  protected pickSymbol ( symbols: readonly Symbol[], opt: SymbolOptions = {} ) : Symbol | undefined {
     if ( ! symbols.length ) return undefined;
 
-    const filtered = symbols.filter( ( { context } ) => 
+    const filtered = symbols.filter( ( { id, context } ) =>
+      ( opt.id ? opt.id === id : true ) &&
       ( ! context?.system || ( opt.system ? context.system.includes( opt.system ) : true ) ) &&
       ( ! context?.lang || ( opt.lang ? context.lang === opt.lang : true ) )
     );
