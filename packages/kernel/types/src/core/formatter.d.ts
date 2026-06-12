@@ -13,7 +13,7 @@ export type NumericOptions = {
   precision?: number;
 };
 
-export type MetaFilter = {
+export type FilterOptions = {
   system?: System;
   lang?: Lang;
   symbols?: SymbolIDFilter;
@@ -21,7 +21,7 @@ export type MetaFilter = {
 
 export type FormatterOptions = {
   numeric?: NumericOptions;
-  filter?: MetaFilter;
+  filter?: FilterOptions;
   deprecated?: 'warn' | 'throw' | 'ignore';
   fraction?: boolean;
 };
