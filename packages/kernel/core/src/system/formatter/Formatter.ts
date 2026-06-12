@@ -78,5 +78,11 @@ export abstract class Formatter implements IFormatter {
     return res;
   }
 
+  protected resolveState ( state: ReferenceState, opt: FormatterOptions = {} ) : FormatterNode[] {
+    const res: FormatterNode[] = [];
+    for ( const node of state.nodes ) res.push( this.resolveNode( node, opt ) );
+    return res;
+  }
+
   public abstract out ( state: ReferenceState ) : string;
 }
