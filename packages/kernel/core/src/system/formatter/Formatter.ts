@@ -1,3 +1,5 @@
+import { Format } from '@unitra/dict/common';
+import type { FormatGroup } from '@unitra/types/common';
 import type { IFormatter } from '@unitra/types/core/formatter';
 import type { RefOf, RegistryDef, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
@@ -8,5 +10,9 @@ export abstract class Formatter implements IFormatter {
 
   protected get < K extends RegistryKey > ( key: K, ref: RefOf< K > ) : RegistryDef< RefOf< K > > | undefined {
     return getTypedRegistry( this.ctx, key ).get( ref );
+  }
+
+  protected pickFormat< T > ( group: FormatGroup< T >, format: Format ) : T {
+    return ( group[ format ] ?? group[ Format.PLAIN ] );
   }
 }
