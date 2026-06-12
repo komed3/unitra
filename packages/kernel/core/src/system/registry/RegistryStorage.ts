@@ -20,7 +20,7 @@ export class RegistryStorage< Ref extends AnyRef > extends Map< Ref, RegistryDef
     );
 
     this.revId++;
-    this.ctx.parser().grammar.invalidate();
+    this.ctx.parser().invalidateCache();
 
     return super.set( key, value );
   }

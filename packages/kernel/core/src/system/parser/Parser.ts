@@ -11,7 +11,7 @@ import { Tokenize } from './Tokenize';
 export class Parser implements IParser {
   private static readonly log = Logging.createSource( 'parser' );
 
-  public readonly grammar: Grammar;
+  private readonly grammar: Grammar;
 
   private readonly tokenize: Tokenize;
   private readonly resolve: Resolve;
@@ -47,6 +47,10 @@ export class Parser implements IParser {
         { context: { input }, cause: err }
       );
     }
+  }
+
+  public invalidateCache () : void {
+    this.grammar.invalidate();
   }
 
   public parse ( input: unknown ) : ParserResult {

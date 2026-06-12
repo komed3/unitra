@@ -48,16 +48,8 @@ export type ParserResult = {
   error?: IUnitraError< ErrorCode.PARSER_ERROR >;
 };
 
-export interface IGrammar {
-  readonly grammar: ParserGrammar;
-  invalidate () : void;
-  get < K extends RegistryKey > ( key: K ) : ParserGrammarMap< K > | undefined;
-  find < K extends RegistryKey > ( key: K, input: string ) : GrammarToken< K > | undefined;
-  keys () : RegistryKey[];
-}
-
 export interface IParser {
-  readonly grammar: IGrammar;
+  invalidateCache () : void;
   parse ( input: unknown ) : ParserResult;
 }
 
