@@ -36,7 +36,7 @@ export class Init {
 
   private static createCtx () : UnitraContext {
     this.log.debug( `create Unitra context (vers. ${ this.version }) ...` );
-    return { VERSION: this.version, REVISION: this.revision } as UnitraContext;
+    return { VERSION: this.version, REVISION: this.revision, readyState: false } as UnitraContext;
   }
 
   private static mountServices ( ctx: UnitraContext, overrides: PluginOverrides ) : void {
@@ -58,6 +58,10 @@ export class Init {
 
   private static freezeCtx ( ctx: UnitraContext ) : void {
     Init.log.debug( 'freezing context ...' );
+
+    ctx.readyState = true;
+    Object.freeze( ctx.readyState );
+
     Object.freeze( ctx );
 
     Object.freeze( ctx.VERSION );

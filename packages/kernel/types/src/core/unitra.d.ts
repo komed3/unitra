@@ -8,6 +8,7 @@ import type { IAssert, IResolve, ServiceContainer } from './service';
 export type UnitraContext = {
   readonly VERSION: 1;
   readonly REVISION: number;
+  readyState: boolean;
   hook: HookAccessor;
   registry: RegistryContainer;
   service: ServiceContainer;
