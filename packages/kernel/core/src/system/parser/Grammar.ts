@@ -6,7 +6,7 @@ import { Logging } from '../../utils/logging';
 
 export class Grammar {
   private static readonly log = Logging.createSource( 'parser::grammar' );
-  private cache: ParserGrammar | undefined;
+  private cache: ParserGrammar | null = null;
 
   constructor ( private readonly ctx: UnitraContext ) {}
 
@@ -42,6 +42,11 @@ export class Grammar {
   public get grammar () : ParserGrammar {
     if ( ! this.cache ) this.populateGrammarCache();
     return this.cache!;
+  }
+
+  public invalidate () : void {
+    Grammar.log.debug( 'invalidate cache' );
+    this.cache = null;
   }
 
   public get < K extends RegistryKey > ( key: K ) : ParserGrammarMap< K > | undefined {
