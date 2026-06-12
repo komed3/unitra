@@ -29,7 +29,6 @@ export interface ErrorRegistry {
     errCount: number;
   };
   [ ErrorCode.REGISTRY_ERROR ]: {
-    key: RegistryKey;
     ref: AnyRef;
   };
   [ ErrorCode.RESOLVE_ERROR ]: {
