@@ -1,6 +1,6 @@
 import { Format } from '@unitra/dict/common';
 import type { Meta } from '@unitra/types/common';
-import type { FilterOptions, FormatterOptions, IFormatter } from '@unitra/types/core/formatter';
+import type { FilterOptions, FormatterNode, FormatterOptions, IFormatter } from '@unitra/types/core/formatter';
 import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { Node, ReferenceState } from '@unitra/types/node';
@@ -43,12 +43,25 @@ export abstract class Formatter implements IFormatter {
     return symbol.format[ this.format ] ?? symbol.format.plain;
   }
 
-  protected resolveNode ( node: Node, opt: FormatterOptions = {} ) {
-    const res: any = {};
+  protected resolveFactor ( val: number ) : string {
+    return String( val );
+  }
 
-    for ( const [ k, val ] of Object.entries( node ) ) {
-      if ( k in this.ctx.registry ) res[ k ] = this.resolveSymbol( k as RegistryKey, val, opt.filter );
-    }
+  protected resolveNode ( node: Node, opt: FormatterOptions = {} ) : FormatterNode {
+    const res = { exp: node.exp } as FormatterNode;
+
+    if ( 'constant' in node )
+      res.symbol = this.resolveSymbol( 'constant', node.constant, opt.filter );
+    else if ( 'unit' in node )
+      res.symbol = this.resolveSymbol( 'unit', node.unit, opt.filter );
+
+    if ( 'prefix' in node && node.prefix )
+      res.prefix = this.resolveSymbol( 'prefix', node.prefix, opt.filter );
+
+    if ( node.type === 'factor' )
+      res.factor = this.resolveFactor( node.value );
+
+    return res;
   }
 
   public abstract out ( state: ReferenceState ) : string;
