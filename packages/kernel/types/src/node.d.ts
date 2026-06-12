@@ -34,6 +34,11 @@ export type ReferenceState = {
   nodes: Nodes;
 };
 
+export type NodeGroups = readonly [
+  numerator: Node[],
+  denominator: Node[]
+];
+
 export type NodeMap = {
   unit: UnitNode;
   constant: ConstantNode;
