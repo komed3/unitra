@@ -3,6 +3,7 @@ import type { FormatGroup, LangGroup, Name, Symbol } from '@unitra/types/common'
 import type { IFormatter } from '@unitra/types/core/formatter';
 import type { RefOf, RegistryDef, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
+import type { ReferenceState } from '@unitra/types/node';
 import { getTypedRegistry } from '../registry';
 
 export abstract class Formatter implements IFormatter {
@@ -35,4 +36,6 @@ export abstract class Formatter implements IFormatter {
     return filtered.find( s => s.canonical ) ?? filtered[ 0 ] ??
       symbols.find( s => s.canonical ) ?? symbols[ 0 ];
   }
+
+  public abstract format ( state: ReferenceState ) : string;
 }
