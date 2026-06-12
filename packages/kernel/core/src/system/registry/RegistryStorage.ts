@@ -19,8 +19,8 @@ export class RegistryStorage< Ref extends AnyRef > extends Map< Ref, RegistryDef
       { context: { ref: key } }
     );
 
+    if ( this.ctx.readyState ) this.ctx.parser().invalidateCache();
     this.revId++;
-    this.ctx.parser().invalidateCache();
 
     return super.set( key, value );
   }
