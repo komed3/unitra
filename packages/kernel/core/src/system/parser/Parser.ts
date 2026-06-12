@@ -11,7 +11,7 @@ import { Tokenize } from './Tokenize';
 export class Parser implements IParser {
   private static readonly log = Logging.createSource( 'parser' );
 
-  private readonly grammar: Grammar;
+  public readonly grammar: Grammar;
 
   private readonly tokenize: Tokenize;
   private readonly resolve: Resolve;
