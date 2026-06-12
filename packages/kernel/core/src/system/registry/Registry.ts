@@ -6,7 +6,7 @@ export class Registry< Ref extends AnyRef > implements IRegistry< Ref > {
   private readonly items: RegistryStorage< Ref >;
 
   constructor ( private readonly ctx: UnitraContext ) {
-    this.items = new RegistryStorage< Ref >( ctx );
+    this.items = new RegistryStorage< Ref >( this.ctx );
   }
 
   public get size () : number {
