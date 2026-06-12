@@ -29,11 +29,8 @@ export interface ISerialize {
   fromUnitStruct ( struct: UnitStruct | CompoundStruct ) : string;
 }
 
-export interface IFormatter {}
-
 export type ServiceInstanceMap = {
   assert: IAssert;
-  formatter: IFormatter;
   resolve: IResolve;
   serialize: ISerialize;
 };
