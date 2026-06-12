@@ -45,6 +45,8 @@ export class Grammar {
   }
 
   public invalidate () : void {
+    if ( ! this.cache ) return;
+
     Grammar.log.debug( 'invalidate cache' );
     this.cache = null;
   }
