@@ -8,24 +8,22 @@ export type SymbolIDFilter = {
   };
 };
 
-export type SymbolOptions = {
+export type NumericOptions = {
+  format?: 'decimal' | 'scientific' | 'engineering' | 'compact';
+  precision?: number;
+};
+
+export type MetaFilter = {
   system?: System;
   lang?: Lang;
-  id?: string;
+  symbols?: SymbolIDFilter;
 };
 
 export type FormatterOptions = {
-  fraction?: boolean;
+  numeric?: NumericOptions;
+  filter?: MetaFilter;
   deprecated?: 'warn' | 'throw' | 'ignore';
-  numeric?: {
-    format?: 'decimal' | 'scientific' | 'engineering' | 'compact';
-    precision?: number;
-  };
-  filter?: {
-    system?: System;
-    lang?: Lang;
-    symbols?: SymbolIDFilter;
-  };
+  fraction?: boolean;
 };
 
 export interface IFormatter {
