@@ -1,5 +1,5 @@
 import type { Lang, System } from '@unitra/dict/common';
-import type { ReferenceState, StructureNode } from '../node';
+import type { NodeType, ReferenceState, StructureNode } from '../node';
 import type { Container, ContainerFactoryMap } from '../utils/container';
 import type { RefOf, RegistryKey } from './registry';
 
@@ -39,6 +39,13 @@ export type GroupedNodes = readonly [
 export type ProcessedNodes = {
   nodes: GroupedNodes;
   factor?: number;
+};
+
+export type ResolvedNode = {
+  type: Exclude< NodeType, 'factor' >;
+  symbol: string;
+  exp: number;
+  prefix?: string;
 };
 
 export interface IFormatter {

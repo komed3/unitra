@@ -1,7 +1,8 @@
 import { Format, Lang } from '@unitra/dict/common';
-import type { FormatterOptions, IFormatter, ProcessedNodes } from '@unitra/types/core/formatter';
+import type { FormatterOptions, IFormatter, ProcessedNodes, ResolvedNode } from '@unitra/types/core/formatter';
+import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
-import type { ReferenceState } from '@unitra/types/node';
+import type { ReferenceState, StructureNode } from '@unitra/types/node';
 import { Logging } from '../../utils/logging';
 
 export abstract class Formatter implements IFormatter {
@@ -48,6 +49,18 @@ export abstract class Formatter implements IFormatter {
       roundingMode: opt.numeric?.rounding,
       useGrouping: opt.numeric?.grouping
     } ).formatToParts( factor );
+  }
+
+  protected resolveSymbol < K extends RegistryKey > ( key: K, ref: RefOf< K >, opt: FormatterOptions = {} ) : string {}
+
+  protected resolveNode ( node: StructureNode, opt: FormatterOptions = {} ) : ResolvedNode {
+    const res = { type: node.type, exp: node.exp } as ResolvedNode;
+
+    if ( 'constant' in node ) res.symbol = this.resolveSymbol( 'constant', node.constant, opt );
+    if ( 'unit' in node ) res.symbol = this.resolveSymbol( 'unit', node.unit, opt );
+    if ( 'prefix' in node && node.prefix ) res.prefix = this.resolveSymbol( 'prefix', node.prefix, opt );
+
+    return res;
   }
 
   public out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string {
