@@ -16,44 +16,64 @@ export abstract class Formatter implements IFormatter {
   protected static readonly log = Logging.createSource( 'formatter' );
   protected readonly format: Format = Format.PLAIN;
 
-  protected readonly defaults: FormatterOptions = {
-    numeric: { notation: 'standard', scientificStyle: 'e' },
-    deprecated: 'warn', fraction: false
+  protected get defaults () : FormatterOptions {
+    return {
+      numeric: {
+        notation: 'standard',
+        scientificStyle: 'e'
+      },
+      deprecated: 'warn',
+      fraction: false
+    };
   };
 
-  protected readonly numberRenderer: NumberPartRenderer = {
-    integer: part => part.value,
-    fraction: part => part.value,
-    decimal: part => part.value,
-    group: part => part.value,
-    minusSign: part => part.value,
-    plusSign: part => part.value,
-    exponentSeparator: ( part, opt ) => opt.numeric?.scientificStyle === 'power' ? '*10^' : part.value,
-    exponentInteger: part => part.value,
-    compact: part => part.value,
-    literal: part => part.value
+  protected get numberRenderer () : NumberPartRenderer {
+    return {
+      integer: part => part.value,
+      group: part => part.value,
+      decimal: part => part.value,
+      fraction: part => part.value,
+      plusSign: part => part.value,
+      minusSign: part => part.value,
+      literal: part => part.value,
+      nan: part => part.value,
+      infinity: part => part.value,
+      compact: part => part.value,
+      exponentInteger: ( part, opt ) => this.renderer.superscript( part.value, opt ),
+      exponentMinusSign: ( part, opt ) => this.renderer.superscript( part.value, opt ),
+      exponentSeparator: ( part, opt ) => this.renderer.superscript( part.value, opt ),
+      scientific: part => part.value,
+      sign: part => part.value
+    };
   };
 
-  protected readonly renderer: FormatterRenderer = {
-    numberPart: ( part, opt ) => this.numberRenderer[ part.type as keyof NumberPartRenderer ]( part, opt ),
-    number: ( num, opt ) => num.map( p => this.renderer.numberPart( p, opt ) ).join( '' ),
-    exponent: ( exp, opt ) => `^${ this.renderer.number( exp, opt ) }`.replace( '^1', '' ),
+  protected get renderer () : FormatterRenderer {
+    return {
+      superscript: value => value,
 
-    symbol: node => node.symbol,
-    prefix: node => node.prefix ?? '',
+      numberPart: ( part, opt ) => {
+        const renderer = this.numberRenderer[ part.type as keyof NumberPartRenderer ];
+        return renderer ? renderer( part, opt ) : part.value;
+      },
+      number: ( num, opt ) => num.map( p => this.renderer.numberPart( p, opt ) ).join( '' ),
+      exponent: ( exp, opt ) => `^${ this.renderer.number( exp, opt ) }`.replace( '^1', '' ),
 
-    node: ( node, opt ) =>
-      this.renderer.prefix( node, opt ) +
-      this.renderer.symbol( node, opt ) +
-      this.renderer.exponent( node.exp, opt ),
+      symbol: node => node.symbol,
+      prefix: node => node.prefix ?? '',
 
-    factor: ( factor, opt ) => this.renderer.number( factor ?? [], opt ),
+      node: ( node, opt ) =>
+        this.renderer.prefix( node, opt ) +
+        this.renderer.symbol( node, opt ) +
+        this.renderer.exponent( node.exp, opt ),
 
-    numerator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( ' ' ),
-    denominator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( ' ' ),
+      factor: ( factor, opt ) => factor?.length ? this.renderer.number( factor ?? [], opt ) : '',
 
-    fraction: ( num, den ) => den.length ? `${ num } / ${ den }` : num,
-    state: ( factor, structure ) => `${ factor } ${ structure }`.trim()
+      numerator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( ' ' ),
+      denominator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( ' ' ),
+
+      fraction: ( num, den ) => den.length ? `${ num } / ${ den }` : num,
+      state: ( factor, structure ) => `${ factor } ${ structure }`.trim()
+    };
   };
 
   constructor ( protected readonly ctx: UnitraContext ) {}
