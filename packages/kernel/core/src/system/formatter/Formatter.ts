@@ -9,7 +9,8 @@ export abstract class Formatter implements IFormatter {
   protected readonly format: Format = Format.PLAIN;
 
   protected readonly defaults: FormatterOptions = {
-    fraction: false
+    numeric: { notation: 'standard', scientificStyle: 'e' },
+    deprecated: 'warn', fraction: false
   };
 
   constructor ( protected readonly ctx: UnitraContext ) {}
