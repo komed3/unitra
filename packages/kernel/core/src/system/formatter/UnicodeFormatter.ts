@@ -3,6 +3,12 @@ import type { FormatterOptions, FormatterRenderer, IFormatter, NumberPartRendere
 import { Formatter } from './Formatter';
 
 export class UnicodeFormatter extends Formatter implements IFormatter {
+  private static readonly DIGITS = /[0-9+\-]/g;
+  private static readonly SUPER_MAP = {
+    '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵',
+    '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '+': '⁺', '-': '⁻'
+  } as const;
+
   protected override readonly format = Format.UNICODE;
 
   protected override get defaults () : FormatterOptions {
@@ -22,10 +28,11 @@ export class UnicodeFormatter extends Formatter implements IFormatter {
 
   protected override get renderer () : FormatterRenderer {
     return { ...super.renderer,
-      superscript: value => value.replace( /[0-9+\-]/g, c => ( {
-        '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴', '5': '⁵',
-        '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻', '+': '⁺'
-      }[ c ] || c ) ),
+      superscript: value => value.replace(
+        UnicodeFormatter.DIGITS, c => c in UnicodeFormatter.SUPER_MAP
+          ? UnicodeFormatter.SUPER_MAP[ c as keyof typeof UnicodeFormatter.SUPER_MAP ]
+          : c
+      ),
 
       exponent: ( exp, opt ) => {
         const num = this.renderer.number( exp, opt );
