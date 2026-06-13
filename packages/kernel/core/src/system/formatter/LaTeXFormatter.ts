@@ -15,16 +15,16 @@ export class LaTeXFormatter extends Formatter implements IFormatter {
         scientificStyle: 'power'
       },
       sep: {
-        factor: '\\,',
-        exp: '\\cdot',
-        node: '\\,'
+        factor: '\\, ',
+        exp: '\\cdot ',
+        node: '\\, '
       }
     };
   }
 
   protected override get numberRenderer () : NumberPartRenderer {
     return { ...super.numberRenderer,
-      exponentSeparator: ( _, opt ) => `${ opt.sep?.exp } 10`
+      exponentSeparator: ( _, opt ) => `${ opt.sep?.exp }10`
     };
   }
 

@@ -1,5 +1,5 @@
 import { Format } from '@unitra/dict/common';
-import type { FormatterOptions, FormatterRenderer, IFormatter } from '@unitra/types/core/formatter';
+import type { FormatterOptions, FormatterRenderer, IFormatter, NumberPartRenderer } from '@unitra/types/core/formatter';
 import { Formatter } from './Formatter';
 
 export class UnicodeFormatter extends Formatter implements IFormatter {
@@ -22,6 +22,15 @@ export class UnicodeFormatter extends Formatter implements IFormatter {
         exp: '×',
         node: ' '
       }
+    };
+  }
+
+  protected override get numberRenderer () : NumberPartRenderer {
+    return { ...super.numberRenderer,
+      exponentSeparator: ( part, opt ) =>
+        opt.numeric?.scientificStyle === 'power'
+          ? `${ opt.sep?.exp }10`
+          : part.value
     };
   }
 
