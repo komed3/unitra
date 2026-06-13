@@ -10,17 +10,20 @@ export type SymbolFilter = {
 };
 
 export type NumericOptions = {
-  format?: Intl.NumberFormatOptions[ 'notation' ];
   precision?: number;
+  notation?: Intl.NumberFormatOptions[ 'notation' ];
+  sign?: Intl.NumberFormatOptions[ 'signDisplay' ];
+  rounding?: Intl.NumberFormatOptions[ 'roundingMode' ];
+  grouping?: Intl.NumberFormatOptions[ 'useGrouping' ];
 };
 
 export type FilterOptions = {
   system?: System;
-  lang?: Lang;
   symbols?: SymbolFilter;
 };
 
 export type FormatterOptions = {
+  lang?: Lang;
   numeric?: NumericOptions;
   filter?: FilterOptions;
   deprecated?: 'warn' | 'throw' | 'ignore';
@@ -32,7 +35,7 @@ export type GroupedNodes = readonly [
   denominator: StructureNode[]
 ];
 
-export type PreprocessedNodes = {
+export type ProcessedNodes = {
   nodes: GroupedNodes;
   factor?: number;
 };
