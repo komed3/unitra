@@ -1,8 +1,8 @@
 import { Format, Lang } from '@unitra/dict/common';
 import type { Meta } from '@unitra/types/common';
 import type {
-  FormatterOptions, GroupedNodes, IFormatter, PreparedState, ResolvedGroupedNodes,
-  ResolvedNode, ResolvedNumber, ResolvedState
+  FormatterOptions, FormatterRenderer, GroupedNodes, IFormatter, PreparedState,
+  ResolvedGroupedNodes, ResolvedNode, ResolvedNumber, ResolvedState
 } from '@unitra/types/core/formatter';
 import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { IAssert } from '@unitra/types/core/service';
@@ -19,6 +19,19 @@ export abstract class Formatter implements IFormatter {
   protected readonly defaults: FormatterOptions = {
     numeric: { notation: 'standard', scientificStyle: 'e' },
     deprecated: 'warn', fraction: false
+  };
+
+  protected readonly renderer: FormatterRenderer = {
+    numberPart: p => p.value,
+    exponent: () => '',
+    symbol: () => '',
+    prefix: () => '',
+    node: () => '',
+    factor: () => '',
+    numerator: () => '',
+    denominator: () => '',
+    fraction: () => '',
+    state: () => ''
   };
 
   constructor ( protected readonly ctx: UnitraContext ) {}
