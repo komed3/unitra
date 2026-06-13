@@ -1,9 +1,13 @@
 import { Format, Lang } from '@unitra/dict/common';
+import type { Meta } from '@unitra/types/common';
 import type { FormatterOptions, GroupedNodes, IFormatter, ProcessedNodes, ResolvedNode, ResolvedNodes } from '@unitra/types/core/formatter';
 import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
+import type { IAssert } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ReferenceState, StructureNode } from '@unitra/types/node';
+import { FormatterError } from '../../utils/error';
 import { Logging } from '../../utils/logging';
+import { getTypedRegistry } from '../registry';
 
 export abstract class Formatter implements IFormatter {
   protected static readonly log = Logging.createSource( 'formatter' );
@@ -22,6 +26,17 @@ export abstract class Formatter implements IFormatter {
       numeric: { ...this.defaults.numeric, ...opt?.numeric },
       filter: { ...this.defaults.filter, ...opt?.filter }
     };
+  }
+
+  protected resolveMeta < K extends RegistryKey > ( key: K, ref: RefOf< K > ) : Meta {
+    const meta = getTypedRegistry( this.ctx, key ).get( ref )?.meta;
+
+    if ( ! meta ) throw new FormatterError(
+      `failed to resolve meta for ${ key } reference "${ ref }"`,
+      { context: { key, ref } }
+    );
+
+    return meta;
   }
 
   protected prepare ( state: ReferenceState, fraction?: boolean, factor?: number ) : ProcessedNodes {
@@ -68,6 +83,9 @@ export abstract class Formatter implements IFormatter {
   }
 
   public out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string {
+    const assert: IAssert = this.ctx.service.assert();
+    assert.assertState( state );
+
     const resolvedOptions = this.options( options );
 
     const { nodes, factor } = this.prepare( state, resolvedOptions.fraction, value );
