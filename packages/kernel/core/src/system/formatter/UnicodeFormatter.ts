@@ -27,9 +27,10 @@ export class UnicodeFormatter extends Formatter implements IFormatter {
         '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻', '+': '⁺'
       }[ c ] || c ) ),
 
-      exponent: ( exp, opt ) => this.renderer.superscript(
-        super.renderer.exponent( exp, opt ).slice( 1 ), opt
-      )
+      exponent: ( exp, opt ) => {
+        const num = this.renderer.number( exp, opt );
+        return num === '1' ? '' : this.renderer.superscript( num, opt );
+      }
     };
   }
 }

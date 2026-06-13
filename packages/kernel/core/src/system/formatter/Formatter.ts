@@ -55,8 +55,13 @@ export abstract class Formatter implements IFormatter {
         const renderer = this.numberRenderer[ part.type as keyof NumberPartRenderer ];
         return renderer ? renderer( part, opt ) : part.value;
       },
+
       number: ( num, opt ) => num.map( p => this.renderer.numberPart( p, opt ) ).join( '' ),
-      exponent: ( exp, opt ) => `^${ this.renderer.number( exp, opt ) }`.replace( '^1', '' ),
+
+      exponent: ( exp, opt ) => {
+        const num = this.renderer.number( exp, opt );
+        return num === '1' ? '' : '^' + this.renderer.superscript( num, opt );
+      },
 
       symbol: node => node.symbol,
       prefix: node => node.prefix ?? '',
@@ -67,10 +72,8 @@ export abstract class Formatter implements IFormatter {
         this.renderer.exponent( node.exp, opt ),
 
       factor: ( factor, opt ) => factor?.length ? this.renderer.number( factor ?? [], opt ) : '',
-
       numerator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( ' ' ),
       denominator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( ' ' ),
-
       fraction: ( num, den ) => den.length ? `${ num } / ${ den }` : num,
       state: ( factor, structure ) => `${ factor } ${ structure }`.trim()
     };
