@@ -1,7 +1,7 @@
 import { Format } from '@unitra/dict/common';
-import type { IFormatter } from '@unitra/types/core/formatter';
+import type { GroupedNodes, IFormatter } from '@unitra/types/core/formatter';
 import type { UnitraContext } from '@unitra/types/core/unitra';
-import type { Node, NodeGroups, ReferenceState } from '@unitra/types/node';
+import type { Node, NumericGroup, ReferenceState, StructureGroup } from '@unitra/types/node';
 import { Logging } from '../../utils/logging';
 
 export abstract class Formatter implements IFormatter {
@@ -10,15 +10,20 @@ export abstract class Formatter implements IFormatter {
 
   constructor ( protected readonly ctx: UnitraContext ) {}
 
-  protected groupNodes ( nodes: Node[], fraction: boolean ) : NodeGroups {
-    const groups: NodeGroups = [ [], [] ];
+  protected groupNodes ( nodes: Node[], fraction: boolean ) : GroupedNodes {
+    const numeric: NumericGroup = [ [], [] ];
+    const structure: StructureGroup = [ [], [] ];
 
     for ( const node of nodes ) {
-      if ( fraction && node.exp < 0 ) groups[ 1 ].push( { ...node, exp: -node.exp } );
-      else groups[ 0 ].push( { ...node } );
+      const isDenom = fraction && node.exp < 0;
+      const exp = isDenom ? -node.exp : node.exp;
+      const idx: 0 | 1 = isDenom ? 1 : 0;
+
+      if ( node.type === 'factor' ) numeric[ idx ].push( { ...node, exp } );
+      else structure[ idx ].push( { ...node, exp } );
     }
 
-    return groups;
+    return { numeric, structure };
   }
 
   public abstract out ( state: ReferenceState ) : string;
