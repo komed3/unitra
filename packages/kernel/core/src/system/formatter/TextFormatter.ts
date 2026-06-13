@@ -10,12 +10,16 @@ export class TextFormatter extends Formatter implements IFormatter {
     [ Lang.EN ]: {
       frac: 'per',
       power: 'times 10 to the power of',
-      exp: 'to the power of'
+      exp: 'to the power of',
+      squared: 'squared',
+      cubed: 'cubed'
     },
     [ Lang.DE ]: {
       frac: 'geteilt durch',
       power: 'mal 10 hoch',
-      exp: 'to the power of'
+      exp: 'to the power of',
+      squared: 'zum Quadrat',
+      cubed: 'zum Kubik'
     }
   } as const;
 
@@ -45,7 +49,9 @@ export class TextFormatter extends Formatter implements IFormatter {
     return { ...super.renderer,
       exponent: ( exp, opt ) => {
         const num = this.renderer.number( exp, opt );
-        return num === '1' ? '' : ` ${ TextFormatter.DICT[ opt.lang ?? Lang.EN ].exp } ${ num }`;
+        return num === '1' ? '' : ` ${ TextFormatter.DICT[ opt.lang ?? Lang.EN ][
+          num === '2' ? 'squared' : num === '3' ? 'cubed' : 'exp'
+        ] }${ num !== '2' && num !== '3' ? ` ${ num }` : '' }`;
       },
 
       fraction: ( num, den, opt ) =>
