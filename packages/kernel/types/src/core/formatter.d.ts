@@ -70,8 +70,8 @@ export interface FormatterRenderer {
   factor ( factor?: ResolvedNumber ) : string;
   numerator ( nodes: ResolvedNode[] ) : string;
   denominator ( nodes: ResolvedNode[] ) : string;
-  fraction () : string;
-  state () : string;
+  fraction ( mun: string, den: string ) : string;
+  state ( factor: string, structure: string ) : string;
 }
 
 export interface IFormatter {

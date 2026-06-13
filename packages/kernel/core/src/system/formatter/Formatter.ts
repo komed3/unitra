@@ -39,9 +39,8 @@ export abstract class Formatter implements IFormatter {
     numerator: nodes => nodes.map( n => this.renderer.node( n ) ).join( '*' ),
     denominator: nodes => nodes.map( n => this.renderer.node( n ) ).join( '*' ),
 
-    fraction: () => '',
-
-    state: () => ''
+    fraction: ( num, den ) => den.length ? `${ num }/${ den }` : num,
+    state: ( factor, structure ) => `${ factor } ${ structure }`.trim()
   };
 
   constructor ( protected readonly ctx: UnitraContext ) {}
