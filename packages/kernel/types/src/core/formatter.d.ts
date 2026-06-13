@@ -15,6 +15,7 @@ export type NumericOptions = {
   sign?: Intl.NumberFormatOptions[ 'signDisplay' ];
   rounding?: Intl.NumberFormatOptions[ 'roundingMode' ];
   grouping?: Intl.NumberFormatOptions[ 'useGrouping' ];
+  scientificStyle?: 'e' | 'power';
 };
 
 export type FilterOptions = {
