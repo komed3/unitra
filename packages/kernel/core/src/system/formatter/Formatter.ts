@@ -1,5 +1,5 @@
-import { Format } from '@unitra/dict/common';
-import type { FormatterOptions, IFormatter, PreprocessedNodes } from '@unitra/types/core/formatter';
+import { Format, Lang } from '@unitra/dict/common';
+import type { FormatterOptions, IFormatter, ProcessedNodes } from '@unitra/types/core/formatter';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ReferenceState } from '@unitra/types/node';
 import { Logging } from '../../utils/logging';
@@ -10,8 +10,8 @@ export abstract class Formatter implements IFormatter {
 
   constructor ( protected readonly ctx: UnitraContext ) {}
 
-  protected preprocess ( state: ReferenceState, fraction: boolean, factor?: number ) : PreprocessedNodes {
-    const res: PreprocessedNodes = { nodes: [ [], [] ], factor };
+  protected prepare ( state: ReferenceState, fraction: boolean, factor?: number ) : ProcessedNodes {
+    const res: ProcessedNodes = { nodes: [ [], [] ], factor };
 
     for ( const node of state.nodes ) {
       if ( node.type === 'factor' ) {
@@ -26,8 +26,19 @@ export abstract class Formatter implements IFormatter {
     return res;
   }
 
+  protected formatFactor ( factor: number, opt: FormatterOptions = {} ) : string {
+    return Intl.NumberFormat( opt.lang ?? Lang.EN, {
+      notation: opt.numeric?.notation,
+      minimumFractionDigits: opt.numeric?.precision,
+      maximumFractionDigits: opt.numeric?.precision,
+      signDisplay: opt.numeric?.sign,
+      roundingMode: opt.numeric?.rounding,
+      useGrouping: opt.numeric?.grouping
+    } ).format( factor );
+  }
+
   public out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string {
-    const { nodes, factor } = this.preprocess( state, options?.fraction ?? true, value );
+    const { nodes, factor } = this.prepare( state, options?.fraction ?? true, value );
 
     return this.ctx.hook().run( 'core.formatter.format', { state, options }, '' );
   }
