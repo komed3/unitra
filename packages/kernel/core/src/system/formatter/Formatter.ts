@@ -1,6 +1,9 @@
 import { Format, Lang } from '@unitra/dict/common';
 import type { Meta } from '@unitra/types/common';
-import type { FormatterOptions, GroupedNodes, IFormatter, ProcessedNodes, ResolvedNode, ResolvedNodes } from '@unitra/types/core/formatter';
+import type {
+  FormatterOptions, GroupedNodes, IFormatter, PreparedState, ResolvedGroupedNodes,
+  ResolvedNode, ResolvedNumber, ResolvedState
+} from '@unitra/types/core/formatter';
 import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { IAssert } from '@unitra/types/core/service';
 import type { UnitraContext } from '@unitra/types/core/unitra';
@@ -39,33 +42,6 @@ export abstract class Formatter implements IFormatter {
     return meta;
   }
 
-  protected prepare ( state: ReferenceState, fraction?: boolean, factor?: number ) : ProcessedNodes {
-    const res: ProcessedNodes = { nodes: [ [], [] ], factor };
-
-    for ( const node of state.nodes ) {
-      if ( node.type === 'factor' ) {
-        if ( res.factor === undefined ) res.factor = 1;
-        res.factor *= Math.pow( node.value, node.exp );
-      } else {
-        if ( fraction && node.exp < 0 ) res.nodes[ 1 ].push( { ...node, exp: -node.exp } );
-        else res.nodes[ 0 ].push( { ...node } );
-      }
-    }
-
-    return res;
-  }
-
-  protected resolveNumber ( factor?: number, opt: FormatterOptions = {} ) : Intl.NumberFormatPart[] {
-    return ! factor ? [] : Intl.NumberFormat( opt.lang ?? Lang.EN, {
-      notation: opt.numeric?.notation,
-      minimumFractionDigits: opt.numeric?.precision,
-      maximumFractionDigits: opt.numeric?.precision,
-      signDisplay: opt.numeric?.sign,
-      roundingMode: opt.numeric?.rounding,
-      useGrouping: opt.numeric?.grouping
-    } ).formatToParts( factor );
-  }
-
   protected resolveSymbol < K extends RegistryKey > ( key: K, ref: RefOf< K >, opt: FormatterOptions = {} ) : string {
     const { lang, filter = {}, deprecated } = opt;
     const meta = this.resolveMeta( key, ref );
@@ -98,6 +74,17 @@ export abstract class Formatter implements IFormatter {
     return symbol.format[ this.format ] ?? symbol.format.plain;
   }
 
+  protected resolveNumber ( factor?: number, opt: FormatterOptions = {} ) : ResolvedNumber {
+    return ! factor ? [] : Intl.NumberFormat( opt.lang ?? Lang.EN, {
+      notation: opt.numeric?.notation,
+      minimumFractionDigits: opt.numeric?.precision,
+      maximumFractionDigits: opt.numeric?.precision,
+      signDisplay: opt.numeric?.sign,
+      roundingMode: opt.numeric?.rounding,
+      useGrouping: opt.numeric?.grouping
+    } ).formatToParts( factor );
+  }
+
   protected resolveNode ( node: StructureNode, opt: FormatterOptions = {} ) : ResolvedNode {
     const res = { type: node.type, exp: this.resolveNumber( node.exp ) } as ResolvedNode;
 
@@ -108,8 +95,31 @@ export abstract class Formatter implements IFormatter {
     return res;
   }
 
-  protected resolveNodes ( nodes: GroupedNodes, opt: FormatterOptions = {} ) : ResolvedNodes {
-    return nodes.map( g => g.map( n => this.resolveNode( n, opt ) ) ) as ResolvedNodes;
+  protected resolveGroupedNodes ( nodes: GroupedNodes, opt: FormatterOptions = {} ) : ResolvedGroupedNodes {
+    return nodes.map( g => g.map( n => this.resolveNode( n, opt ) ) ) as ResolvedGroupedNodes;
+  }
+
+  protected prepare ( state: ReferenceState, fraction?: boolean, factor?: number ) : PreparedState {
+    const res: PreparedState = { nodes: [ [], [] ], factor };
+
+    for ( const node of state.nodes ) {
+      if ( node.type === 'factor' ) {
+        if ( res.factor === undefined ) res.factor = 1;
+        res.factor *= Math.pow( node.value, node.exp );
+      } else {
+        if ( fraction && node.exp < 0 ) res.nodes[ 1 ].push( { ...node, exp: -node.exp } );
+        else res.nodes[ 0 ].push( { ...node } );
+      }
+    }
+
+    return res;
+  }
+
+  protected resolve ( state: PreparedState, opt: FormatterOptions = {} ) : ResolvedState {
+    return {
+      nodes: this.resolveGroupedNodes( state.nodes, opt ),
+      factor: state.factor ? this.resolveNumber( state.factor, opt ) : undefined
+    };
   }
 
   public out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string {
@@ -117,10 +127,11 @@ export abstract class Formatter implements IFormatter {
     assert.assertState( state );
 
     const resolvedOptions = this.options( options );
+    const prepared = this.prepare( state, resolvedOptions.fraction, value );
+    const resolved = this.resolve( prepared, resolvedOptions );
 
-    const { nodes, factor } = this.prepare( state, resolvedOptions.fraction, value );
-    const resolveNodes = this.resolveNodes( nodes, resolvedOptions );
-    const resolvedFactor = this.resolveNumber( factor, resolvedOptions );
+    // TEST OUTPUT
+    console.log( JSON.stringify( resolved, null, 2 ) );
 
     return this.ctx.hook().run( 'core.formatter.format', { state, options }, '' );
   }
