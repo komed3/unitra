@@ -1,7 +1,7 @@
 import { Format, Lang } from '@unitra/dict/common';
 import type { Meta } from '@unitra/types/common';
 import type {
-  FormatterOptions, FormatterRenderer, GroupedNodes, IFormatter, PreparedState,
+  FormatterOptions, FormatterRenderer, GroupedNodes, IFormatter, NumberPartRenderer, PreparedState,
   ResolvedGroupedNodes, ResolvedNode, ResolvedNumber, ResolvedState
 } from '@unitra/types/core/formatter';
 import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
@@ -21,12 +21,24 @@ export abstract class Formatter implements IFormatter {
     deprecated: 'warn', fraction: false
   };
 
+  protected readonly numberRenderer: NumberPartRenderer = {
+    integer: part => part.value,
+    fraction: part => part.value,
+    decimal: part => part.value,
+    group: part => part.value,
+    minusSign: part => part.value,
+    plusSign: part => part.value,
+    exponentSeparator: ( part, opt ) => opt.numeric?.scientificStyle === 'power' ? '*10^' : part.value,
+    exponentInteger: part => part.value,
+    compact: part => part.value,
+    literal: part => part.value
+  };
+
   protected readonly renderer: FormatterRenderer = {
-    numberPart: part => part.value,
-
+    numberPart: ( part, opt ) => this.numberRenderer[ part.type as keyof NumberPartRenderer ]( part, opt ),
     number: ( num, opt ) => num.map( p => this.renderer.numberPart( p, opt ) ).join( '' ),
-
     exponent: ( exp, opt ) => `^${ this.renderer.number( exp, opt ) }`.replace( '^1', '' ),
+
     symbol: node => node.symbol,
     prefix: node => node.prefix ?? '',
 
@@ -36,8 +48,10 @@ export abstract class Formatter implements IFormatter {
       this.renderer.exponent( node.exp, opt ),
 
     factor: ( factor, opt ) => this.renderer.number( factor ?? [], opt ),
+
     numerator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( ' ' ),
     denominator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( ' ' ),
+
     fraction: ( num, den ) => den.length ? `${ num } / ${ den }` : num,
     state: ( factor, structure ) => `${ factor } ${ structure }`.trim()
   };

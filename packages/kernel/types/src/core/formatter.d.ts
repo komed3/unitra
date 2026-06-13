@@ -60,8 +60,23 @@ export type ResolvedState = {
   factor?: ResolvedNumber;
 };
 
+export type NumberPartRendererFn = ( part: Intl.NumberFormatPart, opt: FormatterOptions ) => string;
+
+export interface NumberPartRenderer {
+  integer: NumberPartRendererFn;
+  fraction : NumberPartRendererFn;
+  decimal : NumberPartRendererFn;
+  group : NumberPartRendererFn;
+  minusSign : NumberPartRendererFn;
+  plusSign : NumberPartRendererFn;
+  exponentSeparator : NumberPartRendererFn;
+  exponentInteger : NumberPartRendererFn;
+  compact : NumberPartRendererFn;
+  literal : NumberPartRendererFn;
+}
+
 export interface FormatterRenderer {
-  numberPart ( part: Intl.NumberFormatPart, opt: FormatterOptions ) : string;
+  numberPart : NumberPartRendererFn;
   number ( num: ResolvedNumber, opt: FormatterOptions ) : string;
   exponent ( exp: ResolvedNumber, opt: FormatterOptions ) : string;
   symbol ( node: ResolvedNode, opt: FormatterOptions ) : string;
