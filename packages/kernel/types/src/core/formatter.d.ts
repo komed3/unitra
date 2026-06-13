@@ -29,6 +29,11 @@ export type FormatterOptions = {
   filter?: FilterOptions;
   deprecated?: 'warn' | 'throw' | 'ignore';
   fraction?: boolean;
+  sep?: {
+    factor?: string;
+    exp?: string;
+    node?: string;
+  };
 };
 
 export type GroupedNodes = readonly [
