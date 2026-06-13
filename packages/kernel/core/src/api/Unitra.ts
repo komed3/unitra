@@ -43,31 +43,31 @@ export class Unitra implements IUnitra {
   }
 
   public registry < K extends RegistryKey > ( key: K ) : IRegistry< RefOf< K > > {
-    return getTypedRegistry( this.ctx, key );
+    return this.catchToErr( () => getTypedRegistry( this.ctx, key ) );
   }
 
   public assert () : IAssert {
-    return this.ctx.service.assert();
+    return this.catchToErr( () => this.ctx.service.assert() );
   }
 
   public resolve () : IResolve {
-    return this.ctx.service.resolve();
+    return this.catchToErr( () => this.ctx.service.resolve() );
   }
 
   public serialize ( input: ReferenceState ) : string {
-    return this.ctx.service.serialize().fromReferenceState( input );
+    return this.catchToErr( () => this.ctx.service.serialize().fromReferenceState( input ) );
   }
 
   public parse ( input: unknown ) : ParserResult {
-    return this.ctx.parser().parse( input );
+    return this.catchToErr( () => this.ctx.parser().parse( input ) );
   }
 
   public format ( as: FormatterType, state: ReferenceState, options?: FormatterOptions, value?: number ) : string {
-    return this.ctx.formatter[ as ]().out( state, options, value );
+    return this.catchToErr( () => this.ctx.formatter[ as ]().out( state, options, value ) );
   }
 
   public unit () : IUnitFactory {
-    return this.ctx.factory.unit();
+    return this.catchToErr( () => this.ctx.factory.unit() );
   }
 
   public clone () : IUnitra {
