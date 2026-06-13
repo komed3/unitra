@@ -8,9 +8,21 @@ export abstract class Formatter implements IFormatter {
   protected static readonly log = Logging.createSource( 'formatter' );
   protected readonly format: Format = Format.PLAIN;
 
+  protected readonly defaults: FormatterOptions = {
+    fraction: false
+  };
+
   constructor ( protected readonly ctx: UnitraContext ) {}
 
-  protected prepare ( state: ReferenceState, fraction: boolean, factor?: number ) : ProcessedNodes {
+  protected options ( opt?: FormatterOptions ) : FormatterOptions {
+    return {
+      ...this.defaults, ...opt,
+      numeric: { ...this.defaults.numeric, ...opt?.numeric },
+      filter: { ...this.defaults.filter, ...opt?.filter }
+    };
+  }
+
+  protected prepare ( state: ReferenceState, fraction?: boolean, factor?: number ) : ProcessedNodes {
     const res: ProcessedNodes = { nodes: [ [], [] ], factor };
 
     for ( const node of state.nodes ) {
@@ -26,7 +38,7 @@ export abstract class Formatter implements IFormatter {
     return res;
   }
 
-  protected formatFactor ( factor: number, opt: FormatterOptions = {} ) : string {
+  protected resolveFactor ( factor: number, opt: FormatterOptions = {} ) : Intl.NumberFormatPart[] {
     return Intl.NumberFormat( opt.lang ?? Lang.EN, {
       notation: opt.numeric?.notation,
       minimumFractionDigits: opt.numeric?.precision,
@@ -34,11 +46,13 @@ export abstract class Formatter implements IFormatter {
       signDisplay: opt.numeric?.sign,
       roundingMode: opt.numeric?.rounding,
       useGrouping: opt.numeric?.grouping
-    } ).format( factor );
+    } ).formatToParts( factor );
   }
 
   public out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string {
-    const { nodes, factor } = this.prepare( state, options?.fraction ?? true, value );
+    const resolvedOptions = this.options( options );
+    const { nodes, factor } = this.prepare( state, resolvedOptions.fraction, value );
+    const resolvedFactor = factor ? this.resolveFactor( factor, resolvedOptions ) : [];
 
     return this.ctx.hook().run( 'core.formatter.format', { state, options }, '' );
   }
