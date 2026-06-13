@@ -41,7 +41,7 @@ export abstract class Formatter implements IFormatter {
       compact: part => part.value,
       exponentInteger: ( part, opt ) => this.renderer.superscript( part.value, opt ),
       exponentMinusSign: ( part, opt ) => this.renderer.superscript( part.value, opt ),
-      exponentSeparator: ( part, opt ) => this.renderer.superscript( part.value, opt ),
+      exponentSeparator: ( part, opt ) => opt.numeric?.scientificStyle === 'power' ? '*10^' : part.value,
       scientific: part => part.value,
       sign: part => part.value
     };
