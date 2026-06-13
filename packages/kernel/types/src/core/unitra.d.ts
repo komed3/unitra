@@ -26,7 +26,7 @@ export interface IUnitra {
   resolve () : IResolve;
   serialize ( input: ReferenceState ) : string;
   parse ( input: unknown ) : ParserResult;
-  format ( as: FormatterType, state: ReferenceState, options?: FormatterOptions ) : string;
+  format ( as: FormatterType, state: ReferenceState, options?: FormatterOptions, value?: number ) : string;
   unit () : IUnitFactory;
   clone () : IUnitra;
 }

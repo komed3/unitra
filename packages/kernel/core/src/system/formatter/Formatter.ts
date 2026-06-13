@@ -10,8 +10,8 @@ export abstract class Formatter implements IFormatter {
 
   constructor ( protected readonly ctx: UnitraContext ) {}
 
-  protected preprocess ( state: ReferenceState, fraction: boolean ) : PreprocessedNodes {
-    const res: PreprocessedNodes = { nodes: [ [], [] ] };
+  protected preprocess ( state: ReferenceState, fraction: boolean, factor?: number ) : PreprocessedNodes {
+    const res: PreprocessedNodes = { nodes: [ [], [] ], factor };
 
     for ( const node of state.nodes ) {
       if ( node.type === 'factor' ) {
@@ -26,8 +26,8 @@ export abstract class Formatter implements IFormatter {
     return res;
   }
 
-  public out ( state: ReferenceState, options?: FormatterOptions ) : string {
-    const { nodes, factor } = this.preprocess( state, options?.fraction ?? true );
+  public out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string {
+    const { nodes, factor } = this.preprocess( state, options?.fraction ?? true, value );
 
     return this.ctx.hook().run( 'core.formatter.format', { state, options }, '' );
   }

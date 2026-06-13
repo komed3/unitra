@@ -51,8 +51,8 @@ export class Unitra implements IUnitra {
     return this.ctx.parser().parse( input );
   }
 
-  public format ( as: FormatterType, state: ReferenceState, options?: FormatterOptions ) : string {
-    return this.ctx.formatter[ as ]().out( state, options );
+  public format ( as: FormatterType, state: ReferenceState, options?: FormatterOptions, value?: number ) : string {
+    return this.ctx.formatter[ as ]().out( state, options, value );
   }
 
   public unit () : IUnitFactory {

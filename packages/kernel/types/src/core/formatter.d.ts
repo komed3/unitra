@@ -38,7 +38,7 @@ export type PreprocessedNodes = {
 };
 
 export interface IFormatter {
-  out ( state: ReferenceState, options?: FormatterOptions ) : string;
+  out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string;
 }
 
 export type FormatterType =
