@@ -12,25 +12,17 @@ export class UnicodeFormatter extends Formatter implements IFormatter {
   protected override readonly format = Format.UNICODE;
 
   protected override get defaults () : FormatterOptions {
-    return { ...super.defaults,
-      numeric: { ...super.defaults.numeric,
-        notation: 'scientific',
-        scientificStyle: 'power'
-      },
-      sep: { ...super.defaults.sep,
-        factor: ' ',
-        exp: '×',
-        node: ' '
-      }
+    return {
+      ...super.defaults,
+      numeric: { ...super.defaults.numeric, notation: 'scientific', scientificStyle: 'power' },
+      sep: { ...super.defaults.sep, factor: ' ', exp: '×', node: ' ' }
     };
   }
 
   protected override get numberRenderer () : NumberPartRenderer {
     return { ...super.numberRenderer,
       exponentSeparator: ( part, opt ) =>
-        opt.numeric?.scientificStyle === 'power'
-          ? `${ opt.sep?.exp }10`
-          : part.value
+        opt.numeric?.scientificStyle === 'power' ? `${ opt.sep?.exp }10` : part.value
     };
   }
 

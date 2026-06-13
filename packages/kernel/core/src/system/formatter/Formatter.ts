@@ -18,17 +18,9 @@ export abstract class Formatter implements IFormatter {
 
   protected get defaults () : FormatterOptions {
     return {
-      numeric: {
-        notation: 'standard',
-        scientificStyle: 'e'
-      },
-      deprecated: 'warn',
-      fraction: false,
-      sep: {
-        factor: ' ',
-        exp: '*',
-        node: ' '
-      }
+      numeric: { notation: 'standard', scientificStyle: 'e' },
+      deprecated: 'warn', fraction: false,
+      sep: { factor: ' ', exp: '*', node: ' ' }
     };
   };
 
@@ -52,9 +44,7 @@ export abstract class Formatter implements IFormatter {
         this.renderer.superscript( part.value, opt ),
 
       exponentSeparator: ( part, opt ) =>
-        opt.numeric?.scientificStyle === 'power'
-          ? `${ opt.sep?.exp }10^`
-          : part.value,
+        opt.numeric?.scientificStyle === 'power' ? `${ opt.sep?.exp }10^` : part.value,
 
       scientific: part => part.value,
       sign: part => part.value
@@ -87,9 +77,7 @@ export abstract class Formatter implements IFormatter {
         this.renderer.exponent( node.exp, opt ),
 
       factor: ( factor, opt ) =>
-        factor?.length
-          ? this.renderer.number( factor ?? [], opt )
-          : '',
+        factor?.length ? this.renderer.number( factor ?? [], opt ) : '',
 
       numerator: ( nodes, opt ) =>
         nodes

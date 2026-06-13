@@ -9,16 +9,10 @@ export class LaTeXFormatter extends Formatter implements IFormatter {
   protected override readonly format = Format.LATEX;
 
   protected override get defaults () : FormatterOptions {
-    return { ...super.defaults,
-      numeric: { ...super.defaults.numeric,
-        notation: 'scientific',
-        scientificStyle: 'power'
-      },
-      sep: {
-        factor: '\\, ',
-        exp: '\\cdot ',
-        node: '\\, '
-      }
+    return {
+      ...super.defaults,
+      numeric: { ...super.defaults.numeric, notation: 'scientific', scientificStyle: 'power' },
+      sep: { ...super.defaults.sep, factor: '\\, ', exp: '\\cdot ', node: '\\, ' }
     };
   }
 
@@ -33,8 +27,7 @@ export class LaTeXFormatter extends Formatter implements IFormatter {
       superscript: value => `^{${ value }}`,
 
       number: ( num, opt ) =>
-        super.renderer.number( num, opt )
-          .replace( LaTeXFormatter.EXP_FIX, '^{$1$2}' ),
+        super.renderer.number( num, opt ).replace( LaTeXFormatter.EXP_FIX, '^{$1$2}' ),
 
       exponent: ( exp, opt ) => {
         const num = this.renderer.number( exp, opt );
@@ -42,8 +35,7 @@ export class LaTeXFormatter extends Formatter implements IFormatter {
       },
 
       node: ( node, opt ) =>
-        super.renderer.node( node, opt )
-          .replace( LaTeXFormatter.RM_FIX, '\\mathrm{$1$2}' ),
+        super.renderer.node( node, opt ).replace( LaTeXFormatter.RM_FIX, '\\mathrm{$1$2}' ),
 
       fraction: ( num, den ) => den.length ? `\\frac{${ num }}{${ den }}` : num,
 
