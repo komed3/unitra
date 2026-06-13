@@ -1,6 +1,6 @@
 import type { ReferenceState } from '../node';
 import type { FactoryContainer, IUnitFactory } from './factory';
-import type { FormatterContainer } from './formatter';
+import type { FormatterContainer, FormatterOptions, FormatterType } from './formatter';
 import type { HookAccessor } from './hook';
 import type { ParserAccessor, ParserResult } from './parser';
 import type { IRegistry, RefOf, RegistryContainer, RegistryKey } from './registry';
@@ -26,6 +26,7 @@ export interface IUnitra {
   resolve () : IResolve;
   serialize ( input: ReferenceState ) : string;
   parse ( input: unknown ) : ParserResult;
+  format ( as: FormatterType, state: ReferenceState, options?: FormatterOptions ) : string;
   unit () : IUnitFactory;
   clone () : IUnitra;
 }
