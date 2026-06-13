@@ -47,7 +47,7 @@ export type NodeMap = {
   factor: FactorNode;
 };
 
-export type NumiericGroup = readonly [
+export type NumericGroup = readonly [
   numerator: NumericNode[],
   denominator: NumericNode[]
 ];
