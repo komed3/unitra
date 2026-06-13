@@ -23,23 +23,22 @@ export abstract class Formatter implements IFormatter {
 
   protected readonly renderer: FormatterRenderer = {
     numberPart: part => part.value,
-    number: num => num.map( p => this.renderer.numberPart( p ) ).join( '' ),
-    exponent: exp => `^${ this.renderer.number( exp ) }`.replace( '^1', '' ),
 
+    number: ( num, opt ) => num.map( p => this.renderer.numberPart( p, opt ) ).join( '' ),
+
+    exponent: ( exp, opt ) => `^${ this.renderer.number( exp, opt ) }`.replace( '^1', '' ),
     symbol: node => node.symbol,
     prefix: node => node.prefix ?? '',
 
-    node: node =>
-      this.renderer.prefix( node ) +
-      this.renderer.symbol( node ) +
-      this.renderer.exponent( node.exp ),
+    node: ( node, opt ) =>
+      this.renderer.prefix( node, opt ) +
+      this.renderer.symbol( node, opt ) +
+      this.renderer.exponent( node.exp, opt ),
 
-    factor: factor => this.renderer.number( factor ?? [] ),
-
-    numerator: nodes => nodes.map( n => this.renderer.node( n ) ).join( '*' ),
-    denominator: nodes => nodes.map( n => this.renderer.node( n ) ).join( '*' ),
-
-    fraction: ( num, den ) => den.length ? `${ num }/${ den }` : num,
+    factor: ( factor, opt ) => this.renderer.number( factor ?? [], opt ),
+    numerator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( ' ' ),
+    denominator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( ' ' ),
+    fraction: ( num, den ) => den.length ? `${ num } / ${ den }` : num,
     state: ( factor, structure ) => `${ factor } ${ structure }`.trim()
   };
 
@@ -155,7 +154,15 @@ export abstract class Formatter implements IFormatter {
   }
 
   protected render ( state: ResolvedState, opt: FormatterOptions = {} ) : string {
-    return this.ctx.hook().run( 'core.formatter.render', { state, options: opt }, '' );
+    const factor = this.renderer.factor( state.factor, opt );
+    const num = this.renderer.numerator( state.nodes[ 0 ], opt );
+    const den = this.renderer.denominator( state.nodes[ 1 ], opt );
+    const structure = this.renderer.fraction( num, den, opt );
+
+    return this.ctx.hook().run(
+      'core.formatter.render', { state, options: opt },
+      this.renderer.state( factor, structure, opt )
+    );
   }
 
   public out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string {
