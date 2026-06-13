@@ -112,6 +112,7 @@ export abstract class Formatter implements IFormatter {
       }
     }
 
+    this.ctx.hook().run( 'core.formatter.prepare', { state, prepared: res, fraction, factor } );
     return res;
   }
 
@@ -122,6 +123,10 @@ export abstract class Formatter implements IFormatter {
     };
   }
 
+  protected render ( state: ResolvedState, opt: FormatterOptions = {} ) : string {
+    return this.ctx.hook().run( 'core.formatter.render', { state, options: opt }, '' );
+  }
+
   public out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string {
     const assert: IAssert = this.ctx.service.assert();
     assert.assertState( state );
@@ -129,10 +134,6 @@ export abstract class Formatter implements IFormatter {
     const resolvedOptions = this.options( options );
     const prepared = this.prepare( state, resolvedOptions.fraction, value );
     const resolved = this.resolve( prepared, resolvedOptions );
-
-    // TEST OUTPUT
-    console.log( JSON.stringify( resolved, null, 2 ) );
-
-    return this.ctx.hook().run( 'core.formatter.format', { state, options }, '' );
+    return this.render( resolved, resolvedOptions );
   }
 }

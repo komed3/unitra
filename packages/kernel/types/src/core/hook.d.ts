@@ -1,4 +1,5 @@
 import type { ReferenceState } from '../node';
+import type { FormatterOptions, PreparedState, ResolvedState } from './formatter';
 import type { AnyToken, GrammarToken, ParsedFactor, ParserGrammar, ParserResult, ParserToken, ResolvedToken } from './parser';
 import type { IUnitra, UnitraContext } from './unitra';
 
@@ -11,10 +12,18 @@ export interface HookRegistry {
       state: ReferenceState;
     };
   };
-  'core.formatter.format': {
+  'core.formatter.prepare': {
     ctx: {
       state: ReferenceState;
-      options?: object;
+      prepared: PreparedState;
+      fraction?: boolean;
+      factor?: number;
+    };
+  };
+  'core.formatter.render': {
+    ctx: {
+      state: ResolvedState;
+      options?: FormatterOptions;
     };
     value: string;
   };
