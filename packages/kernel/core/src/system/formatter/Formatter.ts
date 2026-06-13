@@ -23,7 +23,12 @@ export abstract class Formatter implements IFormatter {
         scientificStyle: 'e'
       },
       deprecated: 'warn',
-      fraction: false
+      fraction: false,
+      sep: {
+        factor: ' ',
+        exp: '*',
+        node: ' '
+      }
     };
   };
 
@@ -39,9 +44,18 @@ export abstract class Formatter implements IFormatter {
       nan: part => part.value,
       infinity: part => part.value,
       compact: part => part.value,
-      exponentInteger: ( part, opt ) => this.renderer.superscript( part.value, opt ),
-      exponentMinusSign: ( part, opt ) => this.renderer.superscript( part.value, opt ),
-      exponentSeparator: ( part, opt ) => opt.numeric?.scientificStyle === 'power' ? '*10^' : part.value,
+
+      exponentInteger: ( part, opt ) =>
+        this.renderer.superscript( part.value, opt ),
+
+      exponentMinusSign: ( part, opt ) =>
+        this.renderer.superscript( part.value, opt ),
+
+      exponentSeparator: ( part, opt ) =>
+        opt.numeric?.scientificStyle === 'power'
+          ? `${ opt.sep?.exp ?? ' ' }10^`
+          : part.value,
+
       scientific: part => part.value,
       sign: part => part.value
     };
@@ -52,11 +66,12 @@ export abstract class Formatter implements IFormatter {
       superscript: value => value,
 
       numberPart: ( part, opt ) => {
-        const renderer = this.numberRenderer[ part.type as keyof NumberPartRenderer ];
-        return renderer ? renderer( part, opt ) : part.value;
+        const r = this.numberRenderer[ part.type as keyof NumberPartRenderer ];
+        return r ? r( part, opt ) : part.value;
       },
 
-      number: ( num, opt ) => num.map( p => this.renderer.numberPart( p, opt ) ).join( '' ),
+      number: ( num, opt ) =>
+        num.map( p => this.renderer.numberPart( p, opt ) ).join( '' ),
 
       exponent: ( exp, opt ) => {
         const num = this.renderer.number( exp, opt );
@@ -71,11 +86,27 @@ export abstract class Formatter implements IFormatter {
         this.renderer.symbol( node, opt ) +
         this.renderer.exponent( node.exp, opt ),
 
-      factor: ( factor, opt ) => factor?.length ? this.renderer.number( factor ?? [], opt ) : '',
-      numerator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( ' ' ),
-      denominator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( ' ' ),
+      factor: ( factor, opt ) =>
+        factor?.length
+          ? this.renderer.number( factor ?? [], opt )
+          : '',
+
+      numerator: ( nodes, opt ) =>
+        nodes
+          .map( n => this.renderer.node( n, opt ) )
+          .join( opt.sep?.node ?? ' ' ),
+
+      denominator: ( nodes, opt ) =>
+        nodes
+          .map( n => this.renderer.node( n, opt ) )
+          .join( opt.sep?.node ?? ' ' ),
+
       fraction: ( num, den ) => den.length ? `${ num } / ${ den }` : num,
-      state: ( factor, structure ) => `${ factor } ${ structure }`.trim()
+
+      state: ( factor, structure, opt ) =>
+        factor.length && structure.length
+          ? `${ factor }${ opt.sep?.factor ?? ' ' }${ structure }`
+          : factor || structure || ''
     };
   };
 
@@ -195,11 +226,9 @@ export abstract class Formatter implements IFormatter {
     const num = this.renderer.numerator( state.nodes[ 0 ], opt );
     const den = this.renderer.denominator( state.nodes[ 1 ], opt );
     const structure = this.renderer.fraction( num, den, opt );
+    const out = this.renderer.state( factor, structure, opt ).trim();
 
-    return this.ctx.hook().run(
-      'core.formatter.render', { state, options: opt },
-      this.renderer.state( factor, structure, opt )
-    );
+    return this.ctx.hook().run( 'core.formatter.render', { state, options: opt }, out );
   }
 
   public out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string {

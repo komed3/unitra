@@ -13,33 +13,54 @@ export class LaTeXFormatter extends Formatter implements IFormatter {
       numeric: { ...super.defaults.numeric,
         notation: 'scientific',
         scientificStyle: 'power'
+      },
+      sep: {
+        factor: '\\,',
+        exp: '\\cdot',
+        node: '\\,'
       }
     };
   }
 
   protected override get numberRenderer () : NumberPartRenderer {
     return { ...super.numberRenderer,
-      exponentSeparator: ( _, opt ) => opt.numeric?.scientificStyle === 'power' ? '\\,\\cdot\\,10' : '',
+      exponentSeparator: ( _, opt ) => `${ opt.sep?.exp ?? '\\cdot' } 10`
     };
   }
 
   protected override get renderer () : FormatterRenderer {
     return { ...super.renderer,
       superscript: value => `^{${ value }}`,
-      number: ( num, opt ) => super.renderer.number( num, opt ).replace( LaTeXFormatter.EXP_FIX, '^{$1$2}' ),
+
+      number: ( num, opt ) =>
+        super.renderer.number( num, opt )
+          .replace( LaTeXFormatter.EXP_FIX, '^{$1$2}' ),
 
       exponent: ( exp, opt ) => {
         const num = this.renderer.number( exp, opt );
         return num === '1' ? '' : this.renderer.superscript( num, opt )
       },
 
-      node: ( node, opt ) => super.renderer.node( node, opt ).replace( LaTeXFormatter.RM_FIX, '\\mathrm{$1$2}' ),
-      numerator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( '\\,' ),
-      denominator: ( nodes, opt ) => nodes.map( n => this.renderer.node( n, opt ) ).join( '\\,' ),
+      node: ( node, opt ) =>
+        super.renderer.node( node, opt )
+          .replace( LaTeXFormatter.RM_FIX, '\\mathrm{$1$2}' ),
+
+      numerator: ( nodes, opt ) =>
+        nodes
+          .map( n => this.renderer.node( n, opt ) )
+          .join( ( opt.sep?.node ?? '\\,' ) + ' ' ),
+
+      denominator: ( nodes, opt ) =>
+        nodes
+          .map( n => this.renderer.node( n, opt ) )
+          .join( ( opt.sep?.node ?? '\\,' ) + ' ' ),
+
       fraction: ( num, den ) => den.length ? `\\frac{${ num }}{${ den }}` : num,
 
-      state: ( factor, structure ) => `{\\displaystyle ${
-        factor.length && structure.length ? `${ factor }\\,${ structure }` : factor || structure
+      state: ( factor, structure, opt ) => `{\\displaystyle ${
+        factor.length && structure.length
+          ? `${ factor }${ opt.sep?.factor ?? '\\,' } ${ structure }`
+          : factor || structure || ''
       }}`
     };
   }
