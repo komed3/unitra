@@ -6,6 +6,8 @@ import { FormatterError } from '../../utils/error';
 import { Formatter } from './Formatter';
 
 export class TextFormatter extends Formatter implements IFormatter {
+  private static readonly FIX_UC = /\b(\p{L})(\p{L}*)\b/gu;
+
   private static readonly DICT = {
     [ Lang.EN ]: {
       frac: 'per',
@@ -15,7 +17,7 @@ export class TextFormatter extends Formatter implements IFormatter {
       cubed: 'cubed'
     },
     [ Lang.DE ]: {
-      frac: 'geteilt durch',
+      frac: 'pro',
       power: 'mal 10 hoch',
       exp: 'to the power of',
       squared: 'zum Quadrat',
@@ -56,6 +58,10 @@ export class TextFormatter extends Formatter implements IFormatter {
 
       fraction: ( num, den, opt ) =>
         den.length ? `${ num } ${ TextFormatter.DICT[ opt.lang ?? Lang.EN ].frac } ${ den }` : num,
+
+      state: ( factor, structure, opt ) =>
+        super.renderer.state( factor, structure, opt )
+          .replace( TextFormatter.FIX_UC, ( _, first, rest ) => first + rest.toLowerCase() )
     };
   };
 
