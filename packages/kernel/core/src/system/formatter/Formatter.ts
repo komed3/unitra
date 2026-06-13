@@ -1,7 +1,7 @@
 import { Format } from '@unitra/dict/common';
-import type { GroupedNodes, IFormatter } from '@unitra/types/core/formatter';
+import type { FormatterOptions, IFormatter, PreprocessedNodes } from '@unitra/types/core/formatter';
 import type { UnitraContext } from '@unitra/types/core/unitra';
-import type { Node, NumericGroup, ReferenceState, StructureGroup } from '@unitra/types/node';
+import type { ReferenceState } from '@unitra/types/node';
 import { Logging } from '../../utils/logging';
 
 export abstract class Formatter implements IFormatter {
@@ -10,20 +10,25 @@ export abstract class Formatter implements IFormatter {
 
   constructor ( protected readonly ctx: UnitraContext ) {}
 
-  protected groupNodes ( nodes: Node[], fraction: boolean ) : GroupedNodes {
-    const numeric: NumericGroup = [ [], [] ];
-    const structure: StructureGroup = [ [], [] ];
+  protected preprocess ( state: ReferenceState, fraction: boolean ) : PreprocessedNodes {
+    const res: PreprocessedNodes = { nodes: [ [], [] ] };
 
-    for ( const node of nodes ) {
-      const neg = fraction && node.exp < 0;
-      const exp = neg ? -node.exp : node.exp;
-
-      if ( node.type === 'factor' ) numeric[ +neg ].push( { ...node, exp } );
-      else structure[ +neg ].push( { ...node, exp } );
+    for ( const node of state.nodes ) {
+      if ( node.type === 'factor' ) {
+        if ( res.factor === undefined ) res.factor = 1;
+        res.factor *= Math.pow( node.value, node.exp );
+      } else {
+        if ( fraction && node.exp < 0 ) res.nodes[ 1 ].push( { ...node, exp: -node.exp } );
+        else res.nodes[ 0 ].push( { ...node } );
+      }
     }
 
-    return { numeric, structure };
+    return res;
   }
 
-  public abstract out ( state: ReferenceState ) : string;
+  public out ( state: ReferenceState, options?: FormatterOptions ) : string {
+    const { nodes, factor } = this.preprocess( state, options?.fraction ?? true );
+
+    return this.ctx.hook().run( 'core.formatter.format', { state, options }, '' );
+  }
 }
