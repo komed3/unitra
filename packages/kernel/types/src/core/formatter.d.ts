@@ -61,16 +61,17 @@ export type ResolvedState = {
 };
 
 export interface FormatterRenderer {
-  numberPart: ( part: Intl.NumberFormatPart ) => string;
-  exponent: () => string;
-  symbol: () => string;
-  prefix: () => string;
-  node: () => string;
-  factor: () => string;
-  numerator: () => string;
-  denominator: () => string;
-  fraction: () => string;
-  state: () => string;
+  numberPart ( part: Intl.NumberFormatPart ) : string;
+  number ( number: ResolvedNumber ) : string;
+  exponent ( exp: ResolvedNumber ) : string;
+  symbol () : string;
+  prefix () : string;
+  node () : string;
+  factor () : string;
+  numerator () : string;
+  denominator () : string;
+  fraction () : string;
+  state () : string;
 }
 
 export interface IFormatter {
