@@ -24,7 +24,7 @@ export class LaTeXFormatter extends Formatter implements IFormatter {
 
   protected override get numberRenderer () : NumberPartRenderer {
     return { ...super.numberRenderer,
-      exponentSeparator: ( _, opt ) => `${ opt.sep?.exp ?? '\\cdot' } 10`
+      exponentSeparator: ( _, opt ) => `${ opt.sep?.exp } 10`
     };
   }
 
@@ -45,21 +45,11 @@ export class LaTeXFormatter extends Formatter implements IFormatter {
         super.renderer.node( node, opt )
           .replace( LaTeXFormatter.RM_FIX, '\\mathrm{$1$2}' ),
 
-      numerator: ( nodes, opt ) =>
-        nodes
-          .map( n => this.renderer.node( n, opt ) )
-          .join( ( opt.sep?.node ?? '\\,' ) + ' ' ),
-
-      denominator: ( nodes, opt ) =>
-        nodes
-          .map( n => this.renderer.node( n, opt ) )
-          .join( ( opt.sep?.node ?? '\\,' ) + ' ' ),
-
       fraction: ( num, den ) => den.length ? `\\frac{${ num }}{${ den }}` : num,
 
       state: ( factor, structure, opt ) => `{\\displaystyle ${
         factor.length && structure.length
-          ? `${ factor }${ opt.sep?.factor ?? '\\,' } ${ structure }`
+          ? `${ factor }${ opt.sep?.factor } ${ structure }`
           : factor || structure || ''
       }}`
     };

@@ -53,7 +53,7 @@ export abstract class Formatter implements IFormatter {
 
       exponentSeparator: ( part, opt ) =>
         opt.numeric?.scientificStyle === 'power'
-          ? `${ opt.sep?.exp ?? ' ' }10^`
+          ? `${ opt.sep?.exp }10^`
           : part.value,
 
       scientific: part => part.value,
@@ -94,18 +94,18 @@ export abstract class Formatter implements IFormatter {
       numerator: ( nodes, opt ) =>
         nodes
           .map( n => this.renderer.node( n, opt ) )
-          .join( opt.sep?.node ?? ' ' ),
+          .join( opt.sep?.node ),
 
       denominator: ( nodes, opt ) =>
         nodes
           .map( n => this.renderer.node( n, opt ) )
-          .join( opt.sep?.node ?? ' ' ),
+          .join( opt.sep?.node ),
 
       fraction: ( num, den ) => den.length ? `${ num } / ${ den }` : num,
 
       state: ( factor, structure, opt ) =>
         factor.length && structure.length
-          ? `${ factor }${ opt.sep?.factor ?? ' ' }${ structure }`
+          ? `${ factor }${ opt.sep?.factor }${ structure }`
           : factor || structure || ''
     };
   };
