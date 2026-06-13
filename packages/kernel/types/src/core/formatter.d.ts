@@ -60,6 +60,19 @@ export type ResolvedState = {
   factor?: ResolvedNumber;
 };
 
+export interface FormatterRenderer {
+  numberPart: ( part: Intl.NumberFormatPart ) => string;
+  exponent: () => string;
+  symbol: () => string;
+  prefix: () => string;
+  node: () => string;
+  factor: () => string;
+  numerator: () => string;
+  denominator: () => string;
+  fraction: () => string;
+  state: () => string;
+}
+
 export interface IFormatter {
   out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string;
 }
