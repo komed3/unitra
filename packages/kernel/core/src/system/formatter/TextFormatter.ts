@@ -1,11 +1,24 @@
 import { Lang } from '@unitra/dict/common';
 import type { LangGroup, Name } from '@unitra/types/common';
-import type { FormatterOptions, IFormatter } from '@unitra/types/core/formatter';
+import type { FormatterOptions, FormatterRenderer, IFormatter, NumberPartRenderer } from '@unitra/types/core/formatter';
 import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
 import { FormatterError } from '../../utils/error';
 import { Formatter } from './Formatter';
 
 export class TextFormatter extends Formatter implements IFormatter {
+  private static readonly DICT = {
+    [ Lang.EN ]: {
+      frac: 'per',
+      power: 'times 10 to the power of',
+      exp: 'to the power of'
+    },
+    [ Lang.DE ]: {
+      frac: 'geteilt durch',
+      power: 'mal 10 hoch',
+      exp: 'to the power of'
+    }
+  } as const;
+
   protected resolveLang < T > ( group: LangGroup< T > | undefined, lang?: Lang ) : T | undefined {
     return group ? ( lang && group[ lang ] ) ?? group[ Lang.EN ] ?? Object.values( group )[ 0 ] : undefined;
   }
@@ -16,9 +29,27 @@ export class TextFormatter extends Formatter implements IFormatter {
 
   protected override get defaults () : FormatterOptions {
     return {
-      ...super.defaults,
-      numeric: { ...super.defaults.numeric, notation: 'compact', scientificStyle: 'e' },
-      sep: { ...super.defaults.sep, factor: ' ', exp: ' times ', node: ' ' }
+      ...super.defaults, lang: Lang.EN, fraction: true,
+      numeric: { ...super.defaults.numeric, notation: 'standard', scientificStyle: 'power' },
+      sep: { ...super.defaults.sep, factor: ' ', exp: ' ', node: ' ' }
+    };
+  };
+
+  protected override get numberRenderer () : NumberPartRenderer {
+    return { ...super.numberRenderer,
+      exponentSeparator: ( _, opt ) => ` ${ TextFormatter.DICT[ opt.lang ?? Lang.EN ].power } `
+    };
+  };
+
+  protected override get renderer () : FormatterRenderer {
+    return { ...super.renderer,
+      exponent: ( exp, opt ) => {
+        const num = this.renderer.number( exp, opt );
+        return num === '1' ? '' : ` ${ TextFormatter.DICT[ opt.lang ?? Lang.EN ].exp } ${ num }`;
+      },
+
+      fraction: ( num, den, opt ) =>
+        den.length ? `${ num } ${ TextFormatter.DICT[ opt.lang ?? Lang.EN ].frac } ${ den }` : num,
     };
   };
 
