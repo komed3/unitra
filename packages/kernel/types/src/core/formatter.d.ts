@@ -1,5 +1,5 @@
 import type { Lang, System } from '@unitra/dict/common';
-import type { NumericGroup, ReferenceState, StructureGroup } from '../node';
+import type { ReferenceState, StructureNode } from '../node';
 import type { Container, ContainerFactoryMap } from '../utils/container';
 import type { RefOf, RegistryKey } from './registry';
 
@@ -27,9 +27,14 @@ export type FormatterOptions = {
   fraction?: boolean;
 };
 
-export type GroupedNodes = {
-  numeric: NumericGroup;
-  structure: StructureGroup;
+export type GroupedNodes = readonly [
+  numerator: StructureNode[],
+  denominator: StructureNode[]
+];
+
+export type PreprocessedNodes = {
+  nodes: GroupedNodes;
+  factor?: number;
 };
 
 export interface IFormatter {

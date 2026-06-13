@@ -47,16 +47,6 @@ export type NodeMap = {
   factor: FactorNode;
 };
 
-export type NumericGroup = readonly [
-  numerator: NumericNode[],
-  denominator: NumericNode[]
-];
-
-export type StructureGroup = readonly [
-  numerator: StructureNode[],
-  denominator: StructureNode[]
-];
-
 export type SerializedNode = {
   order: number;
   value: string;
