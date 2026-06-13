@@ -25,6 +25,7 @@ export abstract class Formatter implements IFormatter {
     numberPart: part => part.value,
     number: num => num.map( p => this.renderer.numberPart( p ) ).join( '' ),
     exponent: exp => `^${ this.renderer.number( exp ) }`.replace( '^1', '' ),
+
     symbol: node => node.symbol,
     prefix: node => node.prefix ?? '',
 
@@ -33,10 +34,13 @@ export abstract class Formatter implements IFormatter {
       this.renderer.symbol( node ) +
       this.renderer.exponent( node.exp ),
 
-    factor: () => '',
-    numerator: () => '',
-    denominator: () => '',
+    factor: factor => this.renderer.number( factor ?? [] ),
+
+    numerator: nodes => nodes.map( n => this.renderer.node( n ) ).join( '*' ),
+    denominator: nodes => nodes.map( n => this.renderer.node( n ) ).join( '*' ),
+
     fraction: () => '',
+
     state: () => ''
   };
 

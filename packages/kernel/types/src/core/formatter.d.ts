@@ -67,9 +67,9 @@ export interface FormatterRenderer {
   symbol ( node: ResolvedNode ) : string;
   prefix ( node: ResolvedNode ) : string;
   node ( node: ResolvedNode ) : string;
-  factor () : string;
-  numerator () : string;
-  denominator () : string;
+  factor ( factor?: ResolvedNumber ) : string;
+  numerator ( nodes: ResolvedNode[] ) : string;
+  denominator ( nodes: ResolvedNode[] ) : string;
   fraction () : string;
   state () : string;
 }
