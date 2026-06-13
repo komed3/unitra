@@ -39,13 +39,13 @@ export class TextFormatter extends Formatter implements IFormatter {
       numeric: { ...super.defaults.numeric, notation: 'standard', scientificStyle: 'power' },
       sep: { ...super.defaults.sep, factor: ' ', exp: ' ', node: ' ' }
     };
-  };
+  }
 
   protected override get numberRenderer () : NumberPartRenderer {
     return { ...super.numberRenderer,
       exponentSeparator: ( _, opt ) => ` ${ TextFormatter.DICT[ opt.lang ?? Lang.EN ].power } `
     };
-  };
+  }
 
   protected override get renderer () : FormatterRenderer {
     return { ...super.renderer,
@@ -63,7 +63,7 @@ export class TextFormatter extends Formatter implements IFormatter {
         super.renderer.state( factor, structure, opt )
           .replace( TextFormatter.FIX_UC, ( _, first, rest ) => first + rest.toLowerCase() )
     };
-  };
+  }
 
   protected override resolveSymbol < K extends RegistryKey > ( key: K, ref: RefOf< K >, opt: FormatterOptions = {} ) : string {
     const meta = this.resolveMeta( key, ref );

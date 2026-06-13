@@ -22,7 +22,7 @@ export abstract class Formatter implements IFormatter {
       deprecated: 'warn', fraction: false,
       sep: { factor: ' ', exp: '*', node: ' ' }
     };
-  };
+  }
 
   protected get numberRenderer () : NumberPartRenderer {
     return {
@@ -49,7 +49,7 @@ export abstract class Formatter implements IFormatter {
       scientific: part => part.value,
       sign: part => part.value
     };
-  };
+  }
 
   protected get renderer () : FormatterRenderer {
     return {
@@ -96,7 +96,7 @@ export abstract class Formatter implements IFormatter {
           ? `${ factor }${ opt.sep?.factor }${ structure }`
           : factor || structure || ''
     };
-  };
+  }
 
   constructor ( protected readonly ctx: UnitraContext ) {}
 
