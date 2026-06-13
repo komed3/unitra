@@ -1,5 +1,5 @@
 import { Format, Lang } from '@unitra/dict/common';
-import type { FormatterOptions, IFormatter, ProcessedNodes, ResolvedNode } from '@unitra/types/core/formatter';
+import type { FormatterOptions, GroupedNodes, IFormatter, ProcessedNodes, ResolvedNode, ResolvedNodes } from '@unitra/types/core/formatter';
 import type { RefOf, RegistryKey } from '@unitra/types/core/registry';
 import type { UnitraContext } from '@unitra/types/core/unitra';
 import type { ReferenceState, StructureNode } from '@unitra/types/node';
@@ -63,9 +63,15 @@ export abstract class Formatter implements IFormatter {
     return res;
   }
 
+  protected resolveNodes ( nodes: GroupedNodes, opt: FormatterOptions = {} ) : ResolvedNodes {
+    return nodes.map( g => g.map( n => this.resolveNode( n, opt ) ) ) as ResolvedNodes;
+  }
+
   public out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string {
     const resolvedOptions = this.options( options );
+
     const { nodes, factor } = this.prepare( state, resolvedOptions.fraction, value );
+    const resolveNodes = this.resolveNodes( nodes, resolvedOptions );
     const resolvedFactor = this.resolveNumber( factor, resolvedOptions );
 
     return this.ctx.hook().run( 'core.formatter.format', { state, options }, '' );

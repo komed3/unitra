@@ -48,6 +48,11 @@ export type ResolvedNode = {
   prefix?: string;
 };
 
+export type ResolvedNodes = [
+  numerator: ResolvedNode[],
+  denominator: ResolvedNode[]
+];
+
 export interface IFormatter {
   out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string;
 }
