@@ -36,22 +36,29 @@ export type GroupedNodes = readonly [
   denominator: StructureNode[]
 ];
 
-export type ProcessedNodes = {
+export type PreparedState = {
   nodes: GroupedNodes;
   factor?: number;
 };
 
+export type ResolvedNumber = Intl.NumberFormatPart[];
+
 export type ResolvedNode = {
   type: Exclude< NodeType, 'factor' >;
   symbol: string;
-  exp: Intl.NumberFormatPart[];
+  exp: ResolvedNumber;
   prefix?: string;
 };
 
-export type ResolvedNodes = [
+export type ResolvedGroupedNodes = [
   numerator: ResolvedNode[],
   denominator: ResolvedNode[]
 ];
+
+export type ResolvedState = {
+  nodes: ResolvedGroupedNodes;
+  factor?: ResolvedNumber;
+};
 
 export interface IFormatter {
   out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string;
