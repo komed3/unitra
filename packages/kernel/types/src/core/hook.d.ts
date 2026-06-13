@@ -1,6 +1,8 @@
+import type { Meta } from '../common';
 import type { ReferenceState } from '../node';
-import type { FormatterOptions, PreparedState, ResolvedState } from './formatter';
+import type { FormatterOptions, PreparedState, ResolvedNumber, ResolvedState } from './formatter';
 import type { AnyToken, GrammarToken, ParsedFactor, ParserGrammar, ParserResult, ParserToken, ResolvedToken } from './parser';
+import type { AnyRef, RegistryKey } from './registry';
 import type { IUnitra, UnitraContext } from './unitra';
 
 export interface HookRegistry {
@@ -11,6 +13,13 @@ export interface HookRegistry {
     ctx: {
       state: ReferenceState;
     };
+  };
+  'core.formatter.number': {
+    ctx: {
+      factor?: number;
+      options?: FormatterOptions;
+    };
+    value: ResolvedNumber;
   };
   'core.formatter.prepare': {
     ctx: {
@@ -23,6 +32,22 @@ export interface HookRegistry {
   'core.formatter.render': {
     ctx: {
       state: ResolvedState;
+      options?: FormatterOptions;
+    };
+    value: string;
+  };
+  'core.formatter.resolve': {
+    ctx: {
+      prepared: PreparedState;
+      resolved: ResolvedState;
+      options?: FormatterOptions;
+    };
+  };
+  'core.formatter.symbol': {
+    ctx: {
+      key: RegistryKey;
+      ref: AnyRef;
+      meta: Meta;
       options?: FormatterOptions;
     };
     value: string;

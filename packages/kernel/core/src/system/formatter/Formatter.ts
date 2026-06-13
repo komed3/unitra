@@ -71,18 +71,24 @@ export abstract class Formatter implements IFormatter {
       );
     }
 
-    return symbol.format[ this.format ] ?? symbol.format.plain;
+    return this.ctx.hook().run(
+      'core.formatter.symbol', { key, ref, meta, options: opt },
+      symbol.format[ this.format ] ?? symbol.format.plain
+    );
   }
 
   protected resolveNumber ( factor?: number, opt: FormatterOptions = {} ) : ResolvedNumber {
-    return ! factor ? [] : Intl.NumberFormat( opt.lang ?? Lang.EN, {
-      notation: opt.numeric?.notation,
-      minimumFractionDigits: opt.numeric?.precision,
-      maximumFractionDigits: opt.numeric?.precision,
-      signDisplay: opt.numeric?.sign,
-      roundingMode: opt.numeric?.rounding,
-      useGrouping: opt.numeric?.grouping
-    } ).formatToParts( factor );
+    return this.ctx.hook().run( 'core.formatter.number', { factor, options: opt }, factor
+      ? Intl.NumberFormat( opt.lang ?? Lang.EN, {
+        notation: opt.numeric?.notation,
+        minimumFractionDigits: opt.numeric?.precision,
+        maximumFractionDigits: opt.numeric?.precision,
+        signDisplay: opt.numeric?.sign,
+        roundingMode: opt.numeric?.rounding,
+        useGrouping: opt.numeric?.grouping
+      } ).formatToParts( factor )
+      : []
+    );
   }
 
   protected resolveNode ( node: StructureNode, opt: FormatterOptions = {} ) : ResolvedNode {
@@ -100,27 +106,30 @@ export abstract class Formatter implements IFormatter {
   }
 
   protected prepare ( state: ReferenceState, fraction?: boolean, factor?: number ) : PreparedState {
-    const res: PreparedState = { nodes: [ [], [] ], factor };
+    const prepared: PreparedState = { nodes: [ [], [] ], factor };
 
     for ( const node of state.nodes ) {
       if ( node.type === 'factor' ) {
-        if ( res.factor === undefined ) res.factor = 1;
-        res.factor *= Math.pow( node.value, node.exp );
+        if ( prepared.factor === undefined ) prepared.factor = 1;
+        prepared.factor *= Math.pow( node.value, node.exp );
       } else {
-        if ( fraction && node.exp < 0 ) res.nodes[ 1 ].push( { ...node, exp: -node.exp } );
-        else res.nodes[ 0 ].push( { ...node } );
+        if ( fraction && node.exp < 0 ) prepared.nodes[ 1 ].push( { ...node, exp: -node.exp } );
+        else prepared.nodes[ 0 ].push( { ...node } );
       }
     }
 
-    this.ctx.hook().run( 'core.formatter.prepare', { state, prepared: res, fraction, factor } );
-    return res;
+    this.ctx.hook().run( 'core.formatter.prepare', { state, prepared, fraction, factor } );
+    return prepared;
   }
 
-  protected resolve ( state: PreparedState, opt: FormatterOptions = {} ) : ResolvedState {
-    return {
-      nodes: this.resolveGroupedNodes( state.nodes, opt ),
-      factor: state.factor ? this.resolveNumber( state.factor, opt ) : undefined
+  protected resolve ( prepared: PreparedState, opt: FormatterOptions = {} ) : ResolvedState {
+    const resolved: ResolvedState = {
+      nodes: this.resolveGroupedNodes( prepared.nodes, opt ),
+      factor: prepared.factor ? this.resolveNumber( prepared.factor, opt ) : undefined
     };
+
+    this.ctx.hook().run( 'core.formatter.resolve', { prepared, resolved, options: opt } );
+    return resolved;
   }
 
   protected render ( state: ResolvedState, opt: FormatterOptions = {} ) : string {
