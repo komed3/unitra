@@ -28,22 +28,34 @@ export type Node =
   | ConstantNode
   | FactorNode;
 
+export type StructureNode =
+  | UnitNode
+  | ConstantNode;
+
+export type NumericNode =
+  | FactorNode;
+
 export type Nodes = ReadonlyArray< Node >;
 
 export type ReferenceState = {
   nodes: Nodes;
 };
 
-export type NodeGroups = readonly [
-  numerator: Node[],
-  denominator: Node[]
-];
-
 export type NodeMap = {
   unit: UnitNode;
   constant: ConstantNode;
   factor: FactorNode;
 };
+
+export type NumiercGroup = readonly [
+  numerator: NumericNode[],
+  denominator: NumericNode[]
+];
+
+export type StructureGroup = readonly [
+  numerator: StructureNode[],
+  denominator: StructureNode[]
+];
 
 export type SerializedNode = {
   order: number;
