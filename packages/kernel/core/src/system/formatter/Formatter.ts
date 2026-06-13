@@ -15,12 +15,11 @@ export abstract class Formatter implements IFormatter {
     const structure: StructureGroup = [ [], [] ];
 
     for ( const node of nodes ) {
-      const isDenom = fraction && node.exp < 0;
-      const exp = isDenom ? -node.exp : node.exp;
-      const idx: 0 | 1 = isDenom ? 1 : 0;
+      const neg = fraction && node.exp < 0;
+      const exp = neg ? -node.exp : node.exp;
 
-      if ( node.type === 'factor' ) numeric[ idx ].push( { ...node, exp } );
-      else structure[ idx ].push( { ...node, exp } );
+      if ( node.type === 'factor' ) numeric[ +neg ].push( { ...node, exp } );
+      else structure[ +neg ].push( { ...node, exp } );
     }
 
     return { numeric, structure };
