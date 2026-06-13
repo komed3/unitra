@@ -66,7 +66,37 @@ export abstract class Formatter implements IFormatter {
     } ).formatToParts( factor );
   }
 
-  protected resolveSymbol < K extends RegistryKey > ( key: K, ref: RefOf< K >, opt: FormatterOptions = {} ) : string {}
+  protected resolveSymbol < K extends RegistryKey > ( key: K, ref: RefOf< K >, opt: FormatterOptions = {} ) : string {
+    const { lang, filter = {}, deprecated } = opt;
+    const meta = this.resolveMeta( key, ref );
+
+    if ( ! meta.symbol.length ) throw new FormatterError(
+      `no symbol defined for ${ key } reference "${ ref }"`,
+      { context: { key, ref } }
+    );
+
+    const filtered = meta.symbol.filter( ( { id, context } ) =>
+      ( filter.symbols?.[ key ]?.[ ref ] ? filter.symbols?.[ key ]?.[ ref ] === id : true ) &&
+      ( ! context?.system || ( filter.system ? context.system.includes( filter.system ) : true ) ) &&
+      ( ! context?.lang || ( lang ? context.lang === lang : true ) )
+    );
+
+    const symbol = filtered.find( s => s.canonical ) ?? filtered[ 0 ] ??
+      meta.symbol.find( s => s.canonical ) ?? meta.symbol[ 0 ];
+
+    if ( symbol.deprecated ) {
+      if ( deprecated === 'warn' ) Formatter.log.warn(
+        `using deprecated symbol "${ symbol.id }" for ${ key } reference "${ ref }"`
+      );
+
+      if ( deprecated === 'throw' ) throw new FormatterError(
+        `symbol "${ symbol.id }" for ${ key } reference "${ ref }" is deprecated`,
+        { context: { key, ref, symbol } }
+      );
+    }
+
+    return symbol.format[ this.format ] ?? symbol.format.plain;
+  }
 
   protected resolveNode ( node: StructureNode, opt: FormatterOptions = {} ) : ResolvedNode {
     const res = { type: node.type, exp: this.resolveNumber( node.exp ) } as ResolvedNode;
