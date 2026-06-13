@@ -64,18 +64,24 @@ export type NumberPartRendererFn = ( part: Intl.NumberFormatPart, opt: Formatter
 
 export interface NumberPartRenderer {
   integer: NumberPartRendererFn;
-  fraction : NumberPartRendererFn;
-  decimal : NumberPartRendererFn;
-  group : NumberPartRendererFn;
-  minusSign : NumberPartRendererFn;
-  plusSign : NumberPartRendererFn;
-  exponentSeparator : NumberPartRendererFn;
-  exponentInteger : NumberPartRendererFn;
-  compact : NumberPartRendererFn;
-  literal : NumberPartRendererFn;
+  group: NumberPartRendererFn;
+  decimal: NumberPartRendererFn;
+  fraction: NumberPartRendererFn;
+  plusSign: NumberPartRendererFn;
+  minusSign: NumberPartRendererFn;
+  literal: NumberPartRendererFn;
+  nan: NumberPartRendererFn;
+  infinity: NumberPartRendererFn;
+  compact: NumberPartRendererFn;
+  exponentInteger: NumberPartRendererFn;
+  exponentMinusSign: NumberPartRendererFn;
+  exponentSeparator: NumberPartRendererFn;
+  scientific: NumberPartRendererFn;
+  sign: NumberPartRendererFn;
 }
 
 export interface FormatterRenderer {
+  superscript ( value: string, opt: FormatterOptions ) : string,
   numberPart : NumberPartRendererFn;
   number ( num: ResolvedNumber, opt: FormatterOptions ) : string;
   exponent ( exp: ResolvedNumber, opt: FormatterOptions ) : string;
