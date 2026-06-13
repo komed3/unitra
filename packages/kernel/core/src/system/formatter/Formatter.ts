@@ -38,8 +38,8 @@ export abstract class Formatter implements IFormatter {
     return res;
   }
 
-  protected resolveFactor ( factor: number, opt: FormatterOptions = {} ) : Intl.NumberFormatPart[] {
-    return Intl.NumberFormat( opt.lang ?? Lang.EN, {
+  protected resolveNumber ( factor?: number, opt: FormatterOptions = {} ) : Intl.NumberFormatPart[] {
+    return ! factor ? [] : Intl.NumberFormat( opt.lang ?? Lang.EN, {
       notation: opt.numeric?.notation,
       minimumFractionDigits: opt.numeric?.precision,
       maximumFractionDigits: opt.numeric?.precision,
@@ -52,7 +52,7 @@ export abstract class Formatter implements IFormatter {
   public out ( state: ReferenceState, options?: FormatterOptions, value?: number ) : string {
     const resolvedOptions = this.options( options );
     const { nodes, factor } = this.prepare( state, resolvedOptions.fraction, value );
-    const resolvedFactor = factor ? this.resolveFactor( factor, resolvedOptions ) : [];
+    const resolvedFactor = this.resolveNumber( factor, resolvedOptions );
 
     return this.ctx.hook().run( 'core.formatter.format', { state, options }, '' );
   }
