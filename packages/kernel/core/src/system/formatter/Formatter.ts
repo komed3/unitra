@@ -27,7 +27,12 @@ export abstract class Formatter implements IFormatter {
     exponent: exp => `^${ this.renderer.number( exp ) }`.replace( '^1', '' ),
     symbol: node => node.symbol,
     prefix: node => node.prefix ?? '',
-    node: () => '',
+
+    node: node =>
+      this.renderer.prefix( node ) +
+      this.renderer.symbol( node ) +
+      this.renderer.exponent( node.exp ),
+
     factor: () => '',
     numerator: () => '',
     denominator: () => '',
