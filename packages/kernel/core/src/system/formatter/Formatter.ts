@@ -22,10 +22,11 @@ export abstract class Formatter implements IFormatter {
   };
 
   protected readonly renderer: FormatterRenderer = {
-    numberPart: p => p.value,
-    exponent: () => '',
-    symbol: () => '',
-    prefix: () => '',
+    numberPart: part => part.value,
+    number: num => num.map( p => this.renderer.numberPart( p ) ).join( '' ),
+    exponent: exp => `^${ this.renderer.number( exp ) }`.replace( '^1', '' ),
+    symbol: node => node.symbol,
+    prefix: node => node.prefix ?? '',
     node: () => '',
     factor: () => '',
     numerator: () => '',

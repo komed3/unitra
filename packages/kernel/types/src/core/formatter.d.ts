@@ -62,11 +62,11 @@ export type ResolvedState = {
 
 export interface FormatterRenderer {
   numberPart ( part: Intl.NumberFormatPart ) : string;
-  number ( number: ResolvedNumber ) : string;
+  number ( num: ResolvedNumber ) : string;
   exponent ( exp: ResolvedNumber ) : string;
-  symbol () : string;
-  prefix () : string;
-  node () : string;
+  symbol ( node: ResolvedNode ) : string;
+  prefix ( node: ResolvedNode ) : string;
+  node ( node: ResolvedNode ) : string;
   factor () : string;
   numerator () : string;
   denominator () : string;
