@@ -44,7 +44,7 @@ export type ProcessedNodes = {
 export type ResolvedNode = {
   type: Exclude< NodeType, 'factor' >;
   symbol: string;
-  exp: number;
+  exp: Intl.NumberFormatPart[];
   prefix?: string;
 };
 

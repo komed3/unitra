@@ -54,7 +54,7 @@ export abstract class Formatter implements IFormatter {
   protected resolveSymbol < K extends RegistryKey > ( key: K, ref: RefOf< K >, opt: FormatterOptions = {} ) : string {}
 
   protected resolveNode ( node: StructureNode, opt: FormatterOptions = {} ) : ResolvedNode {
-    const res = { type: node.type, exp: node.exp } as ResolvedNode;
+    const res = { type: node.type, exp: this.resolveNumber( node.exp ) } as ResolvedNode;
 
     if ( 'constant' in node ) res.symbol = this.resolveSymbol( 'constant', node.constant, opt );
     if ( 'unit' in node ) res.symbol = this.resolveSymbol( 'unit', node.unit, opt );
