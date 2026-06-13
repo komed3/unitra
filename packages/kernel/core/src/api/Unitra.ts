@@ -7,6 +7,7 @@ import type { IUnitra, UnitraContext } from '@unitra/types/core/unitra';
 import type { ReferenceState } from '@unitra/types/node';
 import { Init } from '../bootstrap';
 import { getTypedRegistry } from '../system/registry';
+import { UnitraError } from '../utils/error';
 import { Logging } from '../utils/logging';
 
 export class Unitra implements IUnitra {
@@ -15,6 +16,16 @@ export class Unitra implements IUnitra {
   private static cache: IUnitra | null = null;
 
   private readonly ctx: UnitraContext;
+
+  private catchToErr < T > ( fn: () => T ) : T {
+    try { return fn() }
+    catch ( err ) {
+      Unitra.log.error( err instanceof Error ? err.message : 'unknown error occurred' );
+      throw err instanceof UnitraError ? err : new UnitraError(
+        'unknown error occurred', { context: {}, cause: err }
+      );
+    }
+  }
 
   public get version () : number {
     return this.ctx.VERSION;
