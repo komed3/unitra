@@ -42,7 +42,7 @@ import quantities from '@unitra/plugin-quantity-base';
 Get specific base quantity definitions directly:
 
 ```ts
-import length from '@unitra/plugin-quantity-base/dev/length';
+import lengthDef, { length } from '@unitra/plugin-quantity-base/dev/length';
 ```
 
 ### Plugin Definition
@@ -50,7 +50,10 @@ import length from '@unitra/plugin-quantity-base/dev/length';
 To load the plugin and register all base quantities in Unitra:
 
 ```ts
-import plugin from '@unitra/plugin-quantity-base/plugin';
+import { addPlugin } from '@unitra/core/bootstrap';
+import siBaseQuantityPlugin from '@unitra/plugin-quantity-base/plugin';
+
+addPlugin( siBaseQuantityPlugin );
 ```
 
 ## Design Goals
