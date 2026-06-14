@@ -32,7 +32,8 @@ import prefixes from '@unitra/plugin-prefix-si';
 Get specific SI prefix definitions directly:
 
 ```ts
-import kiloDef, { kilo } from '@unitra/plugin-prefix-si/dev/kilo';
+import kiloDef, { kilo } from '@unitra/plugin-prefix-si/dev/pos/kilo';
+import microDef, { micro } from '@unitra/plugin-prefix-si/dev/neg/micro';
 ```
 
 ### Plugin Definition
@@ -40,7 +41,10 @@ import kiloDef, { kilo } from '@unitra/plugin-prefix-si/dev/kilo';
 To load the plugin and register all SI prefixes in Unitra:
 
 ```ts
-import plugin from '@unitra/plugin-prefix-si/plugin';
+import { addPlugin } from '@unitra/core/bootstrap';
+import siPrefixPlugin from '@unitra/plugin-prefix-si/plugin';
+
+addPlugin( siPrefixPlugin );
 ```
 
 ## Design Goals
