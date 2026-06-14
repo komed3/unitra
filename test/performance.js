@@ -19,3 +19,19 @@ const log = ( fn, s, e, i ) => console.log(
   '[', fn, ']', f( i ), 'it.', '||', ( e - s ).toFixed( 3 ), 'ms',
   '||', f( i / ( e - s ) * 1000 ), 'ops/s'
 );
+
+// WARMUP
+
+const u = unitra();
+const state = u.unit().mul( 'g', { prefix: 'k' } ).mul( 'm' ).div( 's', { prefix: 'u', exp: 2 } ).toObj();
+u.parse( 'kilogram meter per microsecond squared' );
+
+// TEST 1 :: INSTANTIATE
+
+let ITERATIONS = 50_000_000;
+
+const s1 = performance.now();
+for ( let i = 0; i < ITERATIONS; i++ ) unitra();
+const e1 = performance.now();
+
+log( 'TEST 1 :: INSTANTIATE', s1, e1, ITERATIONS );
