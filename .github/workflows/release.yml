@@ -5,18 +5,53 @@ on:
     branches:
       - master
     paths:
-      - '.changeset/*.md'
+      - ".changeset/*.md"
+
+  pull_request:
+    types:
+      - closed
 
 permissions:
   contents: write
   pull-requests: write
+  id-token: write
 
 concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
+  group: unitra-release
   cancel-in-progress: true
 
 jobs:
+  version-pr:
+    if: github.event_name == 'push'
+    name: Versioning
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Create Version PR
+        uses: changesets/action@v1
+        with:
+          version: npx changeset version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   release:
+    if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
     name: Release
     runs-on: ubuntu-latest
 
@@ -40,9 +75,6 @@ jobs:
         run: pnpm build
 
       - name: Publish
-        uses: changesets/action@v1
-        with:
-          publish: npx changeset publish
+        run: npx changeset publish
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
