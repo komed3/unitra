@@ -87,3 +87,21 @@ for ( let i = 0; i < ITERATIONS; i++ ) u.format( 'text', state );
 const e4d = performance.now();
 
 log( 'TEST 4d :: TEXT FORMATTER', s4d, e4d, ITERATIONS );
+
+// TEST 5a :: PARSER (TEXT)
+
+ITERATIONS = 100_000;
+
+const s5a = performance.now();
+for ( let i = 0; i < ITERATIONS; i++ ) u.parse( 'kilogram meter per microsecond squared' );
+const e5a = performance.now();
+
+log( 'TEST 5a :: PARSER (TEXT)', s5a, e5a, ITERATIONS );
+
+// TEST 5b :: PARSER (NOTATION)
+
+const s5b = performance.now();
+for ( let i = 0; i < ITERATIONS; i++ ) u.parse( 'kg*m/us^2' );
+const e5b = performance.now();
+
+log( 'TEST 5b :: PARSER (NOTATION)', s5b, e5b, ITERATIONS );
