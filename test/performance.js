@@ -105,3 +105,20 @@ for ( let i = 0; i < ITERATIONS; i++ ) u.parse( 'kg*m/us^2' );
 const e5b = performance.now();
 
 log( 'TEST 5b :: PARSER (NOTATION)', s5b, e5b, ITERATIONS );
+
+// TEST 6 :: ROUND-TRIP
+
+ITERATIONS = 10_000;
+
+const s6 = performance.now();
+
+for ( let i = 0; i < ITERATIONS; i++ ) {
+  const unit = u.unit().mul( 'g', { prefix: 'k' } ).mul( 'm' ).div( 's', { prefix: 'u', exp: 2 } );
+  const text = u.format( 'text', unit.toObj() );
+  const parsed = u.parse( text ).state;
+  u.serialize( parsed );
+}
+
+const e6 = performance.now();
+
+log( 'TEST 6 :: ROUND-TRIP', s6, e6, ITERATIONS );
