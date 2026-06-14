@@ -35,3 +35,21 @@ for ( let i = 0; i < ITERATIONS; i++ ) unitra();
 const e1 = performance.now();
 
 log( 'TEST 1 :: INSTANTIATE', s1, e1, ITERATIONS );
+
+// TEST 2 :: FACTORY
+
+ITERATIONS = 250_000;
+
+const s2 = performance.now();
+for ( let i = 0; i < ITERATIONS; i++ ) u.unit().mul( 'g', { prefix: 'k' } ).mul( 'm' ).div( 's', { prefix: 'u', exp: 2 } );
+const e2 = performance.now();
+
+log( 'TEST 2 :: FACTORY', s2, e2, ITERATIONS );
+
+// TEST 3 :: SERIALIZE
+
+const s3 = performance.now();
+for ( let i = 0; i < ITERATIONS; i++ ) u.serialize( state );
+const e3 = performance.now();
+
+log( 'TEST 3 :: SERIALIZE', s3, e3, ITERATIONS );
