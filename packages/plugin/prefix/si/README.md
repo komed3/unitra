@@ -15,7 +15,7 @@ npm install @unitra/plugin-prefix-si
 
 `@unitra/plugin-prefix-si` provides the official SI prefixes defined by the International System of Units.
 
-This will include: `quetta`, `ronna`, `yotta`, `zetta`, `exa`, `peta`, `tera`, `giga`, `mega`, `kilo`, `hecto`, `deca`, `deci`, `centi`, `milli`, `micro`, `nano`, `pico`, `femto`, `atto`, `zepto`, `yocto`, `ronto`, and `quecto`.
+This will include: `quetta`, `ronna`, `yotta`, `zetta`, `exa`, `peta`, `tera`, `giga`, `mega`, `kilo`, `hecto`, `deca`, `deci`, `centi`, `milli`, `micro`, `nano`, `pico`, `femto`, `atto`, `zepto`, `yocto`, `ronto` and `quecto`.
 
 ## Exports
 
