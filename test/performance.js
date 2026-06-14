@@ -53,3 +53,37 @@ for ( let i = 0; i < ITERATIONS; i++ ) u.serialize( state );
 const e3 = performance.now();
 
 log( 'TEST 3 :: SERIALIZE', s3, e3, ITERATIONS );
+
+// TEST 4a :: PLAIN FORMATTER
+
+ITERATIONS = 10_000;
+
+const s4a = performance.now();
+for ( let i = 0; i < ITERATIONS; i++ ) u.format( 'plain', state );
+const e4a = performance.now();
+
+log( 'TEST 4a :: PLAIN FORMATTER', s4a, e4a, ITERATIONS );
+
+// TEST 4b :: UNICODE FORMATTER
+
+const s4b = performance.now();
+for ( let i = 0; i < ITERATIONS; i++ ) u.format( 'unicode', state );
+const e4b = performance.now();
+
+log( 'TEST 4b :: UNICODE FORMATTER', s4b, e4b, ITERATIONS );
+
+// TEST 4c :: LATEX FORMATTER
+
+const s4c = performance.now();
+for ( let i = 0; i < ITERATIONS; i++ ) u.format( 'latex', state );
+const e4c = performance.now();
+
+log( 'TEST 4c :: LATEX FORMATTER', s4c, e4c, ITERATIONS );
+
+// TEST 4d :: TEXT FORMATTER
+
+const s4d = performance.now();
+for ( let i = 0; i < ITERATIONS; i++ ) u.format( 'text', state );
+const e4d = performance.now();
+
+log( 'TEST 4d :: TEXT FORMATTER', s4d, e4d, ITERATIONS );
