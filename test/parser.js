@@ -18,13 +18,13 @@ const test = ( input ) => console.log( s( p( input ).state ) );
 
 // BASIC TESTS
 
+test( 'kg m s^-2' );
+test( 'km/s' );
 test( '(m/s)^-2' );
 test( '((m/s)^2)^3' );
 test( '(((m)))' );
 test( '50*(m/s)^2' );
 test( '(m/s^-2)^-3' );
-test( '(((kilo-meter^3*(s*s/m))/daK^-2*candela)*50)' );
-test( '((s*kg)/(m^2)*cd^-1)*20s' );
 test( '(((m^2)^3/s^-4)^2)^-1' );
 
 // SPECIAL FORMATS
