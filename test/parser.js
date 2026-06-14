@@ -55,3 +55,31 @@ test( 'kg·m²/ms²' );
 test( 'mm / m m' );
 test( '-.5e-3 kg·m²/(micro-second)^⁻²' );
 test( '6.1e5 kilo gram meter per second squared' );
+
+// FINAL BOSS
+
+test( `(
+  (
+    125 milli gram
+    * (kilo meter / micro-second)^2
+    * (daK^-2 / nano mole)
+  )
+  /
+  (
+    (3.14159e-6 * mm^3)
+    * ((mega mole / milli-second) / (kilo meter^2))
+  )
+)
+*
+(
+  (
+    (micro-second * milli-second)
+    /
+    (nano-second^2)
+  )
+  *
+  (
+    (gram / milli gram)
+    * (kilo mole / micro-mole)
+  )
+)` );
