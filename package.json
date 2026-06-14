@@ -9,7 +9,9 @@
     "tsc": "pnpm -r build",
     "format": "prettier --ignore-path \"\" --write \"./packages/**/dist/**/*.@(js|d.ts)\" --log-level warn",
     "clean": "rimraf --glob \"**/dist\" && rimraf --glob \"**/tsconfig.tsbuildinfo\"",
-    "lint": "pnpm -r lint"
+    "lint": "pnpm -r lint",
+    "test:linux": "for f in test/*.js; do node \"$f\"; done",
+    "test:win32": "for %f in (test\\*.js) do node %f"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
