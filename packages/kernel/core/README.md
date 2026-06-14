@@ -33,7 +33,7 @@ The package itself does not define physical quantities, units or prefixes. These
 
 By the core package, following exports are declared:
 
-* `./` - the main entry point of the package, re-exporting all public APIs
+* `.` - the main entry point of the package, re-exporting all public APIs
 * `./bootstrap` - APIs related to bootstrapping and context creation
 * `./utils/*` - utility functions and types
 
