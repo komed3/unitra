@@ -22,3 +22,8 @@ console.log( newton.toJSON() );
 const nm1 = newton.mul( 'm' );
 const nm2 = newton.mul( 'm' );
 console.log( nm1 !== nm2 );
+
+// SERIALIZE
+
+console.log( newton.serialize() );
+console.log( U.serialize( nm1.toObj() ) );
