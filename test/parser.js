@@ -37,7 +37,7 @@ test( '$1::k:m^1*s^-1' );
 const input = '$1::#20^1*k:g^1*m^1*s^-2';
 console.log( s( p( s( p( s( p( input ).state ) ).state ) ).state ) === input );
 
-// TEST COMMUTATIVITY
+// STRUCTURAL EQUALITY
 
 const a = p( input ).state;
 const b = p( s( a ) ).state;
