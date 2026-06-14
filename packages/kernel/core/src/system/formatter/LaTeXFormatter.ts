@@ -41,7 +41,7 @@ export class LaTeXFormatter extends Formatter implements IFormatter {
 
       state: ( factor, structure, opt ) => `{\\displaystyle ${
         factor.length && structure.length
-          ? `${ factor }${ opt.sep?.factor } ${ structure }`
+          ? `${ factor }${ opt.sep?.factor }${ structure }`
           : factor || structure || ''
       }}`
     };
