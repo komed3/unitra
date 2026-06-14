@@ -22,9 +22,9 @@ const log = ( fn, s, e, i ) => console.log(
 
 // WARMUP
 
-const u = unitra();
-const state = u.unit().mul( 'g', { prefix: 'k' } ).mul( 'm' ).div( 's', { prefix: 'u', exp: 2 } ).toObj();
-u.parse( 'kilogram meter per microsecond squared' );
+const U = unitra();
+const state = U.unit().mul( 'g', { prefix: 'k' } ).mul( 'm' ).div( 's', { prefix: 'u', exp: 2 } ).toObj();
+U.parse( 'kilogram meter per microsecond squared' );
 
 // TEST 1 :: INSTANTIATE
 
@@ -41,7 +41,7 @@ log( 'TEST 1 :: INSTANTIATE', s1, e1, ITERATIONS );
 ITERATIONS = 250_000;
 
 const s2 = performance.now();
-for ( let i = 0; i < ITERATIONS; i++ ) u.unit().mul( 'g', { prefix: 'k' } ).mul( 'm' ).div( 's', { prefix: 'u', exp: 2 } );
+for ( let i = 0; i < ITERATIONS; i++ ) U.unit().mul( 'g', { prefix: 'k' } ).mul( 'm' ).div( 's', { prefix: 'u', exp: 2 } );
 const e2 = performance.now();
 
 log( 'TEST 2 :: FACTORY', s2, e2, ITERATIONS );
@@ -49,7 +49,7 @@ log( 'TEST 2 :: FACTORY', s2, e2, ITERATIONS );
 // TEST 3 :: SERIALIZE
 
 const s3 = performance.now();
-for ( let i = 0; i < ITERATIONS; i++ ) u.serialize( state );
+for ( let i = 0; i < ITERATIONS; i++ ) U.serialize( state );
 const e3 = performance.now();
 
 log( 'TEST 3 :: SERIALIZE', s3, e3, ITERATIONS );
@@ -59,7 +59,7 @@ log( 'TEST 3 :: SERIALIZE', s3, e3, ITERATIONS );
 ITERATIONS = 10_000;
 
 const s4a = performance.now();
-for ( let i = 0; i < ITERATIONS; i++ ) u.format( 'plain', state );
+for ( let i = 0; i < ITERATIONS; i++ ) U.format( 'plain', state );
 const e4a = performance.now();
 
 log( 'TEST 4a :: PLAIN FORMATTER', s4a, e4a, ITERATIONS );
@@ -67,7 +67,7 @@ log( 'TEST 4a :: PLAIN FORMATTER', s4a, e4a, ITERATIONS );
 // TEST 4b :: UNICODE FORMATTER
 
 const s4b = performance.now();
-for ( let i = 0; i < ITERATIONS; i++ ) u.format( 'unicode', state );
+for ( let i = 0; i < ITERATIONS; i++ ) U.format( 'unicode', state );
 const e4b = performance.now();
 
 log( 'TEST 4b :: UNICODE FORMATTER', s4b, e4b, ITERATIONS );
@@ -75,7 +75,7 @@ log( 'TEST 4b :: UNICODE FORMATTER', s4b, e4b, ITERATIONS );
 // TEST 4c :: LATEX FORMATTER
 
 const s4c = performance.now();
-for ( let i = 0; i < ITERATIONS; i++ ) u.format( 'latex', state );
+for ( let i = 0; i < ITERATIONS; i++ ) U.format( 'latex', state );
 const e4c = performance.now();
 
 log( 'TEST 4c :: LATEX FORMATTER', s4c, e4c, ITERATIONS );
@@ -83,7 +83,7 @@ log( 'TEST 4c :: LATEX FORMATTER', s4c, e4c, ITERATIONS );
 // TEST 4d :: TEXT FORMATTER
 
 const s4d = performance.now();
-for ( let i = 0; i < ITERATIONS; i++ ) u.format( 'text', state );
+for ( let i = 0; i < ITERATIONS; i++ ) U.format( 'text', state );
 const e4d = performance.now();
 
 log( 'TEST 4d :: TEXT FORMATTER', s4d, e4d, ITERATIONS );
@@ -93,7 +93,7 @@ log( 'TEST 4d :: TEXT FORMATTER', s4d, e4d, ITERATIONS );
 ITERATIONS = 100_000;
 
 const s5a = performance.now();
-for ( let i = 0; i < ITERATIONS; i++ ) u.parse( 'kilogram meter per microsecond squared' );
+for ( let i = 0; i < ITERATIONS; i++ ) U.parse( 'kilogram meter per microsecond squared' );
 const e5a = performance.now();
 
 log( 'TEST 5a :: PARSER (TEXT)', s5a, e5a, ITERATIONS );
@@ -101,7 +101,7 @@ log( 'TEST 5a :: PARSER (TEXT)', s5a, e5a, ITERATIONS );
 // TEST 5b :: PARSER (NOTATION)
 
 const s5b = performance.now();
-for ( let i = 0; i < ITERATIONS; i++ ) u.parse( 'kg*m/us^2' );
+for ( let i = 0; i < ITERATIONS; i++ ) U.parse( 'kg*m/us^2' );
 const e5b = performance.now();
 
 log( 'TEST 5b :: PARSER (NOTATION)', s5b, e5b, ITERATIONS );
@@ -113,10 +113,10 @@ ITERATIONS = 10_000;
 const s6 = performance.now();
 
 for ( let i = 0; i < ITERATIONS; i++ ) {
-  const unit = u.unit().mul( 'g', { prefix: 'k' } ).mul( 'm' ).div( 's', { prefix: 'u', exp: 2 } );
-  const text = u.format( 'text', unit.toObj() );
-  const parsed = u.parse( text ).state;
-  u.serialize( parsed );
+  const unit = U.unit().mul( 'g', { prefix: 'k' } ).mul( 'm' ).div( 's', { prefix: 'u', exp: 2 } );
+  const text = U.format( 'text', unit.toObj() );
+  const parsed = U.parse( text ).state;
+  U.serialize( parsed );
 }
 
 const e6 = performance.now();
