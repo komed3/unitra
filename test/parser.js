@@ -31,3 +31,14 @@ test( '(((m^2)^3/s^-4)^2)^-1' );
 
 test( { nodes: [ { type: 'unit', unit: 'cd', exp: 1 } ] } );
 test( '$1::k:m^1*s^-1' );
+
+// ROUND-TRIP
+
+const input = '$1::#20^1*k:g^1*m^1*s^-2';
+console.log( s( p( s( p( s( p( input ).state ) ).state ) ).state ) === input );
+
+// TEST COMMUTATIVITY
+
+const a = p( input ).state;
+const b = p( s( a ) ).state;
+console.log( s( a ) === s( b ) );
