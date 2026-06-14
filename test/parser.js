@@ -42,3 +42,16 @@ console.log( s( p( s( p( s( p( input ).state ) ).state ) ).state ) === input );
 const a = p( input ).state;
 const b = p( s( a ) ).state;
 console.log( s( a ) === s( b ) );
+
+// COMPLEX TESTS
+
+test( '( 25 kilo meter / ( s * microsecond ) ) * K^2' );
+test( '((s*kg)/(m^2)*cd^-1)*20s' );
+test( '(((kilo-meter^3*(s*s/m))/daK^-2*candela)*50)' );
+test( '50*A^2/A^-2' );
+test( '45 milligram per kilo moles' );
+test( '((25 kilo meter per micro-second)^2 / (3.14e-4 * daK^-2)) * 50' );
+test( 'kg·m²/ms²' );
+test( 'mm / m m' );
+test( '-.5e-3 kg·m²/(micro-second)^⁻²' );
+test( '6.1e5 kilo gram meter per second squared' );
