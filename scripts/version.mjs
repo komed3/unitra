@@ -50,4 +50,38 @@ class VersionUpdater {
   
     return out;
   }
+
+  buildGraph ( pkgs ) {
+    const g = new Map();
+
+    for ( const p of pkgs ) {
+      const deps = new Set();
+
+      for ( const f of [ 'dependencies', 'devDependencies', 'peerDependencies', 'optionalDependencies' ] )
+        Object.keys( p.pkg[ f ] ?? {} ).forEach( d => deps.add( d ) );
+
+      g.set( p.name, deps );
+    }
+
+    return g;
+  }
+
+  findDependents ( g, roots ) {
+    const affected = new Set();
+    const queue = [ ...roots ];
+
+    while ( queue.length ) {
+      const cur = queue.shift();
+
+      for ( const [ name, deps ] of g ) {
+        if ( ! deps.has( cur ) ) continue;
+        if ( roots.has( name ) || affected.has( name ) ) continue;
+
+        affected.add( name );
+        queue.push( name );
+      }
+    }
+
+    return affected;
+  }
 }
