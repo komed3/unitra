@@ -116,7 +116,7 @@ class VersionUpdater {
   renderList ( title, items, cursor, info, renderer ) {
     this.clear();
 
-    console.log( this.out( this.CTRL.yellow + this.CTRL.bold, 'UNITRA VERSION MANAGER' ) );
+    console.log( this.out( this.CTRL.yellow + this.CTRL.bold, 'MONOREPO VERSION MANAGER' ) );
     console.log( this.out( this.CTRL.bold, title ) );
     console.log( '' );
     items.forEach( ( it, i ) => console.log( renderer( it, i === cursor ) ) );
