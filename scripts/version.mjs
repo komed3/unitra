@@ -176,7 +176,7 @@ class VersionUpdater {
 
   // step 2 :: bump select
 
-  async selectBumps( selectedPkgs ) {
+  async selectBumps ( selectedPkgs ) {
     const state = selectedPkgs.map( p => ( { p, i: 0 } ) );
 
     return this.selector( {
@@ -200,6 +200,16 @@ class VersionUpdater {
         state.forEach( s => map.set( s.p.name, this.BUMPS[ s.i ] ) );
         return map;
       }
+    } );
+  }
+
+  // step 3 :: release plan
+
+  async releasePlan ( bumpMap ) {
+    return this.selector( {
+      title: 'Release Plan',
+      items: bumpMap,
+      info: '[ESC] CANCEL  [↵] PROCEED'
     } );
   }
 
