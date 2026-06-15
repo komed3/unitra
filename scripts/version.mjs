@@ -8,6 +8,20 @@ const CONSOLE = {
   cyan: '\x1b[36m', yellow: '\x1b[33m', red: '\x1b[31m'
 };
 
-const clr = ( c, out ) => c + out + CONSOLE.reset;
+class VersionUpdater {
+  #clr ( ctrl, out ) {
+    return ctrl + out + CONSOLE.reset;
+  }
 
-const clear = () => process.stdout.write( '\x1Bc' );
+  #clear () {
+    process.stdout.write( '\x1Bc' );
+  }
+
+  #bump ( v, type ) {
+    const [ M, m, p ] = v.split( '.' ).map( Number );
+
+    if ( type === 'major' ) return `${ M + 1 }.0.0`;
+    if ( type === 'minor' ) return `${ M }.${ m + 1 }.0`;
+    return `${ M }.${ m }.${ p + 1 }`;
+  }
+}
