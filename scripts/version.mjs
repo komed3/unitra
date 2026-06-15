@@ -282,7 +282,7 @@ class VersionUpdater {
     return content.trim();
   }
 
-  // step 5 :: bump versions
+  // step 5 :: update versions
 
   async updateVersions ( pkgs, plan ) {
     const changes = new Map( plan.map( p => [ p.name, p.to ] ) );
@@ -298,6 +298,22 @@ class VersionUpdater {
     }
 
     return updated;
+  }
+
+  // step 6 :: write changelog
+
+  async writeChangelog ( plan, summary ) {
+    const file = join( this.ROOT, 'CHANGELOG.md' );
+    const old = existsSync( file ) ? await readFile( file, 'utf8' ) : '# Changelog\n\n';
+    const date = new Date().toISOString().slice( 0, 10 );
+    const packages = plan.map( p => `- ${ p.name } (${ p.from } → ${ p.to })` ).join( '\n' );
+
+    const entry = [
+      `## ${ date }`, '', '### Summary', '', summary.trim() || 'No summary',
+      '', '### Packages', '', packages, '', '---', ''
+    ].join( '\n' );
+
+    await writeFile( file, old + entry );
   }
 
   // main
