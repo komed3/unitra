@@ -46,6 +46,8 @@ export interface ErrorRegistry {
     semver: string;
     tag: string;
     parts: string[];
+  } | {
+    value: unknown;
   };
   [ ErrorCode.PARSER_ERROR ]: {
     input?: unknown;
