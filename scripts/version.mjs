@@ -118,10 +118,10 @@ class VersionUpdater {
   }
 
   async selector ( { title, items, info, onKey, renderer, result } ) {
-    const render = () => this.renderList( title, items, cursor, info, renderer );
-    let cursor = 0;
-
     return new Promise( resolve => {
+      const render = () => this.renderList( title, items, cursor, info, renderer );
+      let cursor = 0;
+
       const cleanup = this.withRawInput( k => {
         if ( k === '\u0003' ) process.exit( 1 );
         if ( k === '\u001b[A' ) cursor = Math.max( 0, cursor - 1 );
