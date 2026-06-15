@@ -10,7 +10,7 @@ class VersionUpdater {
 
   INFO = {
     list: '[↑] UP  [↓] DOWN  [␣] TOGGLE  [*] ALL  [-] NONE  [↵] ENTER',
-    bump: '[←] [→] SELECT BUMP OPTION  [↵] ENTER'
+    bump: '[↑] UP  [↓] DOWN  [←] [→] SELECT BUMP OPTION  [↵] ENTER'
   };
 
   CONSOLE = {
@@ -161,6 +161,40 @@ class VersionUpdater {
     } );
   }
 
+  // step 2 :: bump select
+
+  async selectBumps ( selectedPkgs ) {
+    const state = selectedPkgs.map( p => ( { p, i: 0 } ) );
+    const renderList = ( r ) => this.renderList( 'Configure Bumps', state, cursor, this.INFO.bump, r );
+    let cursor = 0;
+
+    return new Promise( resolve => {
+      this.raw( k => {
+        if ( k === '\u0003' ) process.exit( 1 );
+        if ( k === '\u001b[A' ) cursor = Math.max( 0, cursor - 1 );
+        if ( k === '\u001b[B' ) cursor = Math.min( state.length - 1, cursor + 1 );
+        if ( k === '\u001b[C' ) state[ cursor ].i = ( state[ cursor ].i + 1 ) % 3;
+        if ( k === '\u001b[D' ) state[ cursor ].i = ( state[ cursor ].i + 2 ) % 3;
+
+        if ( k === '\r' ) {
+          this.unraw();
+          const map = new Map();
+          state.forEach( s => map.set( s.p.name, this.BUMPS[ s.i ] ) );
+          resolve( map );
+
+          return;
+        }
+
+        renderList( ( s, active ) =>
+          `${ active ? '❯' : ' ' } ${ s.p.name.padEnd( 40 ) } ` +
+          `${ this.clr( this.CONSOLE.cyan, this.BUMPS[ s.i ] ) }`
+        );
+      } );
+
+      renderList( s => `  ${ s.p.name.padEnd( 40 ) } ${ this.clr( this.CONSOLE.cyan, this.BUMPS[ s.i ] ) }` );
+    } );
+  }
+
   // main
 
   async run () {
@@ -169,6 +203,7 @@ class VersionUpdater {
 
     const selectedNames = await this.selectPackages( pkgs );
     const selected = pkgs.filter( p => selectedNames.includes( p.name ) );
+    const bumpMap = await this.selectBumps( selected );
   }
 }
 
