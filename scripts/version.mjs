@@ -91,16 +91,17 @@ class VersionUpdater {
 
   // terminal raw input
 
-  raw ( onKey ) {
+  withRawInput ( handler ) {
     process.stdin.setRawMode( true );
     process.stdin.resume();
     process.stdin.setEncoding( 'utf8' );
-    process.stdin.on( 'data', onKey );
-  }
+    process.stdin.on( 'data', handler );
 
-  unraw () {
-    try { process.stdin.setRawMode( false ) } catch {}
-    process.stdin.removeAllListeners( 'data' );
+    return () => {
+      process.stdin.off( 'data', handler );
+      try { process.stdin.setRawMode( false ) } catch {}
+      process.stdin.pause();
+    };
   }
 
   // selector engine
@@ -124,13 +125,13 @@ class VersionUpdater {
     );
 
     return new Promise( resolve => {
-      this.raw( k => {
+      const cleanup = this.withRawInput( k => {
         if ( k === '\u0003' ) process.exit( 1 );
         if ( k === '\u001b[A' ) cursor = Math.max( 0, cursor - 1 );
         if ( k === '\u001b[B' ) cursor = Math.min( items.length - 1, cursor + 1 );
 
         if ( k === '\r' ) {
-          this.unraw();
+          cleanup();
           resolve( result() );
 
           return;
@@ -216,9 +217,6 @@ class VersionUpdater {
 // run the script
 
 new VersionUpdater().run().catch( e => {
-  try { process.stdin.setRawMode( false ) } catch {}
-  process.stdin.removeAllListeners( 'data' );
-
   console.error( e.stack || e );
   process.exit( 1 );
 } );
