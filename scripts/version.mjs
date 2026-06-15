@@ -9,8 +9,8 @@ class VersionUpdater {
   BUMPS = [ 'patch', 'minor', 'major' ];
 
   KEY = {
-    CTRL_C: '\u0003', ENTER: '\r', UP: '\u001b[A', DOWN: '\u001b[B', LEFT: '\u001b[D',
-    RIGHT: '\u001b[C', SPACE: ' ', STAR: '*', SEP: '-'
+    CTRL_C: '\u0003', ENTER: '\r', ESC: '\u001b', UP: '\u001b[A', DOWN: '\u001b[B',
+    LEFT: '\u001b[D', RIGHT: '\u001b[C', SPACE: ' ', STAR: '*', SEP: '-'
   };
 
   CTRL = {
@@ -127,7 +127,7 @@ class VersionUpdater {
       let cursor = 0;
 
       const cleanup = this.withRawInput( k => {
-        if ( k === this.KEY.CTRL_C ) process.exit( 1 );
+        if ( k === this.KEY.CTRL_C || k === this.KEY.ESC ) process.exit( 1 );
         if ( k === this.KEY.UP ) cursor = Math.max( 0, cursor - 1 );
         if ( k === this.KEY.DOWN ) cursor = Math.min( items.length - 1, cursor + 1 );
 
