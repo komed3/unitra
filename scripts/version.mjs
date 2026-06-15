@@ -174,40 +174,30 @@ class VersionUpdater {
 
   // step 2 :: bump select
 
-  async selectBumps ( selectedPkgs ) {
+  async selectBumps( selectedPkgs ) {
     const state = selectedPkgs.map( p => ( { p, i: 0 } ) );
-    let cursor = 0;
 
-    const renderList = ( r ) => this.renderList(
-      'Configure Bumps', state, cursor,
-      '[↑] UP  [↓] DOWN  [←] [→] SELECT BUMP OPTION  [↵] ENTER',
-      ( s, active ) =>
+    return this.selector( {
+      title: 'Configure Bumps',
+      items: state,
+      info: '[↑] UP  [↓] DOWN  [←] [→] SELECT BUMP OPTION  [↵] ENTER',
+
+      onKey: ( k, cursor ) => {
+        if ( k === '\u001b[C' ) state[ cursor ].i = ( state[ cursor ].i + 1 ) % this.BUMPS.length;
+        if ( k === '\u001b[D' ) state[ cursor ].i = ( state[ cursor ].i + this.BUMPS.length - 1 ) % this.BUMPS.length;
+      },
+
+      renderer: ( s, active ) =>
         `${ active ? '❯' : ' ' } ${ s.p.name.padEnd( 40 ) } ` +
         `${ this.clr( this.CTRL.cyan, this.BUMPS[ s.i ] ) } ` +
-        this.clr( this.CTRL.dim, `(${ s.p.version } → ${ this.bump( s.p.version, s.i ) })` )
-    );
+        this.clr( this.CTRL.dim, `(${ s.p.version } → ${ this.bump( s.p.version, s.i ) })`
+      ),
 
-    return new Promise( resolve => {
-      this.raw( k => {
-        if ( k === '\u0003' ) process.exit( 1 );
-        if ( k === '\u001b[A' ) cursor = Math.max( 0, cursor - 1 );
-        if ( k === '\u001b[B' ) cursor = Math.min( state.length - 1, cursor + 1 );
-        if ( k === '\u001b[C' ) state[ cursor ].i = ( state[ cursor ].i + 1 ) % 3;
-        if ( k === '\u001b[D' ) state[ cursor ].i = ( state[ cursor ].i + 2 ) % 3;
-
-        if ( k === '\r' ) {
-          this.unraw();
-          const map = new Map();
-          state.forEach( s => map.set( s.p.name, this.BUMPS[ s.i ] ) );
-          resolve( map );
-
-          return;
-        }
-
-        renderList();
-      } );
-
-      renderList();
+      result: () => {
+        const map = new Map();
+        state.forEach( s => map.set( s.p.name, this.BUMPS[ s.i ] ) );
+        return map;
+      }
     } );
   }
 
