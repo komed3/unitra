@@ -148,22 +148,13 @@ class VersionUpdater {
 
   async selectPackages ( pkgs ) {
     const selected = new Set();
-    let cursor = 0;
 
-    const renderList = ( r ) => this.renderList(
-      'Select Packages', pkgs, cursor,
-      '[↑] UP  [↓] DOWN  [␣] TOGGLE  [*] ALL  [-] NONE  [↵] ENTER',
-      ( p, active ) =>
-        `${ active ? '❯' : ' ' } [${ selected.has( p.name ) ? 'x' : ' ' }] ` +
-        `${ p.name.padEnd( 40 ) } ${ this.clr( this.CTRL.dim, p.version ) }`
-    );
+    return this.selector( {
+      title: 'Select Packages',
+      items: pkgs,
+      info: '[↑] UP  [↓] DOWN  [␣] TOGGLE  [*] ALL  [-] NONE  [↵] ENTER',
 
-    return new Promise( resolve => {
-      this.raw( k => {
-        if ( k === '\u0003' ) process.exit( 1 );
-        if ( k === '\u001b[A' ) cursor = Math.max( 0, cursor - 1 );
-        if ( k === '\u001b[B' ) cursor = Math.min( pkgs.length - 1, cursor + 1 );
-
+      onKey: ( k, cursor ) => {
         if ( k === ' ' ) {
           const name = pkgs[ cursor ].name;
           selected.has( name ) ? selected.delete( name ) : selected.add( name );
@@ -171,18 +162,13 @@ class VersionUpdater {
 
         if ( k === '*' ) pkgs.forEach( p => selected.add( p.name ) );
         if ( k === '-' ) selected.clear();
+      },
 
-        if ( k === '\r' ) {
-          this.unraw();
-          resolve( [ ...selected ] );
+      renderer: ( p, active ) =>
+        `${ active ? '❯' : ' ' } [${ selected.has( p.name ) ? 'x' : ' ' }] ` +
+        `${ p.name.padEnd( 40 ) } ` + this.clr( this.CTRL.dim, p.version ),
 
-          return;
-        }
-
-        renderList();
-      } );
-
-      renderList();
+      result: () => [ ...selected ]
     } );
   }
 
