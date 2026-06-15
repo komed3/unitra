@@ -104,4 +104,16 @@ class VersionUpdater {
     try { process.stdin.setRawMode( false ) } catch {}
     process.stdin.removeAllListeners( 'data' );
   }
+
+  // selector engine
+
+  renderList ( title, items, cursor, renderer, info ) {
+    this.clear();
+
+    console.log( this.clr( this.CONSOLE.bold, title ) );
+    console.log( '' );
+    items.forEach( ( it, i ) => console.log( renderer( it, i === cursor ) ) );
+    console.log( '' );
+    console.log( this.clr( this.CONSOLE.dim, info ) );
+  }
 }
