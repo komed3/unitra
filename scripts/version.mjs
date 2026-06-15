@@ -115,6 +115,35 @@ class VersionUpdater {
     console.log( this.clr( this.CTRL.dim, info ) );
   }
 
+  async selector ( { title, items, info, onKey, renderer, result } ) {
+    let cursor = 0;
+
+    const render = () => this.renderList(
+      title, items, cursor, info,
+      ( item, active ) => renderer( item, active )
+    );
+
+    return new Promise( resolve => {
+      this.raw( k => {
+        if ( k === '\u0003' ) process.exit( 1 );
+        if ( k === '\u001b[A' ) cursor = Math.max( 0, cursor - 1 );
+        if ( k === '\u001b[B' ) cursor = Math.min( items.length - 1, cursor + 1 );
+
+        if ( k === '\r' ) {
+          this.unraw();
+          resolve( result() );
+
+          return;
+        }
+
+        onKey?.( k, cursor );
+        render();
+      } );
+
+      render();
+    } );
+  }
+
   // step 1 :: pkg select
 
   async selectPackages ( pkgs ) {
