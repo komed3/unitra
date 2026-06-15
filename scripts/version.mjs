@@ -8,6 +8,11 @@ class VersionUpdater {
   ROOT = process.cwd();
   BUMPS = [ 'patch', 'minor', 'major' ];
 
+  KEY = {
+    CTRL_C: '\u0003', ENTER: '\r', UP: '\u001b[A', DOWN: '\u001b[B',
+    LEFT: '\u001b[D', RIGHT: '\u001b[C', SPACE: ' ', STAR: '*'
+  };
+
   CTRL = {
     reset: '\x1b[0m', bold: '\x1b[1m', dim: '\x1b[90m', green: '\x1b[32m',
     cyan: '\x1b[36m', yellow: '\x1b[33m', red: '\x1b[31m'
