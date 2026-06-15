@@ -1,7 +1,9 @@
 #!/usr/bin/env node
 
+import { spawn } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { readdir, readFile } from 'node:fs/promises';
+import { readdir, readFile, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
 class VersionUpdater {
@@ -239,6 +241,32 @@ class VersionUpdater {
     } );
   }
 
+  // step 4 :: summary
+
+  async openEditor ( initial = '' ) {
+    const file = join( tmpdir(), `release-${ Date.now() }.md` );
+    await writeFile( file, initial );
+
+    const editor =
+      process.env.GIT_EDITOR || process.env.VISUAL || process.env.EDITOR ||
+      ( process.platform === 'win32' ? 'notepad' : 'vi' );
+
+    await new Promise( ( resolve, reject ) => {
+      const child = spawn( editor, [ file ], { stdio: 'inherit' } );
+      child.on( 'error', reject );
+
+      child.on( 'exit', code => {
+        if ( code === 0 ) resolve();
+        else reject( new Error( `Editor exited with code ${ code }` ) );
+      } );
+    } );
+
+    const content = await readFile( file, 'utf8' );
+    return content.trim();
+  }
+
+  // step 5 :: bump versions
+
   // main
 
   async run () {
@@ -248,15 +276,11 @@ class VersionUpdater {
     const selectedNames = await this.selectPackages( pkgs );
     const selected = pkgs.filter( p => selectedNames.includes( p.name ) );
     const bumpMap = await this.selectBumps( selected );
+
     const { plan } = this.getReleasePlan( pkgs, selected, selectedNames, bumpMap );
+    if ( ! await this.releasePlan( plan ) ) return;
 
-    if ( ! await this.releasePlan( plan ) ) {
-      console.log( this.out( this.CTRL.red, 'Release cancelled' ) );
-      return;
-    }
-
-    this.clear();
-    console.log( pkgs );
+    const summary = await this.openEditor();
   }
 }
 
