@@ -1,5 +1,9 @@
 #!/usr/bin/env node
 
+import { existsSync } from 'node:fs';
+import { readFile } from 'node:fs/promises';
+import { join } from 'node:path';
+
 class VersionUpdater {
   #ROOT = process.cwd();
   #BUMPS = [ 'major', 'minor', 'patch' ];
@@ -19,4 +23,7 @@ class VersionUpdater {
     if ( type === 'minor' ) return `${ major }.${ minor + 1 }.0`;
     return `${ major }.${ minor }.${ patch + 1 }`;
   }
+
+  #isPkgFile = ( dir ) => existsSync( join( dir, 'package.json' ) );
+  #readPkg = async ( file ) => JSON.parse( await readFile( file, 'utf8' ) );
 }
