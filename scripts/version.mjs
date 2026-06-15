@@ -6,11 +6,11 @@ import { join } from 'node:path';
 
 class VersionUpdater {
   ROOT = process.cwd();
-  BUMPS = [ 'major', 'minor', 'patch' ];
+  BUMPS = [ 'patch', 'minor', 'major' ];
 
   INFO = {
     list: '[↑] UP  [↓] DOWN  [␣] TOGGLE  [*] ALL  [-] NONE  [↵] ENTER',
-    bump: '[←] [→] SELECT OPTION  [↵] ENTER'
+    bump: '[←] [→] SELECT BUMP OPTION  [↵] ENTER'
   };
 
   CONSOLE = {
@@ -52,7 +52,7 @@ class VersionUpdater {
 
     for ( const e of entries ) {
       if ( ! e.isDirectory() || e.name === 'node_modules' || e.name.startsWith( '.' ) ) continue;
-      await walk( join( dir, e.name ), out );
+      await this.walk( join( dir, e.name ), out );
     }
 
     return out;
@@ -163,7 +163,7 @@ class VersionUpdater {
 
   // main
 
-  run () {
+  async run () {
     const pkgs = ( await this.walk( this.ROOT ) ).sort( ( a, b ) => a.name.localeCompare( b.name ) );
     if ( ! pkgs.length ) throw new Error( 'No packages found' );
 

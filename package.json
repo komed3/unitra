@@ -11,7 +11,8 @@
     "clean": "rimraf --glob \"**/dist\" && rimraf --glob \"**/tsconfig.tsbuildinfo\"",
     "lint": "pnpm -r lint",
     "test:linux": "for f in test/*.js; do node \"$f\"; done",
-    "test:win32": "for %f in (test\\*.js) do node %f"
+    "test:win32": "for %f in (test\\*.js) do node %f",
+    "script::version": "node scripts/version.mjs"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",
