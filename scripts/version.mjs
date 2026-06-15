@@ -35,6 +35,21 @@ class VersionUpdater {
     return `${ major }.${ minor }.${ patch + 1 }`;
   }
 
+  replaceVersion ( content, version, file ) {
+    const matches = [ ...content.matchAll(
+      /(?<key>['"]?version['"]?\s*:\s*)(?<quote>['"])(?<version>[^'"]+)(?<end>\k<quote>)/g
+    ) ];
+
+    if ( matches.length !== 1 ) throw new Error(
+      `Expected exactly one version field in "${ file }" but found ${ matches.length }`
+    );
+
+    return content.replace(
+      matches[ 0 ][ 0 ],
+      `${ matches[ 0 ].groups.key }${ matches[ 0 ].groups.quote }${ version }${ matches[ 0 ].groups.quote }`
+    );
+  }
+
   // workspace scan
 
   async walk ( dir, out = [] ) {
