@@ -1,6 +1,5 @@
 import type { ParsedSemverRange, ParsedSemverVersion, SemverOperator, SemverRange, SemverVersion } from '@unitra/types/utils/semver';
 import { SemverError } from './error';
-import { safeJsonStringify } from './json';
 
 export class Semver {
   private static readonly OPMATCH = /^(\^|~|>=|<=|>|<|=)/;
@@ -78,29 +77,5 @@ export class Semver {
       default:
         return this.OPERATORS[ range.operator ]( cmp );
     }
-  }
-
-  public static isSemver ( value: unknown ) : value is SemverVersion {
-    return typeof value === 'string' && this.OPMATCH.test( value ) === false &&
-      this.parse( value as SemverVersion ) !== undefined;
-  }
-
-  public static isSemverRange ( value: unknown ) : value is SemverRange {
-    return typeof value === 'string' && this.OPMATCH.test( value ) === true &&
-      this.parseRange( value as SemverRange ) !== undefined;
-  }
-
-  public static assertSemver ( value: unknown ) : asserts value is SemverVersion {
-    if ( ! this.isSemver( value ) ) throw new SemverError(
-      `expected a valid semantic version, got "${ safeJsonStringify( value ) }"`,
-      { context: { value } }
-    );
-  }
-
-  public static assertSemverRange ( value: unknown ) : asserts value is SemverRange {
-    if ( ! this.isSemverRange( value ) ) throw new SemverError(
-      `expected a valid semantic version range, got "${ safeJsonStringify( value ) }"`,
-      { context: { value } }
-    );
   }
 }
