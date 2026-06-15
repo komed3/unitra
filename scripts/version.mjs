@@ -9,8 +9,8 @@ class VersionUpdater {
   BUMPS = [ 'patch', 'minor', 'major' ];
 
   KEY = {
-    CTRL_C: '\u0003', ENTER: '\r', UP: '\u001b[A', DOWN: '\u001b[B',
-    LEFT: '\u001b[D', RIGHT: '\u001b[C', SPACE: ' ', STAR: '*'
+    CTRL_C: '\u0003', ENTER: '\r', UP: '\u001b[A', DOWN: '\u001b[B', LEFT: '\u001b[D',
+    RIGHT: '\u001b[C', SPACE: ' ', STAR: '*', SEP: '-'
   };
 
   CTRL = {
@@ -128,11 +128,11 @@ class VersionUpdater {
       let cursor = 0;
 
       const cleanup = this.withRawInput( k => {
-        if ( k === '\u0003' ) process.exit( 1 );
-        if ( k === '\u001b[A' ) cursor = Math.max( 0, cursor - 1 );
-        if ( k === '\u001b[B' ) cursor = Math.min( items.length - 1, cursor + 1 );
+        if ( k === this.KEY.CTRL_C ) process.exit( 1 );
+        if ( k === this.KEY.UP ) cursor = Math.max( 0, cursor - 1 );
+        if ( k === this.KEY.DOWN ) cursor = Math.min( items.length - 1, cursor + 1 );
 
-        if ( k === '\r' ) {
+        if ( k === this.KEY.ENTER ) {
           cleanup();
           resolve( result() );
 
@@ -158,13 +158,13 @@ class VersionUpdater {
       info: '[↑] UP  [↓] DOWN  [␣] TOGGLE  [*] ALL  [-] NONE  [↵] ENTER',
 
       onKey: ( k, cursor ) => {
-        if ( k === ' ' ) {
+        if ( k === this.KEY.SPACE ) {
           const name = pkgs[ cursor ].name;
           selected.has( name ) ? selected.delete( name ) : selected.add( name );
         }
 
-        if ( k === '*' ) pkgs.forEach( p => selected.add( p.name ) );
-        if ( k === '-' ) selected.clear();
+        if ( k === this.KEY.STAR ) pkgs.forEach( p => selected.add( p.name ) );
+        if ( k === this.KEY.SEP ) selected.clear();
       },
 
       renderer: ( p, active ) =>
@@ -185,9 +185,9 @@ class VersionUpdater {
       items: state,
       info: '[↑] UP  [↓] DOWN  [←] [→] SELECT BUMP OPTION  [↵] ENTER',
 
-      onKey: ( k, cursor ) => {
-        if ( k === '\u001b[C' ) state[ cursor ].i = ( state[ cursor ].i + 1 ) % this.BUMPS.length;
-        if ( k === '\u001b[D' ) state[ cursor ].i = ( state[ cursor ].i + this.BUMPS.length - 1 ) % this.BUMPS.length;
+      onKey: ( k, c ) => {
+        if ( k === this.KEY.RIGHT ) state[ c ].i = ( state[ c ].i + 1 ) % this.BUMPS.length;
+        if ( k === this.KEY.LEFT ) state[ c ].i = ( state[ c ].i + this.BUMPS.length - 1 ) % this.BUMPS.length;
       },
 
       renderer: ( s, active ) =>
