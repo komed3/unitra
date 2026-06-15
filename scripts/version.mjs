@@ -8,6 +8,11 @@ class VersionUpdater {
   ROOT = process.cwd();
   BUMPS = [ 'major', 'minor', 'patch' ];
 
+  INFO = {
+    list: '[↑] UP  [↓] DOWN  [␣] TOGGLE  [*] ALL  [-] NONE  [↵] ENTER',
+    bump: '[←] [→] SELECT OPTION  [↵] ENTER'
+  };
+
   CONSOLE = {
     reset: '\x1b[0m', bold: '\x1b[1m', dim: '\x1b[90m', green: '\x1b[32m',
     cyan: '\x1b[36m', yellow: '\x1b[33m', red: '\x1b[31m'
@@ -105,7 +110,7 @@ class VersionUpdater {
 
   // selector engine
 
-  renderList ( title, items, cursor, renderer, info ) {
+  renderList ( title, items, cursor, info, renderer ) {
     this.clear();
 
     console.log( this.clr( this.CONSOLE.bold, title ) );
@@ -113,6 +118,47 @@ class VersionUpdater {
     items.forEach( ( it, i ) => console.log( renderer( it, i === cursor ) ) );
     console.log( '' );
     console.log( this.clr( this.CONSOLE.dim, info ) );
+  }
+
+  // step 1 :: pkg select
+
+  async selectPackages ( pkgs ) {
+    const selected = new Set();
+    const renderList = ( r ) => this.renderList( 'Select Packages', pkgs, cursor, this.INFO.list, r );
+    let cursor = 0;
+
+    return new Promise( resolve => {
+      this.raw( k => {
+        if ( k === '\u0003' ) process.exit( 1 );
+        if ( k === '\u001b[A' ) cursor = Math.max( 0, cursor - 1 );
+        if ( k === '\u001b[B' ) cursor = Math.min( pkgs.length - 1, cursor + 1 );
+
+        if ( k === ' ' ) {
+          const name = pkgs[ cursor ].name;
+          selected.has( name ) ? selected.delete( name ) : selected.add( name );
+        }
+
+        if ( k === '*' ) pkgs.forEach( p => selected.add( p.name ) );
+        if ( k === '-' ) selected.clear();
+
+        if ( k === '\r' ) {
+          this.unraw();
+          resolve( [ ...selected ] );
+
+          return;
+        }
+
+        renderList( ( p, active ) =>
+          `${ active ? '❯' : ' ' } [${ selected.has( p.name ) ? 'x' : ' ' }] ` +
+          `${ p.name.padEnd( 40 ) } ${ this.clr( this.CONSOLE.dim, p.version ) }`
+        );
+      } );
+
+      renderList( ( p, active ) =>
+        `${ active ? '❯' : ' ' } [ ] ${ p.name.padEnd( 40 ) } ` +
+        `${ this.clr( this.CONSOLE.dim, p.version ) }`
+      );
+    } );
   }
 
   // main
