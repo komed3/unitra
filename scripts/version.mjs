@@ -124,8 +124,14 @@ class VersionUpdater {
 
   async selectPackages ( pkgs ) {
     const selected = new Set();
-    const renderList = ( r ) => this.renderList( 'Select Packages', pkgs, cursor, this.INFO.list, r );
     let cursor = 0;
+
+    const renderList = ( r ) => this.renderList(
+      'Select Packages', pkgs, cursor, this.INFO.list,
+      ( p, active ) =>
+        `${ active ? '❯' : ' ' } [${ selected.has( p.name ) ? 'x' : ' ' }] ` +
+        `${ p.name.padEnd( 40 ) } ${ this.clr( this.CONSOLE.dim, p.version ) }`
+    );
 
     return new Promise( resolve => {
       this.raw( k => {
@@ -148,32 +154,26 @@ class VersionUpdater {
           return;
         }
 
-        renderList( ( p, active ) =>
-          `${ active ? '❯' : ' ' } [${ selected.has( p.name ) ? 'x' : ' ' }] ` +
-          `${ p.name.padEnd( 40 ) } ${ this.clr( this.CONSOLE.dim, p.version ) }`
-        );
+        renderList();
       } );
 
-      renderList( ( p, active ) =>
-        `${ active ? '❯' : ' ' } [ ] ${ p.name.padEnd( 40 ) } ` +
-        `${ this.clr( this.CONSOLE.dim, p.version ) }`
-      );
+      renderList();
     } );
   }
 
   // step 2 :: bump select
 
   async selectBumps ( selectedPkgs ) {
+    const state = selectedPkgs.map( p => ( { p, i: 0 } ) );
+    let cursor = 0;
+
     const renderList = ( r ) => this.renderList(
       'Configure Bumps', state, cursor, this.INFO.bump,
       ( s, active ) =>
         `${ active ? '❯' : ' ' } ${ s.p.name.padEnd( 40 ) } ` +
         `${ this.clr( this.CONSOLE.cyan, this.BUMPS[ s.i ] ) } ` +
-        `(${ s.p.version } → ${ this.bump( s.p.version, s.i ) })`
+        this.clr( this.CONSOLE.dim, `(${ s.p.version } → ${ this.bump( s.p.version, s.i ) })` )
     );
-
-    const state = selectedPkgs.map( p => ( { p, i: 0 } ) );
-    let cursor = 0;
 
     return new Promise( resolve => {
       this.raw( k => {
