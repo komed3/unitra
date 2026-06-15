@@ -44,7 +44,8 @@ class VersionUpdater {
         const pkg = await this.readPkg( file );
 
         if ( pkg.name && pkg.version ) out.push( {
-          dir, file, name: pkg.name, version: pkg.version, pkg
+          dir, file, name: pkg.name, version: pkg.version, pkg,
+          plugin: ( './plugin' in pkg.exports ?? {} ) && join( dir, 'src/plugin.ts' )
         } );
       } catch {}
     }
@@ -203,6 +204,8 @@ class VersionUpdater {
     } );
   }
 
+  // step 3 :: release plan
+
   getReleasePlan ( pkgs, selected, selectedNames, bumpMap ) {
     const changes = new Map();
 
@@ -221,8 +224,6 @@ class VersionUpdater {
     const plan = [ ...changes.entries() ].map( ( [ name, v ] ) => ( { name, ...v } ) );
     return { changes, deps, plan };
   }
-
-  // step 3 :: release plan
 
   async releasePlan ( plan ) {
     return this.selector( {
@@ -253,6 +254,9 @@ class VersionUpdater {
       console.log( this.out( this.CTRL.red, 'Release cancelled' ) );
       return;
     }
+
+    this.clear();
+    console.log( pkgs );
   }
 }
 
