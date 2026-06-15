@@ -90,4 +90,18 @@ class VersionUpdater {
 
     return affected;
   }
+
+  // terminal raw input
+
+  raw ( onKey ) {
+    process.stdin.setRawMode( true );
+    process.stdin.resume();
+    process.stdin.setEncoding( 'utf8' );
+    process.stdin.on( 'data', onKey );
+  }
+
+  unraw () {
+    try { process.stdin.setRawMode( false ) } catch {}
+    process.stdin.removeAllListeners( 'data' );
+  }
 }
