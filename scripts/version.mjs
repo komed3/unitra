@@ -163,7 +163,13 @@ class VersionUpdater {
 
   // main
 
-  run () {}
+  run () {
+    const pkgs = ( await this.walk( this.ROOT ) ).sort( ( a, b ) => a.name.localeCompare( b.name ) );
+    if ( ! pkgs.length ) throw new Error( 'No packages found' );
+
+    const selectedNames = await this.selectPackages( pkgs );
+    const selected = pkgs.filter( p => selectedNames.includes( p.name ) );
+  }
 }
 
 // run the script
