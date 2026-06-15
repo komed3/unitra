@@ -35,7 +35,7 @@ class VersionUpdater {
     return `${ major }.${ minor }.${ patch + 1 }`;
   }
 
-  replaceVersion ( file, version ) {
+  async replaceVersion ( file, version ) {
     let content = await readFile( file, 'utf8' );
 
     const matches = [ ...content.matchAll(
@@ -292,9 +292,9 @@ class VersionUpdater {
       const version = changes.get( pkg.name );
       if ( ! version ) continue;
 
-      this.replaceVersion( pkg.file, version );
+      await this.replaceVersion( pkg.file, version );
       updated.push( { name: pkg.name, from: pkg.version, to: version } );
-      if ( pkg.plugin ) this.replaceVersion( pkg.plugin, version );
+      if ( pkg.plugin ) await this.replaceVersion( pkg.plugin, version );
     }
 
     return updated;
