@@ -316,6 +316,20 @@ class VersionUpdater {
     await writeFile( file, old + entry );
   }
 
+  // step 7 :: log result
+
+  logResult ( plan ) {
+    console.log( '' );
+    console.log( this.out( this.CTRL.green, '✓ Release completed' ) );
+    console.log( '' );
+
+    for ( const item of plan ) console.log(
+      `  ${ item.name.padEnd( 40 ) } ${ item.from } → ` + this.out( this.CTRL.green, item.to )
+    );
+
+    console.log( '' );
+  }
+
   // main
 
   async run () {
