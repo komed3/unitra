@@ -114,4 +114,18 @@ class VersionUpdater {
     console.log( '' );
     console.log( this.clr( this.CONSOLE.dim, info ) );
   }
+
+  // main
+
+  run () {}
 }
+
+// run the script
+
+new VersionUpdater().run().catch( e => {
+  try { process.stdin.setRawMode( false ) } catch {}
+  process.stdin.removeAllListeners( 'data' );
+
+  console.error( e.stack || e );
+  process.exit( 1 );
+} );
