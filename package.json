@@ -14,7 +14,6 @@
     "test:win32": "for %f in (test\\*.js) do node %f"
   },
   "devDependencies": {
-    "@changesets/cli": "^2.31.0",
     "@types/node": "^25.9.3",
     "prettier": "^3.8.4",
     "rimraf": "^6.1.3",
