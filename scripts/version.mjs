@@ -8,11 +8,6 @@ class VersionUpdater {
   ROOT = process.cwd();
   BUMPS = [ 'patch', 'minor', 'major' ];
 
-  INFO = {
-    list: '[↑] UP  [↓] DOWN  [␣] TOGGLE  [*] ALL  [-] NONE  [↵] ENTER',
-    bump: '[↑] UP  [↓] DOWN  [←] [→] SELECT BUMP OPTION  [↵] ENTER'
-  };
-
   CTRL = {
     reset: '\x1b[0m', bold: '\x1b[1m', dim: '\x1b[90m', green: '\x1b[32m',
     cyan: '\x1b[36m', yellow: '\x1b[33m', red: '\x1b[31m'
@@ -127,7 +122,8 @@ class VersionUpdater {
     let cursor = 0;
 
     const renderList = ( r ) => this.renderList(
-      'Select Packages', pkgs, cursor, this.INFO.list,
+      'Select Packages', pkgs, cursor,
+      '[↑] UP  [↓] DOWN  [␣] TOGGLE  [*] ALL  [-] NONE  [↵] ENTER',
       ( p, active ) =>
         `${ active ? '❯' : ' ' } [${ selected.has( p.name ) ? 'x' : ' ' }] ` +
         `${ p.name.padEnd( 40 ) } ${ this.clr( this.CTRL.dim, p.version ) }`
@@ -168,7 +164,8 @@ class VersionUpdater {
     let cursor = 0;
 
     const renderList = ( r ) => this.renderList(
-      'Configure Bumps', state, cursor, this.INFO.bump,
+      'Configure Bumps', state, cursor,
+      '[↑] UP  [↓] DOWN  [←] [→] SELECT BUMP OPTION  [↵] ENTER',
       ( s, active ) =>
         `${ active ? '❯' : ' ' } ${ s.p.name.padEnd( 40 ) } ` +
         `${ this.clr( this.CTRL.cyan, this.BUMPS[ s.i ] ) } ` +
