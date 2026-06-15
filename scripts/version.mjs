@@ -293,7 +293,7 @@ class VersionUpdater {
       if ( ! version ) continue;
 
       this.replaceVersion( pkg.file, version );
-      updated.push( { file: pkg.file, from: pkg.version, to: version } );
+      updated.push( { name: pkg.name, from: pkg.version, to: version } );
       if ( pkg.plugin ) this.replaceVersion( pkg.plugin, version );
     }
 
@@ -318,15 +318,19 @@ class VersionUpdater {
 
   // step 7 :: log result
 
-  logResult ( plan ) {
-    console.log( '' );
-    console.log( this.out( this.CTRL.green, '✓ Release completed' ) );
+  logResult ( updated ) {
+    this.clear();
+
+    console.log( this.out( this.CTRL.yellow + this.CTRL.bold, 'MONOREPO VERSION MANAGER' ) );
+    console.log( this.out( this.CTRL.bold, 'Updated Packages' ) );
     console.log( '' );
 
-    for ( const item of plan ) console.log(
+    for ( const item of updated ) console.log(
       `  ${ item.name.padEnd( 40 ) } ${ item.from } → ` + this.out( this.CTRL.green, item.to )
     );
 
+    console.log( '' );
+    console.log( this.out( this.CTRL.green, '✓ Ready to release' ) );
     console.log( '' );
   }
 
@@ -344,6 +348,9 @@ class VersionUpdater {
     if ( ! await this.releasePlan( plan ) ) return;
 
     const summary = await this.openEditor();
+    const updated = await this.updateVersions( pkgs, plan );
+    await this.writeChangelog( plan, summary );
+    this.logResult( updated );
   }
 }
 
