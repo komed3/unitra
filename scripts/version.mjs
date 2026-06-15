@@ -20,6 +20,8 @@ class VersionUpdater {
 
   // utils
 
+  isPkgFile = ( dir ) => existsSync( join( dir, 'package.json' ) );
+  readPkg = async ( file ) => JSON.parse( await readFile( file, 'utf8' ) );
   clr = ( ctrl, out ) => ctrl + out + this.CTRL.reset;
   clear = () => process.stdout.write( '\x1Bc' );
 
@@ -30,9 +32,6 @@ class VersionUpdater {
     if ( type === 1 || type === 'minor' ) return `${ major }.${ minor + 1 }.0`;
     return `${ major }.${ minor }.${ patch + 1 }`;
   }
-
-  isPkgFile = ( dir ) => existsSync( join( dir, 'package.json' ) );
-  readPkg = async ( file ) => JSON.parse( await readFile( file, 'utf8' ) );
 
   // workspace scan
 
