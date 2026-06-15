@@ -26,8 +26,8 @@ class VersionUpdater {
   bump ( v, type ) {
     const [ major, minor, patch ] = v.split( '.' ).map( Number );
 
-    if ( type === 'major' ) return `${ major + 1 }.0.0`;
-    if ( type === 'minor' ) return `${ major }.${ minor + 1 }.0`;
+    if ( type === 2 || type === 'major' ) return `${ major + 1 }.0.0`;
+    if ( type === 1 || type === 'minor' ) return `${ major }.${ minor + 1 }.0`;
     return `${ major }.${ minor }.${ patch + 1 }`;
   }
 
@@ -164,8 +164,15 @@ class VersionUpdater {
   // step 2 :: bump select
 
   async selectBumps ( selectedPkgs ) {
+    const renderList = ( r ) => this.renderList(
+      'Configure Bumps', state, cursor, this.INFO.bump,
+      ( s, active ) =>
+        `${ active ? '❯' : ' ' } ${ s.p.name.padEnd( 40 ) } ` +
+        `${ this.clr( this.CONSOLE.cyan, this.BUMPS[ s.i ] ) } ` +
+        `(${ s.p.version } → ${ this.bump( s.p.version, s.i ) })`
+    );
+
     const state = selectedPkgs.map( p => ( { p, i: 0 } ) );
-    const renderList = ( r ) => this.renderList( 'Configure Bumps', state, cursor, this.INFO.bump, r );
     let cursor = 0;
 
     return new Promise( resolve => {
@@ -185,13 +192,10 @@ class VersionUpdater {
           return;
         }
 
-        renderList( ( s, active ) =>
-          `${ active ? '❯' : ' ' } ${ s.p.name.padEnd( 40 ) } ` +
-          `${ this.clr( this.CONSOLE.cyan, this.BUMPS[ s.i ] ) }`
-        );
+        renderList();
       } );
 
-      renderList( s => `  ${ s.p.name.padEnd( 40 ) } ${ this.clr( this.CONSOLE.cyan, this.BUMPS[ s.i ] ) }` );
+      renderList();
     } );
   }
 
