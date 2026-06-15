@@ -22,7 +22,7 @@ class VersionUpdater {
 
   isPkgFile = ( dir ) => existsSync( join( dir, 'package.json' ) );
   readPkg = async ( file ) => JSON.parse( await readFile( file, 'utf8' ) );
-  clr = ( ctrl, out ) => ctrl + out + this.CTRL.reset;
+  out = ( ctrl, out ) => ctrl + out + this.CTRL.reset;
   clear = () => process.stdout.write( '\x1Bc' );
 
   bump ( v, type ) {
@@ -113,12 +113,12 @@ class VersionUpdater {
   renderList ( title, items, cursor, info, renderer ) {
     this.clear();
 
-    console.log( this.clr( this.CTRL.yellow + this.CTRL.bold, 'UNITRA VERSION MANAGER' ) );
-    console.log( this.clr( this.CTRL.bold, title ) );
+    console.log( this.out( this.CTRL.yellow + this.CTRL.bold, 'UNITRA VERSION MANAGER' ) );
+    console.log( this.out( this.CTRL.bold, title ) );
     console.log( '' );
     items.forEach( ( it, i ) => console.log( renderer( it, i === cursor ) ) );
     console.log( '' );
-    console.log( this.clr( this.CTRL.dim, info ) );
+    console.log( this.out( this.CTRL.dim, info ) );
   }
 
   async selector ( { title, items, info, onKey, renderer, result } ) {
@@ -166,9 +166,9 @@ class VersionUpdater {
         if ( k === this.KEY.SEP ) selected.clear();
       },
 
-      renderer: ( p, active ) =>
-        `${ active ? '❯' : ' ' } [${ selected.has( p.name ) ? 'x' : ' ' }] ` +
-        `${ p.name.padEnd( 40 ) } ` + this.clr( this.CTRL.dim, p.version ),
+      renderer: ( item, active ) =>
+        `${ active ? '❯' : ' ' } [${ selected.has( item.name ) ? 'x' : ' ' }] ` +
+        `${ item.name.padEnd( 40 ) } ` + this.out( this.CTRL.dim, item.version ),
 
       result: () => [ ...selected ]
     } );
@@ -189,10 +189,10 @@ class VersionUpdater {
         if ( k === this.KEY.LEFT ) state[ c ].i = ( state[ c ].i + this.BUMPS.length - 1 ) % this.BUMPS.length;
       },
 
-      renderer: ( s, active ) =>
-        `${ active ? '❯' : ' ' } ${ s.p.name.padEnd( 40 ) } ` +
-        `${ this.clr( this.CTRL.cyan, this.BUMPS[ s.i ] ) } ` +
-        this.clr( this.CTRL.dim, `(${ s.p.version } → ${ this.bump( s.p.version, s.i ) })`
+      renderer: ( item, active ) =>
+        `${ active ? '❯' : ' ' } ${ item.p.name.padEnd( 40 ) } ` +
+        `${ this.out( this.CTRL.cyan, this.BUMPS[ item.i ] ) } ` +
+        this.out( this.CTRL.dim, `(${ item.p.version } → ${ this.bump( item.p.version, item.i ) })`
       ),
 
       result: () => {
@@ -203,15 +203,64 @@ class VersionUpdater {
     } );
   }
 
+  getReleasePlan ( pkgs, selected, selectedNames, bumpMap ) {
+    const changes = new Map();
+
+    for ( const p of selected ) {
+      const type = bumpMap.get( p.name );
+      changes.set( p.name, { type, from: p.version, to: this.bump( p.version, type ) } );
+    }
+
+    const deps = this.findDependents( this.buildGraph( pkgs ), new Set( selectedNames ) );
+
+    for ( const d of deps ) {
+      const pkg = pkgs.find( p => p.name === d );
+      changes.set( d, { type: 'auto-patch', from: pkg.version, to: this.bump( pkg.version, 'patch' ) } );
+    }
+
+    const plan = [ ...changes.entries() ].map( ( [ name, v ] ) => ( { name, ...v } ) );
+    return { changes, deps, plan };
+  }
+
   // step 3 :: release plan
 
-  async releasePlan ( bumpMap ) {
+  async releasePlan ( plan ) {
     return this.selector( {
       title: 'Release Plan',
-      items: bumpMap,
-      info: '[ESC] CANCEL  [↵] PROCEED'
+      items: plan,
+      info: '[ESC] CANCEL  [↵] PROCEED',
+
+      renderer: item =>
+        `${ item.name }\n  ${ this.out( this.CTRL.dim, `[${ item.type }]` ) } ` +
+        `${ item.from } → ${ this.out( this.CTRL.green, item.to ) }`,
+
+      result: () => true
     } );
   }
+
+  /*[
+  { name: '@unitra/core', type: 'major', from: '0.0.2', to: '1.0.0' },
+  { name: '@unitra/dict', type: 'major', from: '0.0.2', to: '1.0.0' },
+  {
+    name: '@unitra/plugin-quantity-base',
+    type: 'patch',
+    from: '0.0.2',
+    to: '0.0.3'
+  },
+  { name: '@unitra/types', type: 'minor', from: '0.0.2', to: '0.1.0' },
+  {
+    name: '@unitra/plugin-prefix-si',
+    type: 'auto-patch',
+    from: '0.0.2',
+    to: '0.0.3'
+  },
+  {
+    name: '@unitra/plugin-unit-si-base',
+    type: 'auto-patch',
+    from: '0.0.2',
+    to: '0.0.3'
+  }
+]*/
 
   // main
 
@@ -222,6 +271,12 @@ class VersionUpdater {
     const selectedNames = await this.selectPackages( pkgs );
     const selected = pkgs.filter( p => selectedNames.includes( p.name ) );
     const bumpMap = await this.selectBumps( selected );
+    const { plan } = this.getReleasePlan( pkgs, selected, selectedNames, bumpMap );
+
+    if ( ! await this.releasePlan( plan ) ) {
+      //
+      return;
+    }
   }
 }
 
