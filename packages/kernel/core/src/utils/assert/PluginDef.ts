@@ -1,6 +1,6 @@
 import type { PluginDefinition } from '@unitra/types/core/plugin';
-import { Semver } from '../../Semver';
-import { UnitraError } from '../../error';
+import { Semver } from '../Semver';
+import { UnitraError } from '../error';
 
 export class AssertPluginDef {
   public static is ( value: unknown ) : value is PluginDefinition {
