@@ -35,7 +35,9 @@ class VersionUpdater {
     return `${ major }.${ minor }.${ patch + 1 }`;
   }
 
-  replaceVersion ( content, version, file ) {
+  replaceVersion ( file, version ) {
+    let content = await readFile( file, 'utf8' );
+
     const matches = [ ...content.matchAll(
       /(?<key>['"]?version['"]?\s*:\s*)(?<quote>['"])(?<version>[^'"]+)(?<end>\k<quote>)/g
     ) ];
@@ -44,10 +46,10 @@ class VersionUpdater {
       `Expected exactly one version field in "${ file }" but found ${ matches.length }`
     );
 
-    return content.replace(
-      matches[ 0 ][ 0 ],
-      `${ matches[ 0 ].groups.key }${ matches[ 0 ].groups.quote }${ version }${ matches[ 0 ].groups.quote }`
-    );
+    await writeFile( file, content.replace( matches[ 0 ][ 0 ],
+      `${ matches[ 0 ].groups.key }${ matches[ 0 ].groups.quote }` +
+      `${ version }${ matches[ 0 ].groups.quote }`
+    ) );
   }
 
   // workspace scan
@@ -281,6 +283,22 @@ class VersionUpdater {
   }
 
   // step 5 :: bump versions
+
+  async updateVersions ( pkgs, plan ) {
+    const changes = new Map( plan.map( p => [ p.name, p.to ] ) );
+    const updated = [];
+
+    for ( const pkg of pkgs ) {
+      const version = changes.get( pkg.name );
+      if ( ! version ) continue;
+
+      this.replaceVersion( pkg.file, version );
+      updated.push( { file: pkg.file, from: pkg.version, to: version } );
+      if ( pkg.plugin ) this.replaceVersion( pkg.plugin, version );
+    }
+
+    return updated;
+  }
 
   // main
 
