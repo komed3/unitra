@@ -13,14 +13,14 @@ class VersionUpdater {
     bump: '[↑] UP  [↓] DOWN  [←] [→] SELECT BUMP OPTION  [↵] ENTER'
   };
 
-  CONSOLE = {
+  CTRL = {
     reset: '\x1b[0m', bold: '\x1b[1m', dim: '\x1b[90m', green: '\x1b[32m',
     cyan: '\x1b[36m', yellow: '\x1b[33m', red: '\x1b[31m'
   };
 
   // utils
 
-  clr = ( ctrl, out ) => ctrl + out + this.CONSOLE.reset;
+  clr = ( ctrl, out ) => ctrl + out + this.CTRL.reset;
   clear = () => process.stdout.write( '\x1Bc' );
 
   bump ( v, type ) {
@@ -113,11 +113,11 @@ class VersionUpdater {
   renderList ( title, items, cursor, info, renderer ) {
     this.clear();
 
-    console.log( this.clr( this.CONSOLE.bold, title ) );
+    console.log( this.clr( this.CTRL.bold, title ) );
     console.log( '' );
     items.forEach( ( it, i ) => console.log( renderer( it, i === cursor ) ) );
     console.log( '' );
-    console.log( this.clr( this.CONSOLE.dim, info ) );
+    console.log( this.clr( this.CTRL.dim, info ) );
   }
 
   // step 1 :: pkg select
@@ -130,7 +130,7 @@ class VersionUpdater {
       'Select Packages', pkgs, cursor, this.INFO.list,
       ( p, active ) =>
         `${ active ? '❯' : ' ' } [${ selected.has( p.name ) ? 'x' : ' ' }] ` +
-        `${ p.name.padEnd( 40 ) } ${ this.clr( this.CONSOLE.dim, p.version ) }`
+        `${ p.name.padEnd( 40 ) } ${ this.clr( this.CTRL.dim, p.version ) }`
     );
 
     return new Promise( resolve => {
@@ -171,8 +171,8 @@ class VersionUpdater {
       'Configure Bumps', state, cursor, this.INFO.bump,
       ( s, active ) =>
         `${ active ? '❯' : ' ' } ${ s.p.name.padEnd( 40 ) } ` +
-        `${ this.clr( this.CONSOLE.cyan, this.BUMPS[ s.i ] ) } ` +
-        this.clr( this.CONSOLE.dim, `(${ s.p.version } → ${ this.bump( s.p.version, s.i ) })` )
+        `${ this.clr( this.CTRL.cyan, this.BUMPS[ s.i ] ) } ` +
+        this.clr( this.CTRL.dim, `(${ s.p.version } → ${ this.bump( s.p.version, s.i ) })` )
     );
 
     return new Promise( resolve => {
