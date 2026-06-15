@@ -1,5 +1,6 @@
 import type { PluginCatalog, PluginDefinition, PluginList } from '@unitra/types/core/plugin';
 import type { SemverVersion } from '@unitra/types/utils/semver';
+import { AssertPluginDef } from '../utils/assert';
 import { Logging } from '../utils/logging';
 
 export class PluginRegistry {
@@ -24,6 +25,8 @@ export class PluginRegistry {
     let updated = false;
 
     for ( const plugin of plugins ) {
+      AssertPluginDef.assert( plugin );
+
       const versions = this.registry.get( plugin.id ) ?? new Map< SemverVersion, PluginDefinition >();
       const exists = versions.get( plugin.version );
 
