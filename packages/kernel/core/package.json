@@ -1,7 +1,7 @@
 {
   "name": "@unitra/core",
   "description": "Core functionality for Unitra framework",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "author": {
     "name": "Paul Köhler (komed3)",

@@ -1,7 +1,7 @@
 {
   "name": "@unitra/plugin-prefix-si",
   "description": "Unitra plugin for SI prefixes",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "license": "MIT",
   "author": {
     "name": "Paul Köhler (komed3)",
