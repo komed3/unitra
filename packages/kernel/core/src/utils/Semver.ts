@@ -78,4 +78,14 @@ export class Semver {
         return this.OPERATORS[ range.operator ]( cmp );
     }
   }
+
+  public static isSemver ( value: unknown ) : value is SemverVersion {
+    return typeof value === 'string' && this.OPMATCH.test( value ) === false &&
+      this.parse( value as SemverVersion ) !== undefined;
+  }
+
+  public static isSemverRange ( value: unknown ) : value is SemverRange {
+    return typeof value === 'string' && this.OPMATCH.test( value ) === true &&
+      this.parseRange( value as SemverRange ) !== undefined;
+  }
 }
