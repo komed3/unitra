@@ -250,7 +250,7 @@ class VersionUpdater {
     const { plan } = this.getReleasePlan( pkgs, selected, selectedNames, bumpMap );
 
     if ( ! await this.releasePlan( plan ) ) {
-      //
+      console.log( this.out( this.CTRL.red, 'Release cancelled' ) );
       return;
     }
   }
