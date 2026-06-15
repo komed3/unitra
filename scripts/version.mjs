@@ -34,10 +34,10 @@ class VersionUpdater {
   async walk ( dir, out = [] ) {
     const entries = await readdir( dir, { withFileTypes: true } );
 
-    if ( isPkgFile( dir ) ) {
+    if ( this.isPkgFile( dir ) ) {
       try {
         const file = join( dir, 'package.json' );
-        const pkg = await readPkg( file );
+        const pkg = await this.readPkg( file );
 
         if ( pkg.name && pkg.version ) out.push( {
           dir, file, name: pkg.name, version: pkg.version, pkg
@@ -47,7 +47,7 @@ class VersionUpdater {
 
     for ( const e of entries ) {
       if ( ! e.isDirectory() || e.name === 'node_modules' || e.name.startsWith( '.' ) ) continue;
-      await walk( path.join( dir, e.name ), out );
+      await walk( join( dir, e.name ), out );
     }
 
     return out;
