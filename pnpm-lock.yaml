@@ -11,6 +11,9 @@ importers:
       '@types/node':
         specifier: ^25.9.3
         version: 25.9.3
+      changesets:
+        specifier: ^1.0.2
+        version: 1.0.2
       prettier:
         specifier: ^3.8.4
         version: 3.8.4
@@ -122,6 +125,9 @@ packages:
   braces@3.0.3:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
+
+  changesets@1.0.2:
+    resolution: {integrity: sha512-lnXvvqJEcK0z/6RtwKNLbejazl+Hxd1bocMcNgfLHWb4rGxuqkO/LdeGNzwIx3jHj+fNWZ6AGgK5AqNBwva4Xg==}
 
   chokidar@3.6.0:
     resolution: {integrity: sha512-7VT13fmjotKpGipCW9JEQAusEPE+Ei8nl6/g4FBAmIm0GOOLMua9NDDo/DWp0ZAxCr3cPq5ZpBqmPAQgDda2Pw==}
@@ -321,6 +327,8 @@ snapshots:
   braces@3.0.3:
     dependencies:
       fill-range: 7.1.1
+
+  changesets@1.0.2: {}
 
   chokidar@3.6.0:
     dependencies:
