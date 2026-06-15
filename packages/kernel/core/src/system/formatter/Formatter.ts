@@ -18,7 +18,7 @@ export abstract class Formatter implements IFormatter {
 
   protected get defaults () : FormatterOptions {
     return {
-      numeric: { notation: 'standard', scientificStyle: 'e' },
+      numeric: { notation: 'standard', scientificMinExp: 3, scientificStyle: 'e' },
       deprecated: 'warn', fraction: false,
       sep: { factor: ' ', exp: '*', node: ' ' }
     };
@@ -154,10 +154,16 @@ export abstract class Formatter implements IFormatter {
     );
   }
 
+  protected resolveScientificNotation ( factor: number, minExp: number = 3 ) : Intl.NumberFormatOptions[ 'notation' ] {
+    return factor ? Math.abs( Math.floor( Math.log10( Math.abs( factor ) ) ) ) >= minExp ? 'scientific' : 'standard' : 'standard';
+  }
+
   protected resolveNumber ( factor?: number, opt: FormatterOptions = {} ) : ResolvedNumber {
-    return this.ctx.hook().run( 'core.formatter.number', { factor, options: opt }, factor
+    return this.ctx.hook().run( 'core.formatter.number', { factor, options: opt }, factor != null
       ? Intl.NumberFormat( opt.lang ?? Lang.EN, {
-        notation: opt.numeric?.notation,
+        notation: opt.numeric?.notation === 'scientific'
+          ? this.resolveScientificNotation( factor, opt.numeric?.scientificMinExp )
+          : opt.numeric?.notation,
         minimumFractionDigits: opt.numeric?.precision,
         maximumFractionDigits: opt.numeric?.precision,
         signDisplay: opt.numeric?.sign,
