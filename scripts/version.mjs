@@ -109,6 +109,7 @@ class VersionUpdater {
   renderList ( title, items, cursor, info, renderer ) {
     this.clear();
 
+    console.log( this.clr( this.CTRL.yellow + this.CTRL.bold, 'UNITRA VERSION MANAGER' ) );
     console.log( this.clr( this.CTRL.bold, title ) );
     console.log( '' );
     items.forEach( ( it, i ) => console.log( renderer( it, i === cursor ) ) );
@@ -117,12 +118,8 @@ class VersionUpdater {
   }
 
   async selector ( { title, items, info, onKey, renderer, result } ) {
+    const render = () => this.renderList( title, items, cursor, info, renderer );
     let cursor = 0;
-
-    const render = () => this.renderList(
-      title, items, cursor, info,
-      ( item, active ) => renderer( item, active )
-    );
 
     return new Promise( resolve => {
       const cleanup = this.withRawInput( k => {
