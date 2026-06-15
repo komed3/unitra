@@ -238,30 +238,6 @@ class VersionUpdater {
     } );
   }
 
-  /*[
-  { name: '@unitra/core', type: 'major', from: '0.0.2', to: '1.0.0' },
-  { name: '@unitra/dict', type: 'major', from: '0.0.2', to: '1.0.0' },
-  {
-    name: '@unitra/plugin-quantity-base',
-    type: 'patch',
-    from: '0.0.2',
-    to: '0.0.3'
-  },
-  { name: '@unitra/types', type: 'minor', from: '0.0.2', to: '0.1.0' },
-  {
-    name: '@unitra/plugin-prefix-si',
-    type: 'auto-patch',
-    from: '0.0.2',
-    to: '0.0.3'
-  },
-  {
-    name: '@unitra/plugin-unit-si-base',
-    type: 'auto-patch',
-    from: '0.0.2',
-    to: '0.0.3'
-  }
-]*/
-
   // main
 
   async run () {
