@@ -13,6 +13,8 @@ class VersionUpdater {
     cyan: '\x1b[36m', yellow: '\x1b[33m', red: '\x1b[31m'
   };
 
+  // utils
+
   clr = ( ctrl, out ) => ctrl + out + this.CONSOLE.reset;
   clear = () => process.stdout.write( '\x1Bc' );
 
@@ -26,6 +28,8 @@ class VersionUpdater {
 
   isPkgFile = ( dir ) => existsSync( join( dir, 'package.json' ) );
   readPkg = async ( file ) => JSON.parse( await readFile( file, 'utf8' ) );
+
+  // workspace scan
 
   async walk ( dir, out = [] ) {
     const entries = await readdir( dir, { withFileTypes: true } );
@@ -50,6 +54,8 @@ class VersionUpdater {
   
     return out;
   }
+
+  // dependency graph
 
   buildGraph ( pkgs ) {
     const g = new Map();
