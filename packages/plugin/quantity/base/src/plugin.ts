@@ -3,7 +3,7 @@ import baseQuantityRegistry from './';
 
 export default ( {
   id: '@unitra/plugin-quantity-base',
-  version: '0.0.1',
+  version: '0.0.2',
   meta: {
     name: 'Base Quantities',
     description: 'Unitra plugin for SI base quantities',
