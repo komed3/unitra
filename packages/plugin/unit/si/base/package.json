@@ -1,7 +1,7 @@
 {
   "name": "@unitra/plugin-unit-si-base",
   "description": "Unitra plugin for SI base units",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "license": "MIT",
   "author": {
     "name": "Paul Köhler (komed3)",

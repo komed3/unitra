@@ -3,7 +3,7 @@ import siBaseUnitRegistry from './';
 
 export default ( {
   id: '@unitra/plugin-unit-si-base',
-  version: '0.0.2',
+  version: '0.0.3',
   meta: {
     name: 'SI Base Units',
     description: 'Unitra plugin for SI base units',
@@ -13,7 +13,7 @@ export default ( {
     repo: 'https://github.com/komed3/unitra/tree/master/packages/plugin/unit/si/base'
   },
   dependencies: {
-    '@unitra/plugin-quantity-base': '^0.0.2'
+    '@unitra/plugin-quantity-base': '^0.0.3'
   },
   contribs: {
     unit: [
