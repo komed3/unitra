@@ -13,7 +13,7 @@ export default ( {
     repo: 'https://github.com/komed3/unitra/tree/master/packages/plugin/unit/si/base'
   },
   dependencies: {
-    '@unitra/plugin-quantity-base': '^0.0.1'
+    '@unitra/plugin-quantity-base': '^0.0.2'
   },
   contribs: {
     unit: [
