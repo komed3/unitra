@@ -293,8 +293,9 @@ class VersionUpdater {
       if ( ! version ) continue;
 
       await this.replaceVersion( pkg.file, version );
-      updated.push( { name: pkg.name, from: pkg.version, to: version } );
       if ( pkg.plugin ) await this.replaceVersion( pkg.plugin, version );
+
+      updated.push( { name: pkg.name, from: pkg.version, to: version } );
     }
 
     return updated;
